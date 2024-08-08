@@ -47,7 +47,9 @@
         </div>
     </header>
     <main>
-        <button class="toggle-button" onclick="toggleAside()">☰</button>
+        <div class="menu-container">
+            <button class="toggle-button" onclick="toggleAside()">☰</button>
+        </div>
         <aside id="sidebar">
             <form id="experimentForm">
                 <div class="form-group">
@@ -125,14 +127,12 @@
             </form>
         </aside>
         <div class="content">
-            <!-- Conteúdo principal -->
             <div id="chart-container">
                 <div id="spinner" class="spinner" style="display: none;"></div>
-                <div id="chart-container">
-                    <canvas id="myChart"></canvas>
-                </div>
+                <canvas id="myChart"></canvas>
             </div>
-        </main>
+        </div>
+    </main>
     <footer>
         <p>Rodapé</p>
     </footer>
