@@ -15,6 +15,14 @@ function clearInput() {
     input.value = '';
 }
 
+function showSpinner() {
+    document.getElementById('spinner').style.display = 'block';
+}
+
+function hideSpinner() {
+    document.getElementById('spinner').style.display = 'none';
+}
+
 document.getElementById('normalize_linear').addEventListener('change', function () {
     const normalizeMin = document.getElementById('normalize_min');
     const normalizeMax = document.getElementById('normalize_max');
@@ -29,6 +37,9 @@ document.getElementById('steady_state_without_duplicates').addEventListener('cha
 
 document.getElementById('experimentForm').addEventListener('submit', async function (event) {
     event.preventDefault();
+
+    // Mostra o spinner
+    showSpinner();
 
     const funcStr = document.getElementById('func_str').value;
     const numExperiments = document.getElementById('num_experiments').value;
@@ -71,19 +82,26 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
 
     const apiUrl = `http://127.0.0.1:8000/run-experiments?func_str=${encodeURIComponent(funcStr)}&num_experiments=${numExperiments}`;
 
-    const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-    });
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        });
 
-    const data = await response.json();
-    const meanBestIndividuals = data.mean_best_individuals_per_generation;
-    const numGenerationsValue = requestBody.num_generations;
+        const data = await response.json();
+        const meanBestIndividuals = data.mean_best_individuals_per_generation;
+        const numGenerationsValue = requestBody.num_generations;
 
-    renderChart(meanBestIndividuals, numGenerationsValue);
+        renderChart(meanBestIndividuals, numGenerationsValue);
+    } catch (error) {
+        console.error('Error:', error);
+    } finally {
+        // Esconde o spinner
+        hideSpinner();
+    }
 });
 
 function renderChart(data, numGenerations) {
