@@ -102,8 +102,8 @@ function renderChart(data, numGenerations) {
                 label: 'Mean Best Fitness per Generation',
                 data: data,
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
+                borderColor: '#67A5C8',
+                borderWidth: 3,
                 fill: false
             }]
         },
