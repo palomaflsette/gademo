@@ -44,7 +44,7 @@ git clone [HTTPS]
 2. Navegue até o diretório do projeto:
 
 ```
-cd genetic-algorithm-experiments
+cd src/genetic-algorithm-experiments
 ```
 
 3. Instale as dependências:
@@ -69,7 +69,7 @@ http://localhost:8000
 
 ### Inserção de Função
 
-* Use o teclado matemático virtual para inserir a função que deseja usar no experimento.
+* Você pode optar por utilizar o teclado virtual ou não para inserir a função que deseja usar no experimento.
 
 ### Configuração dos Parâmetros
 
