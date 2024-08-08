@@ -18,11 +18,13 @@ footer {
 
 header {
     position: relative;
+    transition: margin-left 0.3s;
 }
 
 main {
     display: flex;
     flex: 1;
+    transition: margin-left 0.3s;
 }
 
 .content {

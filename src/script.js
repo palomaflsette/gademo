@@ -2,7 +2,21 @@ let myChart;
 
 function toggleAside() {
     const aside = document.getElementById('sidebar');
-    aside.classList.toggle('aside-visible');
+    const header = document.getElementById('header');
+    const main = document.getElementById('main');
+    const footer = document.getElementById('footer');
+    
+    if (aside.classList.contains('aside-visible')) {
+        aside.classList.remove('aside-visible');
+        header.style.marginLeft = '0';
+        main.style.marginLeft = '0';
+        footer.style.marginLeft = '0';
+    } else {
+        aside.classList.add('aside-visible');
+        header.style.marginLeft = '250px';
+        main.style.marginLeft = '250px';
+        footer.style.marginLeft = '250px';
+    }
 }
 
 function insertSymbol(symbol) {
@@ -127,10 +141,22 @@ function renderChart(data, numGenerations) {
         },
         options: {
             scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Geração'
+                    }
+                },
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Avaliação'
+                    }
                 }
             }
         }
     });
 }
+
