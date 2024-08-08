@@ -1,0 +1,218 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5;
+}
+
+header,
+footer {
+    background: #3f51b5;
+    color: white;
+    padding: 1em;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    position: relative;
+}
+
+main {
+    display: flex;
+    flex: 1;
+}
+
+.content {
+    flex: 1;
+    padding: 1em;
+    overflow: auto;
+}
+
+.function-input-container {
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.function-input {
+    display: flex;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.function-input input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+    flex: 1;
+}
+
+.function-input button {
+    padding: 10px;
+    background: #3f51b5;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    width: 60px;
+}
+
+.function-input button:hover {
+    background: #303f9f;
+}
+
+.math-keyboard {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+    max-width: 400px;
+    margin-bottom: 10px;
+}
+
+.math-keyboard button {
+    padding: 10px;
+    background: #f0f2f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.3s;
+}
+
+.math-keyboard button:hover {
+    background: #e0e0e0;
+}
+
+.toggle-button {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #3f51b5;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    color: white;
+    font-size: 1.2em;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+    transition: background 0.3s;
+}
+
+.toggle-button:hover {
+    background: #303f9f;
+}
+
+.toggle-button:focus {
+    outline: none;
+}
+
+aside {
+    width: 250px;
+    background: #ffffff;
+    padding: 1em;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+    z-index: 1;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.aside-visible {
+    transform: translateX(0);
+}
+
+#chart-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    margin-top: 10px;
+    font-size: 0.8em;
+}
+
+form input,
+form textarea {
+    padding: 5px;
+    margin-top: 3px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+form button {
+    margin-top: 15px;
+    padding: 10px;
+    background: #3f51b5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background: #303f9f;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: flexbox;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="range"],
+.form-group select {
+    width: 70%;
+}
+
+.form-group input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.form-group-inline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: auto;
+}
+
+.form-group-inline label {
+    flex: 1;
+}
+
+.form-group-inline input[type="text"],
+.form-group-inline input[type="number"] {
+    flex: 2;
+}
