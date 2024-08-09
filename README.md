@@ -44,7 +44,7 @@ git clone [HTTPS]
 2. Navegue até o diretório do projeto:
 
 ```
-cd src/genetic-algorithm-experiments
+cd genetic-algorithm-experiments/src
 ```
 
 3. Instale as dependências:
@@ -62,7 +62,7 @@ npm start
 5. Abra o navegador e acesse:
 
 ```
-http://localhost:8000
+http://localhost:8000/src
 ```
 
 ## Uso
