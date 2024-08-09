@@ -51,80 +51,82 @@
             <button class="toggle-button" onclick="toggleAside()">☰</button>
         </div>
         <aside id="sidebar">
-            <form id="experimentForm">
-                <div class="form-group">
-                    <label for="num_experiments">Number of Experiments:</label>
-                    <input type="number" id="num_experiments" name="num_experiments" required value="1">
-                </div>
-                <div class="form-group">
-                    <label for="num_generations">Number of Generations:</label>
-                    <input type="number" id="num_generations" name="num_generations" value="5">
-                </div>
-                <div class="form-group">
-                    <label for="population_size">Population Size:</label>
-                    <input type="number" id="population_size" name="population_size" value="20">
-                </div>
-                <div class="form-group">
-                    <label for="crossover_rate">Crossover Rate:</label>
-                    <input type="text" id="crossover_rate" name="crossover_rate" value="0.8">
-                </div>
-                <div class="form-group">
-                    <label for="mutation_rate">Mutation Rate:</label>
-                    <input type="text" id="mutation_rate" name="mutation_rate" value="0.8">
-                </div>
-                <div class="form-group">
-                    <label>Objective:</label>
-                    <input type="radio" id="maximize" name="objective" value="true" checked>
-                    <label for="maximize">Maximize</label>
-                    <input type="radio" id="minimize" name="objective" value="false">
-                    <label for="minimize">Minimize</label>
-                </div>
-                <div class="form-group-inline">
-                    <label for="interval_min">Interval Min:</label>
-                    <input type="text" id="interval_min" name="interval_min" value="-5">
-                </div>
-                <div class="form-group-inline">
-                    <label for="interval_max">Interval Max:</label>
-                    <input type="text" id="interval_max" name="interval_max" value="5">
-                </div>
-                <div class="form-group">
-                    <label>Crossover Type:</label>
-                    <input type="radio" id="one_point" name="crossover_type" value="one_point" checked>
-                    <label for="one_point">One Point</label>
-                    <input type="radio" id="two_point" name="crossover_type" value="two_point">
-                    <label for="two_point">Two Point</label>
-                    <input type="radio" id="uniform" name="crossover_type" value="uniform">
-                    <label for="uniform">Uniform</label>
-                </div>
-                <div class="form-group">
-                    <input type="checkbox" id="normalize_linear" name="normalize_linear">
-                    <label for="normalize_linear">Normalize Linear</label>
-                </div>
-                <div class="form-group-inline">
-                    <label for="normalize_min">Min:</label>
-                    <input type="text" id="normalize_min" name="normalize_min" value="0" disabled>
-                </div>
-                <div class="form-group-inline">
-                    <label for="normalize_max">Max:</label>
-                    <input type="text" id="normalize_max" name="normalize_max" value="100" disabled>
-                </div>
-                <div class="form-group">
-                    <input type="checkbox" id="elitism" name="elitism">
-                    <label for="elitism">Elitism</label>
-                </div>
-                <div class="form-group">
-                    <input type="checkbox" id="steady_state" name="steady_state">
-                    <label for="steady_state">Steady State</label>
-                </div>
-                <div class="form-group">
-                    <input type="checkbox" id="steady_state_without_duplicates" name="steady_state_without_duplicates">
-                    <label for="steady_state_without_duplicates">Steady State Without Duplicates</label>
-                </div>
-                <div class="form-group-inline">
-                    <label for="gap">Gap:</label>
-                    <input type="text" id="gap" name="gap" value="80" disabled>
-                </div>
-            </form>
+            <div class="sidebar-container">
+                <form id="experimentForm">
+                    <div class="form-group">
+                        <label for="num_experiments">Number of Experiments:</label>
+                        <input type="number" id="num_experiments" name="num_experiments" required value="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="num_generations">Number of Generations:</label>
+                        <input type="number" id="num_generations" name="num_generations" value="5">
+                    </div>
+                    <div class="form-group">
+                        <label for="population_size">Population Size:</label>
+                        <input type="number" id="population_size" name="population_size" value="20">
+                    </div>
+                    <div class="form-group">
+                        <label for="crossover_rate">Crossover Rate:</label>
+                        <input type="number" id="crossover_rate" name="crossover_rate" value="0.8">
+                    </div>
+                    <div class="form-group">
+                        <label for="mutation_rate">Mutation Rate:</label>
+                        <input type="number" id="mutation_rate" name="mutation_rate" value="0.8">
+                    </div>
+                    <div class="form-group">
+                        <label>Objective:</label>
+                        <input type="radio" id="maximize" name="objective" value="true" checked>
+                        <label for="maximize">Maximize</label>
+                        <input type="radio" id="minimize" name="objective" value="false">
+                        <label for="minimize">Minimize</label>
+                    </div>
+                    <div class="form-group-inline">
+                        <label for="interval_min">Interval Min:</label>
+                        <input type="number" id="interval_min" name="interval_min" value="-5">
+                    </div>
+                    <div class="form-group-inline">
+                        <label for="interval_max">Interval Max:</label>
+                        <input type="number" id="interval_max" name="interval_max" value="5">
+                    </div>
+                    <div class="form-group">
+                        <label>Crossover Type:</label>
+                        <input type="radio" id="one_point" name="crossover_type" value="one_point" checked>
+                        <label for="one_point">One Point</label>
+                        <input type="radio" id="two_point" name="crossover_type" value="two_point">
+                        <label for="two_point">Two Point</label>
+                        <input type="radio" id="uniform" name="crossover_type" value="uniform">
+                        <label for="uniform">Uniform</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" id="normalize_linear" name="normalize_linear">
+                        <label for="normalize_linear">Normalize Linear</label>
+                    </div>
+                    <div class="form-group-inline">
+                        <label for="normalize_min">Min:</label>
+                        <input type="number" id="normalize_min" name="normalize_min" value="0" disabled>
+                    </div>
+                    <div class="form-group-inline">
+                        <label for="normalize_max">Max:</label>
+                        <input type="number" id="normalize_max" name="normalize_max" value="100" disabled>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" id="elitism" name="elitism">
+                        <label for="elitism">Elitism</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" id="steady_state" name="steady_state">
+                        <label for="steady_state">Steady State</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" id="steady_state_without_duplicates" name="steady_state_without_duplicates">
+                        <label for="steady_state_without_duplicates">Steady State Without Duplicates</label>
+                    </div>
+                    <div class="form-group-inline">
+                        <label for="gap">Gap:</label>
+                        <input type="number" id="gap" name="gap" value="80" disabled>
+                    </div>
+                </form>
+            </div>
         </aside>
         <div class="content">
             <div id="chart-container">
