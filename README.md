@@ -24,7 +24,23 @@ O projeto está organizado da seguinte maneira:
 * **Formulário de Parâmetros** : Permite ao usuário configurar parâmetros do algoritmo genético, como número de gerações, tamanho da população, taxa de crossover e mutação, entre outros.
 * **Gráfico de Resultados** : Exibe os resultados dos experimentos em um gráfico de linha.
 
-## Configuração
+
+
+
+### Configuração Docker
+
+$ Docker Execute no terminal
+```
+docker compose up
+```
+Necessário ter o clone da API E Front em diretórios irmãos
+```
+├── gademo-front/
+└──GAdemo-back/
+```
+
+### Configuração Tradicional
+
 
 ### Pré-requisitos
 
@@ -59,10 +75,11 @@ npm install
 npm start
 ```
 
+
 5. Abra o navegador e acesse:
 
 ```
-http://localhost:8000/src
+http://localhost/
 ```
 
 ## Uso
