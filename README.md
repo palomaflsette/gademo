@@ -9,7 +9,7 @@ O projeto está organizado da seguinte maneira:
 ```
 ├── index.html
 ├── style.css
-└── script.js
+└── index.js
 ```
 
 ### Arquivos
@@ -41,13 +41,7 @@ Para rodar a aplicação localmente, você precisa ter instalado:
 git clone [HTTPS]
 ```
 
-2. Navegue até o diretório do projeto:
-
-```
-cd genetic-algorithm-experiments/src
-```
-
-3. Instale as dependências:
+3. Navege até o diretório do projeto e instale as dependências:
 
 ```
 npm install

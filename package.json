@@ -1,0 +1,26 @@
+{
+  "name": "gademo-front",
+  "version": "1.0.0",
+  "description": "gademo web",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "http-server ./src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/palomaflsette/gademo-front.git"
+  },
+  "keywords": [
+    "algorithm",
+    "genetic",
+    "web",
+    "frontend",
+    "javascript"
+  ],
+  "author": "Paloma Sette",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/palomaflsette/gademo-front/issues"
+  },
+  "homepage": "https://github.com/palomaflsette/gademo-front#readme"
+}
