@@ -107,9 +107,11 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
 
         const data = await response.json();
         const meanBestIndividuals = data.mean_best_individuals_per_generation;
+        const bestIndividuals = data.best_individual_per_experiment; // Adiciona melhor indivíduo
         const numGenerationsValue = requestBody.num_generations;
 
         renderChart(meanBestIndividuals, numGenerationsValue);
+        renderBestIndividualsTable(bestIndividuals); // Função para renderizar tabela
     } catch (error) {
         console.error('Error:', error);
     } finally {
@@ -160,3 +162,19 @@ function renderChart(data, numGenerations) {
     });
 }
 
+// Função para renderizar tabela com os melhores indivíduos por experimento
+function renderBestIndividualsTable(bestIndividuals) {
+    const table = document.getElementById('best-individuals-table');
+    table.innerHTML = ''; // Limpa tabela anterior
+
+    bestIndividuals.forEach((individual, index) => {
+        const row = `
+            <tr>
+                <td><strong>${index + 1}º</strong></td>
+                <td>X: ${individual[0].toFixed(3)}</td>
+                <td>Y: ${individual[1].toFixed(3)}</td>
+            </tr>
+        `;
+        table.innerHTML += row;
+    });
+}

@@ -25,13 +25,59 @@ main {
     display: flex;
     flex: 1;
     transition: margin-left 0.3s;
+    background-color: #e3eaf1;
+    padding: 20px;
 }
 
 .content {
-    flex: 1;
-    padding: 1em;
-    overflow: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Mantém ambos os elementos com a mesma altura */
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
+
+#chart-container {
+    width: 70%; /* Gráfico ocupa 70% do espaço */
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 500px; /* Define uma altura fixa */
+}
+
+#chart-container canvas {
+    width: 100%;
+    height: 100%; /* O canvas ocupa toda a altura do contêiner */
+}
+
+#results-container {
+    width: 25%; /* Tabela ocupa 25% do espaço */
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-size: small;
+    max-height: 500px; /* Define a mesma altura do gráfico */
+    overflow-y: auto; /* Adiciona scroll quando o conteúdo excede a altura */
+}
+
+#results-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#results-container th, #results-container td {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid #cecdcd;
+}
+
 
 .function-input-container {
     background: #ffffff;
