@@ -22,5 +22,10 @@
   "bugs": {
     "url": "https://github.com/palomaflsette/gademo-front/issues"
   },
-  "homepage": "https://github.com/palomaflsette/gademo-front#readme"
+  "homepage": "https://github.com/palomaflsette/gademo-front#readme",
+  "dependencies": {
+    "chart.js": "^4.4.4",
+    "chartjs-chart-box-and-violin-plot": "^4.0.0",
+    "plotly.js": "^2.35.2"
+  }
 }

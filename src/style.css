@@ -7,6 +7,7 @@ body {
     background-color: #f0f2f5;
 }
 
+
 header,
 footer {
     background: #3f51b5;
@@ -36,11 +37,26 @@ main {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    flex-direction: column;
 }
 
+
+
+#box-plot-chart {
+    width: 80%;
+    margin: 20px auto; /* Adiciona um espaço entre o gráfico e o box-plot */
+    text-align: center; /* Centraliza o conteúdo */
+    background-color: #ffffff; /* Cor de fundo para destacar */
+    padding: 20px; /* Adiciona um preenchimento */
+    border-radius: 8px; /* Canto arredondado */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
+}
+
+
 #chart-container {
-    width: 70%; /* Gráfico ocupa 70% do espaço */
+    width: 80%; /* Gráfico ocupa 70% do espaço */
     padding: 20px;
+    margin: 20px auto;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -51,17 +67,20 @@ main {
 }
 
 #chart-container canvas {
+    padding: flex;
     width: 100%;
     height: 100%; /* O canvas ocupa toda a altura do contêiner */
 }
 
 #results-container {
-    width: 25%; /* Tabela ocupa 25% do espaço */
+    width: 30%; /* Tabela ocupa 25% do espaço */
     padding: 20px;
+    margin: 20px auto;
     background-color: #f8f8f8;
     border-radius: 10px;
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
+    justify-content: center;
     font-size: small;
     max-height: 500px; /* Define a mesma altura do gráfico */
     overflow-y: auto; /* Adiciona scroll quando o conteúdo excede a altura */
@@ -190,21 +209,11 @@ aside {
     transform: translateX(0);
 }
 
-#chart-container {
-    width: 100%;
-    max-width: 800px;
-    margin: 20px auto;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: relative;
-}
+
 
 .spinner {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    justify-content: center;
     transform: translate(-50%, -50%);
     border: 8px solid #e8e6e6;
     border-top: 8px solid #00cb29;

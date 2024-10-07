@@ -129,24 +129,38 @@
             </div>
         </aside>
         <div class="content">
+            
+            
             <div id="chart-container">
                 <div id="spinner" class="spinner" style="display: none;"></div>
                 <canvas id="myChart"></canvas>
+                
             </div>
-            <!-- Nova tabela de resultados ao lado do gráfico -->
+            <div id="box-plot-chart"    ></div>
+        </div>
+    
+        <!-- Nova tabela de resultados ao lado do gráfico -->
             <div id="results-container">
-                <h3>Best Individual Per Experiment</h3>
-                <table id="best-individuals-table">
+                <h3>Melhores nas gerações</h3>
+                <h4>Experimentos</h4>
+                <table id="best-values-table">
                     <!-- Tabela dinâmica será preenchida aqui -->
                 </table>
             </div>
-        </div>
+     
     </main>
     <footer id="footer">
         <p>Rodapé</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Adicionar o BoxPlot e ViolinPlot plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-and-violin-plot"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- <script src="./node_modules/chart.js/dist/chart.js"></script>
+    <script src="./node_modules/chartjs-chart-box-and-violin-plot/dist/chartjs-chart-box-and-violin-plot.js"></script> -->
     <script src="index.js"></script>
 </body>
 

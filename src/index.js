@@ -1,4 +1,4 @@
-let myChart;
+let myChart, boxPlotChart;
 
 function toggleAside() {
     const aside = document.getElementById('sidebar');
@@ -52,7 +52,6 @@ document.getElementById('steady_state_without_duplicates').addEventListener('cha
 document.getElementById('experimentForm').addEventListener('submit', async function (event) {
     event.preventDefault();
 
-    // Mostra o spinner
     showSpinner();
 
     const funcStr = document.getElementById('func_str').value;
@@ -107,15 +106,17 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
 
         const data = await response.json();
         const meanBestIndividuals = data.mean_best_individuals_per_generation;
-        const bestIndividuals = data.best_individual_per_experiment; // Adiciona melhor indivíduo
-        const numGenerationsValue = requestBody.num_generations;
+        const bestValuesPerGeneration = data.best_values_per_generation;
 
-        renderChart(meanBestIndividuals, numGenerationsValue);
-        renderBestIndividualsTable(bestIndividuals); // Função para renderizar tabela
+        renderChart(meanBestIndividuals, requestBody.num_generations);
+        renderBestValuesTable(bestValuesPerGeneration, meanBestIndividuals, requestBody.num_experiments, requestBody.num_generations);
+
+        // Chamando a função para renderizar o box plot com Plotly
+        renderBoxPlot(meanBestIndividuals);
+
     } catch (error) {
         console.error('Error:', error);
     } finally {
-        // Esconde o spinner
         hideSpinner();
     }
 });
@@ -162,19 +163,70 @@ function renderChart(data, numGenerations) {
     });
 }
 
-// Função para renderizar tabela com os melhores indivíduos por experimento
-function renderBestIndividualsTable(bestIndividuals) {
-    const table = document.getElementById('best-individuals-table');
-    table.innerHTML = ''; // Limpa tabela anterior
+function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGeneration) {
+    const table = document.getElementById('best-values-table');
+    table.innerHTML = ''; // Limpa a tabela anterior
 
-    bestIndividuals.forEach((individual, index) => {
-        const row = `
-            <tr>
-                <td><strong>${index + 1}º</strong></td>
-                <td>X: ${individual[0].toFixed(3)}</td>
-                <td>Y: ${individual[1].toFixed(3)}</td>
-            </tr>
-        `;
+    const numExperiments = bestValuesPerGeneration.length;
+    const numGenerations = bestValuesPerGeneration[0].length;
+
+    let headerRow = '<tr><th>Gerações</th>';
+    for (let i = 1; i <= numExperiments; i++) {
+        headerRow += `<th>${i}º</th>`;
+    }
+    headerRow += '<th>Média</th></tr>';
+    table.innerHTML += headerRow;
+
+    for (let i = 0; i < numGenerations; i++) {
+        let row = `<tr><td>ger ${i + 1}</td>`;
+        for (let j = 0; j < numExperiments; j++) {
+            row += `<td>${bestValuesPerGeneration[j][i].toFixed(4)}</td>`;
+        }
+        row += `<td><strong>${meanBestIndividualsPerGeneration[i].toFixed(4)}</strong></td></tr>`;
         table.innerHTML += row;
-    });
+    }
+}
+
+// Função para renderizar o box-plot abaixo do gráfico principal
+function renderBoxPlot(data) {
+    var trace = {
+        y: data,
+        type: 'box',
+        // name: 'Fitness',
+        boxpoints: 'all',  // Mostra todos os pontos no gráfico
+        jitter: 0.3,  // Deslocamento dos pontos para evitar sobreposição
+        pointpos: -1.8,  // Posição dos pontos à esquerda do boxplot
+        marker: {
+            color: 'blue',  // Cor dos pontos
+            size: 6  // Tamanho dos pontos
+        },
+        line: {
+            width: 2  // Largura da linha do boxplot
+        },
+        boxmean: true  // Adiciona uma linha indicando a média
+    };
+
+    var layout = {
+        title: 'Box Plot for Fitness',
+        yaxis: {
+            title: 'Fitness Values',
+            zeroline: true,
+            gridcolor: 'light grey',  // Cor da grade do eixo Y
+        },
+        xaxis: {
+            title: 'Fitness',
+            zeroline: false,  // Remove a linha zero do eixo X
+        },
+        margin: {
+            l: 50,  // Ajuste da margem esquerda
+            r: 30,  // Ajuste da margem direita
+            b: 50,  // Ajuste da margem inferior
+            t: 50   // Ajuste da margem superior
+        },
+        paper_bgcolor: 'white',  // Cor de fundo do papel
+        plot_bgcolor: 'white',  // Cor de fundo do gráfico
+        showlegend: false  // Remove a legenda
+    };
+
+    Plotly.newPlot('box-plot-chart', [trace], layout);
 }
