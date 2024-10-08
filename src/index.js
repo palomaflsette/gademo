@@ -124,44 +124,71 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
 function renderChart(data, numGenerations) {
     const labels = Array.from({ length: numGenerations }, (_, i) => i + 1);
 
-    if (myChart) {
+    // Verifica se a checkbox "Manter gráfico" está marcada
+    const keepChart = document.getElementById('keep_chart').checked;
+
+    if (!keepChart && myChart) {
         myChart.destroy();
     }
 
-    const ctx = document.getElementById('myChart').getContext('2d');
-    myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Mean Best Fitness per Generation',
-                data: data,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: '#67A5C8',
-                borderWidth: 3,
-                fill: false
-            }]
-        },
-        options: {
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Geração'
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Avaliação'
+    // Se o gráfico já existir e "Manter gráfico" estiver marcado, apenas adiciona um novo conjunto de dados
+    if (keepChart && myChart) {
+        const newDataset = {
+            label: `Run ${myChart.data.datasets.length + 1}`, // Novo rótulo para cada novo conjunto de dados
+            data: data,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: getRandomColor(), // Define uma cor aleatória para cada nova linha
+            borderWidth: 2,
+            fill: false
+        };
+        myChart.data.datasets.push(newDataset);
+        myChart.update();
+    } else {
+        const ctx = document.getElementById('myChart').getContext('2d');
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Mean Best Fitness per Generation',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: '#67A5C8',
+                    borderWidth: 3,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Geração'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Avaliação'
+                        }
                     }
                 }
             }
-        }
-    });
+        });
+    }
 }
+
+function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
 
 function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGeneration) {
     const table = document.getElementById('best-values-table');
@@ -187,17 +214,16 @@ function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGe
     }
 }
 
-// Função para renderizar o box-plot abaixo do gráfico principal
 function renderBoxPlot(data) {
     var trace = {
         y: data,
         type: 'box',
-        // name: 'Fitness',
+        // name: 'Fitness', 
         boxpoints: 'all',  // Mostra todos os pontos no gráfico
         jitter: 0.3,  // Deslocamento dos pontos para evitar sobreposição
         pointpos: -1.8,  // Posição dos pontos à esquerda do boxplot
         marker: {
-            color: 'blue',  // Cor dos pontos
+            color: 'red',  // Cor dos pontos
             size: 6  // Tamanho dos pontos
         },
         line: {
@@ -225,7 +251,9 @@ function renderBoxPlot(data) {
         },
         paper_bgcolor: 'white',  // Cor de fundo do papel
         plot_bgcolor: 'white',  // Cor de fundo do gráfico
-        showlegend: false  // Remove a legenda
+        showlegend: false,  // Remove a legenda
+        autosize: true,  // para  grafico se ajustar automaticamente
+        responsive: true 
     };
 
     Plotly.newPlot('box-plot-chart', [trace], layout);
