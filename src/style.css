@@ -10,7 +10,7 @@ body {
 
 header,
 footer {
-    background: #3f51b5;
+    background: #386da6;
     color: white;
     padding: 1em;
     text-align: center;
@@ -50,6 +50,11 @@ main {
     padding: 20px; /* Adiciona um preenchimento */
     border-radius: 8px; /* Canto arredondado */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
+    position: relative;
+}
+
+.keep_chart {
+    text-align: center;
 }
 
 
@@ -61,10 +66,26 @@ main {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
-    align-items: center;
     justify-content: center;
+    flex-direction: column;
     height: 500px; /* Define uma altura fixa */
+    position: relative;
 }
+
+.spinner {
+    position: absolute;
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    border: 8px solid #e8e6e6;
+    border-top: 8px solid #00cb29;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    z-index: 10; /* Isso garante que o spinner fique acima do conteúdo do gráfico */
+}
+
 
 #chart-container canvas {
     padding: flex;
@@ -76,7 +97,7 @@ main {
     width: 30%; /* Tabela ocupa 25% do espaço */
     padding: 20px;
     margin: 20px auto;
-    background-color: #f8f8f8;
+    background-color: #c3c3c3;
     border-radius: 10px;
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -94,15 +115,15 @@ main {
 #results-container th, #results-container td {
     padding: 8px;
     text-align: center;
-    border-bottom: 1px solid #cecdcd;
+    border-bottom: 1px solid #0c0c0c;
 }
 
 
 .function-input-container {
-    background: #ffffff;
+    background: #1f1f1f;
     padding: 10px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 8px 10px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -124,11 +145,14 @@ main {
     border: 1px solid #ccc;
     border-radius: 4px 0 0 4px;
     flex: 1;
+    border-color: #545050;
+    color: #e3eaf1;
+    background-color: #2e2d2d;
 }
 
 .function-input button {
     padding: 10px;
-    background: #3f51b5;
+    background: #21649a;
     color: white;
     border: none;
     border-radius: 0 4px 4px 0;
@@ -137,10 +161,10 @@ main {
 }
 
 .function-input button:hover {
-    background: #303f9f;
+    background: #70b8e9;
 }
 
-.math-keyboard {
+.math-keyboard-symbols {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 5px;
@@ -148,25 +172,63 @@ main {
     margin-bottom: 10px;
 }
 
-.math-keyboard button {
+.math-keyboard-symbols button {
     padding: 10px;
-    background: #f0f2f5;
-    border: 1px solid #ccc;
+    background: #5f6368;
+    border: 1px solid #5f6368;
+    box-shadow: 1px 2px 2px rgba(10, 10, 10, 0.1);
+    color: white;
     border-radius: 4px;
     cursor: pointer;
     font-size: 1em;
     transition: background 0.3s;
 }
 
-.math-keyboard button:hover {
-    background: #e0e0e0;
+.math-keyboard-symbols button:hover {
+    background: #b9b8b8;
+}
+
+div.math-keyboard-symbols {
+    width: 254px;
+    height: 125px;
+}
+
+
+.math-keyboard-numbers {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+    max-width: 400px;
+    margin-bottom: 10px;
+}
+
+
+div.math-keyboard-numbers {
+    width: 254px;
+    height: 83px;
+}
+
+.math-keyboard-numbers button {
+    padding: 10px;
+    background: #3c4043;
+    border: 1px solid #3c4043;
+    box-shadow: 1px 2px 2px rgba(10, 10, 10, 0.1);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    color: white;
+    transition: background 0.3s;
+}
+
+.math-keyboard-numbers button:hover {
+    background: #b9b8b8;
 }
 
 .toggle-button {
     position: fixed;
     top: 15px;
     left: 15px;
-    background: #3f51b5;
+    background: #004278;
     border: none;
     padding: 10px 15px;
     cursor: pointer;
@@ -211,17 +273,6 @@ aside {
 
 
 
-.spinner {
-    position: absolute;
-    justify-content: center;
-    transform: translate(-50%, -50%);
-    border: 8px solid #e8e6e6;
-    border-top: 8px solid #00cb29;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 2s linear infinite;
-}
 
 @keyframes spin {
     0% { transform: translate(-50%, -50%) rotate(0deg); }
@@ -242,7 +293,7 @@ form input,
 form textarea {
     padding: 5px;
     margin-top: 3px;
-    border: 1px solid #ccc;
+    border: 1px solid #d5d2d2;
     border-radius: 4px;
     font-size: 0.9em;
 }
@@ -295,4 +346,8 @@ form button:hover {
 .form-group-inline input[type="text"],
 .form-group-inline input[type="number"] {
     flex: 2;
+}
+
+@media (max-width: 1310px) {
+    
 }

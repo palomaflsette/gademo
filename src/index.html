@@ -4,15 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Genetic Algorithm Experiments</title>
+    <title>Gademo</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <header id="header">
-        <h1>Genetic Algorithm Experiments</h1>
+        <h1>GAdemo</h1>
         <div class="function-input-container">
-            <div class="math-keyboard">
+            <div class="math-keyboard-symbols">
                 <button onclick="insertSymbol('sin(')">sin</button>
                 <button onclick="insertSymbol('cos(')">cos</button>
                 <button onclick="insertSymbol('tan(')">tan</button>
@@ -27,7 +27,8 @@
                 <button onclick="insertSymbol('/')">÷</button>
                 <button onclick="insertSymbol('pi')">π</button>
                 <button onclick="insertSymbol('exp(')">e</button>
-                <button onclick="insertSymbol('x')">x</button>
+                <button onclick="insertSymbol('x')">x</button></div>
+            <div class="math-keyboard-numbers">
                 <button onclick="insertSymbol('0')">0</button>
                 <button onclick="insertSymbol('1')">1</button>
                 <button onclick="insertSymbol('2')">2</button>
@@ -67,7 +68,7 @@
                     </div>
                     <div class="form-group">
                         <label for="crossover_rate">Crossover Rate:</label>
-                        <input type="number" id="crossover_rate" name="crossover_rate" value="0.8">
+                        <input type="number" id="crossover_rate" name="crossover_rate" value="65.0">
                     </div>
                     <div class="form-group">
                         <label for="mutation_rate">Mutation Rate:</label>
@@ -133,10 +134,13 @@
             
             <div id="chart-container">
                 <div id="spinner" class="spinner" style="display: none;"></div>
-                <canvas id="myChart"></canvas>
+                <canvas id="myChart"></canvas><div class="form-group"></div>
+                    <div><input type="checkbox" id="keep_chart" name="keep_chart">
+                    <label for="keep_chart">Manter gráfico</label></div>
                 
             </div>
-            <div id="box-plot-chart"    ></div>
+            <div id="box-plot-chart">
+            </div>
         </div>
     
         <!-- Nova tabela de resultados ao lado do gráfico -->

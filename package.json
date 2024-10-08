@@ -26,6 +26,7 @@
   "dependencies": {
     "chart.js": "^4.4.4",
     "chartjs-chart-box-and-violin-plot": "^4.0.0",
+    "gademo-front": "file:",
     "plotly.js": "^2.35.2"
   }
 }
