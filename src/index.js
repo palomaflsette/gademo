@@ -89,22 +89,23 @@ function renderBestValuesTableForCurrentRun() {
     updateUsedParametersDescription(runData.params, runData.numOfExperiments); // Atualiza os parâmetros
 }
 
-// Função para atualizar a descrição dos parâmetros utilizados
 function updateUsedParametersDescription(params, numOfExp) {
     const textElement = document.getElementById("used-parameters");
     textElement.innerHTML = `
-        <p><strong>Number of Experiments:</strong> ${numOfExp || 'N/A'}</p>
-        <p><strong>Number of Generations:</strong> ${params.num_generations || 'N/A'}</p>
-        <p><strong>Population Size:</strong> ${params.population_size || 'N/A'}</p>
-        <p><strong>Crossover Rate:</strong> ${params.crossover_rate || 'N/A'}</p>
-        <p><strong>Mutation Rate:</strong> ${params.mutation_rate || 'N/A'}</p>
-        <p><strong>Interval Min:</strong> ${params.interval ? params.interval[0] : 'N/A'}</p>
-        <p><strong>Interval Max:</strong> ${params.interval ? params.interval[1] : 'N/A'}</p>
-        <p><strong>Crossover Type:</strong> ${params.crossover_type ? (params.crossover_type.one_point ? 'One Point' : params.crossover_type.two_point ? 'Two Point' : 'Uniform') : 'N/A'}</p>
-        <p><strong>Normalize Linear:</strong> ${params.normalize_linear ? 'Yes' : 'No'}</p>
-        <p><strong>Elitism:</strong> ${params.elitism ? 'Yes' : 'No'}</p>
-        <p><strong>Steady State:</strong> ${params.steady_state ? 'Yes' : 'No'}</p>
-        <p><strong>Steady State Without Duplicates:</strong> ${params.steady_state_without_duplicates ? 'Yes' : 'No'}</p>
+        <table id="used-parameters-table">
+            <tr><td>Number of Experiments:</td><td>${numOfExp || 'N/A'}</td></tr>
+            <tr><td>Number of Generations:</td><td>${params.num_generations || 'N/A'}</td></tr>
+            <tr><td>Population Size:</td><td>${params.population_size || 'N/A'}</td></tr>
+            <tr><td>Crossover Rate:</td><td>${params.crossover_rate || 'N/A'}</td></tr>
+            <tr><td>Mutation Rate:</td><td>${params.mutation_rate || 'N/A'}</td></tr>
+            <tr><td>Interval Min:</td><td>${params.interval ? params.interval[0] : 'N/A'}</td></tr>
+            <tr><td>Interval Max:</td><td>${params.interval ? params.interval[1] : 'N/A'}</td></tr>
+            <tr><td>Crossover Type:</td><td>${params.crossover_type ? (params.crossover_type.one_point ? 'One Point' : params.crossover_type.two_point ? 'Two Point' : 'Uniform') : 'N/A'}</td></tr>
+            <tr><td>Normalize Linear:</td><td>${params.normalize_linear ? 'Yes' : 'No'}</td></tr>
+            <tr><td>Elitism:</td><td>${params.elitism ? 'Yes' : 'No'}</td></tr>
+            <tr><td>Steady State:</td><td>${params.steady_state ? 'Yes' : 'No'}</td></tr>
+            <tr><td>Steady State Without Duplicates:</td><td>${params.steady_state_without_duplicates ? 'Yes' : 'No'}</td></tr>
+        </table>
     `;
 }
 
