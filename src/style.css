@@ -146,7 +146,7 @@ main {
 }
 #used-parameters-table tr, #used-parameters-table td {
     border: 1px solid  #c3c3c3; 
-    padding: 5px; /* Espaçamento interno das células */
+    padding: 3px; /* Espaçamento interno das células */
     
 }
 #used-parameters-table td {
