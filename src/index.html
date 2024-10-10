@@ -56,7 +56,7 @@
                 <form id="experimentForm">
                     <div class="form-group">
                         <label for="num_experiments">Number of Experiments:</label>
-                        <input type="number" id="num_experiments" name="num_experiments" required value="1">
+                        <input type="number" id="num_experiments" name="num_experiments" required value="3">
                     </div>
                     <div class="form-group">
                         <label for="num_generations">Number of Generations:</label>
@@ -148,8 +148,14 @@
     
         <!-- Nova tabela de resultados ao lado do gráfico -->
             <div id="results-container">
-                <h3>Best Fitness Per Generation & Experiments</h3>
-                <h4>Experiments</h4>
+                <h3 id="table-title">Best Fitness Per Generation & Experiments</h3>
+                <div id="used-parameters" style="text-align: center; margin-bottom: 10px;">
+                    <!-- Parâmetros utilizados aparecerão aqui -->
+                </div>
+                <div id="table-navigation" style="text-align: center; margin-bottom: 10px;">
+                    <button id="prev-run" disabled style="padding: 5px 10px;">◀</button>
+                    <button id="next-run" disabled style="padding: 5px 10px;">▶</button>
+                </div>
                 <table id="best-values-table">
                     <!-- Tabela dinâmica será preenchida aqui -->
                 </table>

@@ -1,11 +1,14 @@
 let myChart, boxPlotChart;
+let previousResults = [];  // Armazena os resultados anteriores
+let currentRunIndex = 0;   // Índice para a rodada atual
+
 
 function toggleAside() {
     const aside = document.getElementById('sidebar');
     const header = document.getElementById('header');
     const main = document.getElementById('main');
     const footer = document.getElementById('footer');
-    
+
     if (aside.classList.contains('aside-visible')) {
         aside.classList.remove('aside-visible');
         header.style.marginLeft = '0';
@@ -19,16 +22,7 @@ function toggleAside() {
     }
 }
 
-function insertSymbol(symbol) {
-    const input = document.getElementById('func_str');
-    input.value += symbol;
-}
-
-function clearInput() {
-    const input = document.getElementById('func_str');
-    input.value = '';
-}
-
+// Adicionando as funções showSpinner e hideSpinner
 function showSpinner() {
     document.getElementById('spinner').style.display = 'block';
 }
@@ -37,18 +31,84 @@ function hideSpinner() {
     document.getElementById('spinner').style.display = 'none';
 }
 
-document.getElementById('normalize_linear').addEventListener('change', function () {
-    const normalizeMin = document.getElementById('normalize_min');
-    const normalizeMax = document.getElementById('normalize_max');
-    normalizeMin.disabled = !this.checked;
-    normalizeMax.disabled = !this.checked;
+// Função para armazenar novos resultados
+function storeResults(runData) {
+    const keepChart = document.getElementById('keep_chart').checked;
+
+    // Se "Keep Graph" NÃO estiver marcado, reinicia os resultados
+    if (!keepChart) {
+        previousResults = [];  // Limpa os resultados anteriores
+        currentRunIndex = 0;   // Reinicia o índice
+    }
+
+    previousResults.push(runData);
+    currentRunIndex = previousResults.length - 1;
+    updateTableNavigationButtons();
+    updateTableTitle(); // Atualiza o título com a rodada correta
+    updateUsedParametersDescription(runData.params, runData.numOfExperiments); // Atualiza os parâmetros
+}
+
+// Função para atualizar o estado dos botões de navegação
+function updateTableNavigationButtons() {
+    document.getElementById('prev-run').disabled = currentRunIndex === 0;
+    document.getElementById('next-run').disabled = currentRunIndex === previousResults.length - 1;
+}
+
+// Função para atualizar o título com o número da rodada atual
+function updateTableTitle() {
+    const titleElement = document.getElementById('table-title');
+    titleElement.innerText = `Best Fitness Per Generation & Experiments (Run ${currentRunIndex + 1})`; // +1 para exibir como 1-based
+}
+
+// Listeners para os botões de navegação
+document.getElementById('prev-run').addEventListener('click', function() {
+    if (currentRunIndex > 0) {
+        currentRunIndex--;  // Decrementa o índice da rodada atual
+        renderBestValuesTableForCurrentRun();  // Renderiza a tabela para a rodada atual
+        updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
+        updateTableTitle();  // Atualiza o título com o número da rodada
+        updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments); // Atualiza os parâmetros
+    }
 });
 
-document.getElementById('steady_state_without_duplicates').addEventListener('change', function () {
-    const gap = document.getElementById('gap');
-    gap.disabled = !this.checked;
+document.getElementById('next-run').addEventListener('click', function() {
+    if (currentRunIndex < previousResults.length - 1) {
+        currentRunIndex++;  // Incrementa o índice da rodada atual
+        renderBestValuesTableForCurrentRun();  // Renderiza a tabela para a rodada atual
+        updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
+        updateTableTitle();  // Atualiza o título com o número da rodada
+        updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments); // Atualiza os parâmetros
+    }
 });
 
+// Função para renderizar a tabela para a rodada atual
+function renderBestValuesTableForCurrentRun() {
+    const runData = previousResults[currentRunIndex];
+    renderBestValuesTable(runData.bestValuesPerGeneration, runData.meanBestIndividualsPerGeneration);
+    updateTableTitle(); // Atualiza o título com o número da rodada
+    updateUsedParametersDescription(runData.params, runData.numOfExperiments); // Atualiza os parâmetros
+}
+
+// Função para atualizar a descrição dos parâmetros utilizados
+function updateUsedParametersDescription(params, numOfExp) {
+    const textElement = document.getElementById("used-parameters");
+    textElement.innerHTML = `
+        <p><strong>Number of Experiments:</strong> ${numOfExp || 'N/A'}</p>
+        <p><strong>Number of Generations:</strong> ${params.num_generations || 'N/A'}</p>
+        <p><strong>Population Size:</strong> ${params.population_size || 'N/A'}</p>
+        <p><strong>Crossover Rate:</strong> ${params.crossover_rate || 'N/A'}</p>
+        <p><strong>Mutation Rate:</strong> ${params.mutation_rate || 'N/A'}</p>
+        <p><strong>Interval Min:</strong> ${params.interval ? params.interval[0] : 'N/A'}</p>
+        <p><strong>Interval Max:</strong> ${params.interval ? params.interval[1] : 'N/A'}</p>
+        <p><strong>Crossover Type:</strong> ${params.crossover_type ? (params.crossover_type.one_point ? 'One Point' : params.crossover_type.two_point ? 'Two Point' : 'Uniform') : 'N/A'}</p>
+        <p><strong>Normalize Linear:</strong> ${params.normalize_linear ? 'Yes' : 'No'}</p>
+        <p><strong>Elitism:</strong> ${params.elitism ? 'Yes' : 'No'}</p>
+        <p><strong>Steady State:</strong> ${params.steady_state ? 'Yes' : 'No'}</p>
+        <p><strong>Steady State Without Duplicates:</strong> ${params.steady_state_without_duplicates ? 'Yes' : 'No'}</p>
+    `;
+}
+
+// Função de escuta para o envio do formulário
 document.getElementById('experimentForm').addEventListener('submit', async function (event) {
     event.preventDefault();
 
@@ -66,11 +126,6 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     const crossoverType = document.querySelector('input[name="crossover_type"]:checked').value;
     const normalizeLinear = document.getElementById('normalize_linear').checked;
 
-    // Verifica se os campos Min, Max e Gap têm valor antes de incluí-los
-    const normalizeMin = document.getElementById('normalize_min').value || null;
-    const normalizeMax = document.getElementById('normalize_max').value || null;
-    const gap = document.getElementById('gap').value || null;
-
     const requestBody = {
         num_generations: parseInt(numGenerations),
         population_size: parseInt(populationSize),
@@ -84,18 +139,13 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
             uniform: crossoverType === 'uniform'
         },
         normalize_linear: normalizeLinear,
-        ...(normalizeMin && { normalize_min: parseFloat(normalizeMin) }), // Só inclui se tiver valor
-        ...(normalizeMax && { normalize_max: parseFloat(normalizeMax) }), // Só inclui se tiver valor
-        ...(gap && { gap: parseInt(gap) }), // Só inclui se tiver valor
         elitism: document.getElementById('elitism').checked,
         steady_state: document.getElementById('steady_state').checked,
         steady_state_without_duplicates: document.getElementById('steady_state_without_duplicates').checked
     };
 
-    const apiUrl = `http://127.0.0.1:8000/run-experiments?func_str=${encodeURIComponent(funcStr)}&num_experiments=${numExperiments}`;
-
     try {
-        const response = await fetch(apiUrl, {
+        const response = await fetch(`http://127.0.0.1:8000/run-experiments?func_str=${encodeURIComponent(funcStr)}&num_experiments=${numExperiments}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -108,9 +158,15 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         const bestValuesPerGeneration = data.best_values_per_generation;
 
         renderChart(meanBestIndividuals, requestBody.num_generations);
-        renderBestValuesTable(bestValuesPerGeneration, meanBestIndividuals, requestBody.num_experiments, requestBody.num_generations);
 
-        // Chamando a função para renderizar o box plot com Plotly
+        // Salva os dados da rodada e renderiza a tabela
+        storeResults({
+            bestValuesPerGeneration: bestValuesPerGeneration,
+            meanBestIndividualsPerGeneration: meanBestIndividuals,
+            params: requestBody, // Armazenando parâmetros da execução
+            numOfExperiments: numExperiments
+        });
+        renderBestValuesTableForCurrentRun();
         renderBoxPlot(meanBestIndividuals);
 
     } catch (error) {
@@ -120,11 +176,10 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     }
 });
 
-
+// Funções para renderizar o gráfico e tabela
 function renderChart(data, numGenerations) {
     const labels = Array.from({ length: numGenerations }, (_, i) => i + 1);
 
-    // Verifica se a checkbox "Manter gráfico" está marcada
     const keepChart = document.getElementById('keep_chart').checked;
 
     document.getElementById('download-chart').addEventListener('click', function() {
@@ -138,13 +193,12 @@ function renderChart(data, numGenerations) {
         myChart.destroy();
     }
 
-    // Se o gráfico já existir e "Manter gráfico" estiver marcado, apenas adiciona um novo conjunto de dados
     if (keepChart && myChart) {
         const newDataset = {
-            label: `Run ${myChart.data.datasets.length + 1}`, // Novo rótulo para cada novo conjunto de dados
+            label: `Run ${myChart.data.datasets.length + 1}`,
             data: data,
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: getRandomColor(), // Define uma cor aleatória para cada nova linha
+            borderColor: getRandomColor(),
             borderWidth: 2,
             fill: false
         };
@@ -157,7 +211,7 @@ function renderChart(data, numGenerations) {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Run 1',  // Altere o rótulo aqui para 'Run 1'
+                    label: 'Run 1',
                     data: data,
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: '#67A5C8',
@@ -169,9 +223,9 @@ function renderChart(data, numGenerations) {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Mean Best Fitness per Generation',  // Título destacado aqui
+                        text: 'Mean Best Fitness per Generation',
                         font: {
-                            size: 24,  // Tamanho da fonte do título
+                            size: 24,
                             weight: 'bold'
                         },
                         padding: {
@@ -201,7 +255,6 @@ function renderChart(data, numGenerations) {
     }
 }
 
-
 function getRandomColor() {
     const letters = '0123456789ABCDEF';
     let color = '#';
@@ -211,7 +264,6 @@ function getRandomColor() {
     return color;
 }
 
-
 function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGeneration) {
     const table = document.getElementById('best-values-table');
     table.innerHTML = ''; // Limpa a tabela anterior
@@ -219,13 +271,25 @@ function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGe
     const numExperiments = bestValuesPerGeneration.length;
     const numGenerations = bestValuesPerGeneration[0].length;
 
-    let headerRow = '<tr><th>Generations</th>';
+    // Cabeçalho com as colunas principais
+    let headerRow = `
+        <tr>
+            <th rowspan="2">Generations</th>
+            <th colspan="${numExperiments}">Experiments</th>
+            <th rowspan="2">Average</th>
+        </tr>
+        <tr>`;
+
+    // Subcabeçalhos das colunas de experimentos (1º, 2º, 3º, etc.)
     for (let i = 1; i <= numExperiments; i++) {
         headerRow += `<th>${i}º</th>`;
     }
-    headerRow += '<th>Average</th></tr>';
+    headerRow += '</tr>';
+
+    // Adiciona a linha de cabeçalho ao conteúdo da tabela
     table.innerHTML += headerRow;
 
+    // Adiciona as linhas dos dados
     for (let i = 0; i < numGenerations; i++) {
         let row = `<tr><td>gen ${i + 1}</td>`;
         for (let j = 0; j < numExperiments; j++) {
@@ -240,18 +304,17 @@ function renderBoxPlot(data) {
     var trace = {
         y: data,
         type: 'box',
-        // name: 'Fitness', 
-        boxpoints: 'all',  // Mostra todos os pontos no gráfico
-        jitter: 0.3,  // Deslocamento dos pontos para evitar sobreposição
-        pointpos: -1.8,  // Posição dos pontos à esquerda do boxplot
+        boxpoints: 'all',
+        jitter: 0.3,
+        pointpos: -1.8,
         marker: {
-            color: 'red',  // Cor dos pontos
-            size: 6  // Tamanho dos pontos
+            color: 'red',
+            size: 6
         },
         line: {
-            width: 2  // Largura da linha do boxplot
+            width: 2
         },
-        boxmean: true  // Adiciona uma linha indicando a média
+        boxmean: true
     };
 
     var layout = {
@@ -259,22 +322,22 @@ function renderBoxPlot(data) {
         yaxis: {
             title: 'Fitness Values',
             zeroline: true,
-            gridcolor: 'light grey',  // Cor da grade do eixo Y
+            gridcolor: 'light grey'
         },
         xaxis: {
             title: 'Fitness',
-            zeroline: false,  // Remove a linha zero do eixo X
+            zeroline: false
         },
         margin: {
-            l: 50,  // Ajuste da margem esquerda
-            r: 30,  // Ajuste da margem direita
-            b: 50,  // Ajuste da margem inferior
-            t: 50   // Ajuste da margem superior
+            l: 50,
+            r: 30,
+            b: 50,
+            t: 50
         },
-        paper_bgcolor: 'white',  // Cor de fundo do papel
-        plot_bgcolor: 'white',  // Cor de fundo do gráfico
-        showlegend: false,  // Remove a legenda
-        autosize: true,  // para  grafico se ajustar automaticamente
+        paper_bgcolor: 'white',
+        plot_bgcolor: 'white',
+        showlegend: false,
+        autosize: true,
         responsive: true 
     };
 

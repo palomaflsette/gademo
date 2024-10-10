@@ -94,7 +94,7 @@ main {
 }
 
 #results-container {
-    width: 30%; /* Tabela ocupa 25% do espaço */
+    width: 30%;
     padding: 20px;
     margin: 20px auto;
     background-color: #c3c3c3;
@@ -103,20 +103,40 @@ main {
     text-align: center;
     justify-content: center;
     font-size: small;
-    max-height: 500px; /* Define a mesma altura do gráfico */
-    overflow-y: auto; /* Adiciona scroll quando o conteúdo excede a altura */
+    max-height: 500px;
+    overflow-y: auto;
 }
 
 #results-container table {
     width: 100%;
     border-collapse: collapse;
+    border: 1px solid black;
 }
 
 #results-container th, #results-container td {
     padding: 8px;
     text-align: center;
-    border-bottom: 1px solid #0c0c0c;
+    border: 1px solid black;
+    font-weight: bold;
 }
+
+#results-container th {
+    background-color: #e0e0e0; /* Cor de fundo para o cabeçalho */
+    font-weight: bold;
+}
+
+#results-container td {
+    background-color: #f9f9f9; /* Cor de fundo para as células */
+}
+
+#results-container th[colspan] {
+    border-bottom: 2px solid black; /* Linha mais grossa entre o cabeçalho e as células */
+}
+
+#results-container tr:nth-child(odd) td {
+    background-color: #f1f1f1; /* Alterna as cores das linhas para melhor visualização */
+}
+
 
 
 .function-input-container {
