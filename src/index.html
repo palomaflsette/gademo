@@ -60,18 +60,18 @@
                     </div>
                     <div class="form-group">
                         <label for="num_generations">Number of Generations:</label>
-                        <input type="number" id="num_generations" name="num_generations" value="5">
+                        <input type="number" id="num_generations" name="num_generations" value="20">
                     </div>
                     <div class="form-group">
                         <label for="population_size">Population Size:</label>
-                        <input type="number" id="population_size" name="population_size" value="20">
+                        <input type="number" id="population_size" name="population_size" value="100">
                     </div>
                     <div class="form-group">
-                        <label for="crossover_rate">Crossover Rate:</label>
+                        <label for="crossover_rate">Crossover Rate (%):</label>
                         <input type="number" id="crossover_rate" name="crossover_rate" value="65.0">
                     </div>
                     <div class="form-group">
-                        <label for="mutation_rate">Mutation Rate:</label>
+                        <label for="mutation_rate">Mutation Rate (%):</label>
                         <input type="number" id="mutation_rate" name="mutation_rate" value="0.8">
                     </div>
                     <div class="form-group">
@@ -83,11 +83,11 @@
                     </div>
                     <div class="form-group-inline">
                         <label for="interval_min">Interval Min:</label>
-                        <input type="number" id="interval_min" name="interval_min" value="-5">
+                        <input type="number" id="interval_min" name="interval_min" value="-100">
                     </div>
                     <div class="form-group-inline">
                         <label for="interval_max">Interval Max:</label>
-                        <input type="number" id="interval_max" name="interval_max" value="5">
+                        <input type="number" id="interval_max" name="interval_max" value="100">
                     </div>
                     <div class="form-group">
                         <label>Crossover Type:</label>
@@ -123,7 +123,7 @@
                         <label for="steady_state_without_duplicates">Steady State Without Duplicates</label>
                     </div>
                     <div class="form-group-inline">
-                        <label for="gap">Gap:</label>
+                        <label for="gap">Gap (%):</label>
                         <input type="number" id="gap" name="gap" value="80" disabled>
                     </div>
                 </form>
@@ -136,7 +136,7 @@
                 <div id="spinner" class="spinner" style="display: none;"></div>
                 <canvas id="myChart"></canvas><div class="form-group"></div>
                     <div><input type="checkbox" id="keep_chart" name="keep_chart">
-                    <label for="keep_chart">Manter gráfico</label></div>
+                    <label for="keep_chart">Keep Graph</label></div>
                 
             </div>
             <div id="box-plot-chart">
@@ -145,8 +145,8 @@
     
         <!-- Nova tabela de resultados ao lado do gráfico -->
             <div id="results-container">
-                <h3>Melhores nas gerações</h3>
-                <h4>Experimentos</h4>
+                <h3>Best Fitness Per Generation & Experiments</h3>
+                <h4>Experiments</h4>
                 <table id="best-values-table">
                     <!-- Tabela dinâmica será preenchida aqui -->
                 </table>
