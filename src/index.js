@@ -127,6 +127,13 @@ function renderChart(data, numGenerations) {
     // Verifica se a checkbox "Manter gráfico" está marcada
     const keepChart = document.getElementById('keep_chart').checked;
 
+    document.getElementById('download-chart').addEventListener('click', function() {
+        const link = document.createElement('a');
+        link.href = myChart.toBase64Image();
+        link.download = 'chart_image.png';  // Nome do arquivo baixado
+        link.click();
+    });
+
     if (!keepChart && myChart) {
         myChart.destroy();
     }
@@ -150,7 +157,7 @@ function renderChart(data, numGenerations) {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Mean Best Fitness per Generation',
+                    label: 'Run 1',  // Altere o rótulo aqui para 'Run 1'
                     data: data,
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: '#67A5C8',
@@ -159,6 +166,20 @@ function renderChart(data, numGenerations) {
                 }]
             },
             options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Mean Best Fitness per Generation',  // Título destacado aqui
+                        font: {
+                            size: 24,  // Tamanho da fonte do título
+                            weight: 'bold'
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 30
+                        }
+                    }
+                },
                 scales: {
                     x: {
                         beginAtZero: true,
@@ -179,6 +200,7 @@ function renderChart(data, numGenerations) {
         });
     }
 }
+
 
 function getRandomColor() {
     const letters = '0123456789ABCDEF';
