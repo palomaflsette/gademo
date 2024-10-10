@@ -2,6 +2,7 @@ let myChart, boxPlotChart;
 let previousResults = [];  // Armazena os resultados anteriores
 let currentRunIndex = 0;   // Índice para a rodada atual
 
+
 function toggleAside() {
     const aside = document.getElementById('sidebar');
     const header = document.getElementById('header');
@@ -21,16 +22,7 @@ function toggleAside() {
     }
 }
 
-function insertSymbol(symbol) {
-    const input = document.getElementById('func_str');
-    input.value += symbol;
-}
-
-function clearInput() {
-    const input = document.getElementById('func_str');
-    input.value = '';
-}
-
+// Adicionando as funções showSpinner e hideSpinner
 function showSpinner() {
     document.getElementById('spinner').style.display = 'block';
 }
@@ -39,38 +31,21 @@ function hideSpinner() {
     document.getElementById('spinner').style.display = 'none';
 }
 
-document.getElementById('normalize_linear').addEventListener('change', function () {
-    const normalizeMin = document.getElementById('normalize_min');
-    const normalizeMax = document.getElementById('normalize_max');
-    normalizeMin.disabled = !this.checked;
-    normalizeMax.disabled = !this.checked;
-});
-
-document.getElementById('steady_state_without_duplicates').addEventListener('change', function () {
-    const gap = document.getElementById('gap');
-    gap.disabled = !this.checked;
-});
-
 // Função para armazenar novos resultados
 function storeResults(runData) {
+    const keepChart = document.getElementById('keep_chart').checked;
+
+    // Se "Keep Graph" NÃO estiver marcado, reinicia os resultados
+    if (!keepChart) {
+        previousResults = [];  // Limpa os resultados anteriores
+        currentRunIndex = 0;   // Reinicia o índice
+    }
+
     previousResults.push(runData);
     currentRunIndex = previousResults.length - 1;
     updateTableNavigationButtons();
+    updateTableTitle(); // Atualiza o título com a rodada correta
 }
-
-// Função para atualizar o título com o número da rodada atual
-function updateTableTitle() {
-    const titleElement = document.getElementById('table-title');
-    titleElement.innerText = `Best Fitness Per Generation & Experiments (Run ${currentRunIndex + 1})`; // +1 para exibir como 1-based
-}
-
-// Atualizar título ao renderizar a tabela para a rodada atual
-function renderBestValuesTableForCurrentRun() {
-    const runData = previousResults[currentRunIndex];
-    renderBestValuesTable(runData.bestValuesPerGeneration, runData.meanBestIndividualsPerGeneration);
-    updateTableTitle(); // Chama a função para atualizar o título
-}
-
 
 
 
@@ -80,60 +55,40 @@ function updateTableNavigationButtons() {
     document.getElementById('next-run').disabled = currentRunIndex === previousResults.length - 1;
 }
 
-// Função para renderizar a tabela (modificada para aceitar os dados diretamente)
-function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGeneration) {
-    const table = document.getElementById('best-values-table');
-    table.innerHTML = ''; // Limpa a tabela anterior
-
-    const numExperiments = bestValuesPerGeneration.length;
-    const numGenerations = bestValuesPerGeneration[0].length;
-
-    // Cabeçalho com as colunas principais
-    let headerRow = `
-        <tr>
-            <th rowspan="2">Generations</th>
-            <th colspan="${numExperiments}">Experiments</th>
-            <th rowspan="2">Average</th>
-        </tr>
-        <tr>`;
-
-    // Subcabeçalhos das colunas de experimentos (1º, 2º, 3º, etc.)
-    for (let i = 1; i <= numExperiments; i++) {
-        headerRow += `<th>${i}º</th>`;
-    }
-    headerRow += '</tr>';
-
-    // Adiciona a linha de cabeçalho ao conteúdo da tabela
-    table.innerHTML += headerRow;
-
-    // Adiciona as linhas dos dados
-    for (let i = 0; i < numGenerations; i++) {
-        let row = `<tr><td>gen ${i + 1}</td>`;
-        for (let j = 0; j < numExperiments; j++) {
-            row += `<td>${bestValuesPerGeneration[j][i].toFixed(4)}</td>`;
-        }
-        row += `<td><strong>${meanBestIndividualsPerGeneration[i].toFixed(4)}</strong></td></tr>`;
-        table.innerHTML += row;
-    }
+// Função para atualizar o título com o número da rodada atual
+function updateTableTitle() {
+    const titleElement = document.getElementById('table-title');
+    titleElement.innerText = `Best Fitness Per Generation & Experiments (Run ${currentRunIndex + 1})`; // +1 para exibir como 1-based
 }
 
 // Listeners para os botões de navegação
 document.getElementById('prev-run').addEventListener('click', function() {
     if (currentRunIndex > 0) {
-        currentRunIndex--;
-        renderBestValuesTableForCurrentRun();
-        updateTableNavigationButtons();
+        currentRunIndex--;  // Decrementa o índice da rodada atual
+        renderBestValuesTableForCurrentRun();  // Renderiza a tabela para a rodada atual
+        updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
+        updateTableTitle();  // Atualiza o título com o número da rodada
     }
 });
 
 document.getElementById('next-run').addEventListener('click', function() {
     if (currentRunIndex < previousResults.length - 1) {
-        currentRunIndex++;
-        renderBestValuesTableForCurrentRun();
-        updateTableNavigationButtons();
+        currentRunIndex++;  // Incrementa o índice da rodada atual
+        renderBestValuesTableForCurrentRun();  // Renderiza a tabela para a rodada atual
+        updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
+        updateTableTitle();  // Atualiza o título com o número da rodada
     }
 });
 
+
+// Função para renderizar a tabela para a rodada atual
+function renderBestValuesTableForCurrentRun() {
+    const runData = previousResults[currentRunIndex];
+    renderBestValuesTable(runData.bestValuesPerGeneration, runData.meanBestIndividualsPerGeneration);
+    updateTableTitle(); // Atualiza o título com o número da rodada
+}
+
+// Função de escuta para o envio do formulário
 document.getElementById('experimentForm').addEventListener('submit', async function (event) {
     event.preventDefault();
 
@@ -151,11 +106,6 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     const crossoverType = document.querySelector('input[name="crossover_type"]:checked').value;
     const normalizeLinear = document.getElementById('normalize_linear').checked;
 
-    // Verifica se os campos Min, Max e Gap têm valor antes de incluí-los
-    const normalizeMin = document.getElementById('normalize_min').value || null;
-    const normalizeMax = document.getElementById('normalize_max').value || null;
-    const gap = document.getElementById('gap').value || null;
-
     const requestBody = {
         num_generations: parseInt(numGenerations),
         population_size: parseInt(populationSize),
@@ -169,18 +119,13 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
             uniform: crossoverType === 'uniform'
         },
         normalize_linear: normalizeLinear,
-        ...(normalizeMin && { normalize_min: parseFloat(normalizeMin) }), // Só inclui se tiver valor
-        ...(normalizeMax && { normalize_max: parseFloat(normalizeMax) }), // Só inclui se tiver valor
-        ...(gap && { gap: parseInt(gap) }), // Só inclui se tiver valor
         elitism: document.getElementById('elitism').checked,
         steady_state: document.getElementById('steady_state').checked,
         steady_state_without_duplicates: document.getElementById('steady_state_without_duplicates').checked
     };
 
-    const apiUrl = `http://127.0.0.1:8000/run-experiments?func_str=${encodeURIComponent(funcStr)}&num_experiments=${numExperiments}`;
-
     try {
-        const response = await fetch(apiUrl, {
+        const response = await fetch(`http://127.0.0.1:8000/run-experiments?func_str=${encodeURIComponent(funcStr)}&num_experiments=${numExperiments}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -193,8 +138,8 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         const bestValuesPerGeneration = data.best_values_per_generation;
 
         renderChart(meanBestIndividuals, requestBody.num_generations);
-        
-        // Aqui salvamos os dados da rodada e renderizamos a tabela
+
+        // Salva os dados da rodada e renderiza a tabela
         storeResults({
             bestValuesPerGeneration: bestValuesPerGeneration,
             meanBestIndividualsPerGeneration: meanBestIndividuals,
@@ -298,6 +243,42 @@ function getRandomColor() {
         color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+}
+
+function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGeneration) {
+    const table = document.getElementById('best-values-table');
+    table.innerHTML = ''; // Limpa a tabela anterior
+
+    const numExperiments = bestValuesPerGeneration.length;
+    const numGenerations = bestValuesPerGeneration[0].length;
+
+    // Cabeçalho com as colunas principais
+    let headerRow = `
+        <tr>
+            <th rowspan="2">Generations</th>
+            <th colspan="${numExperiments}">Experiments</th>
+            <th rowspan="2">Average</th>
+        </tr>
+        <tr>`;
+
+    // Subcabeçalhos das colunas de experimentos (1º, 2º, 3º, etc.)
+    for (let i = 1; i <= numExperiments; i++) {
+        headerRow += `<th>${i}º</th>`;
+    }
+    headerRow += '</tr>';
+
+    // Adiciona a linha de cabeçalho ao conteúdo da tabela
+    table.innerHTML += headerRow;
+
+    // Adiciona as linhas dos dados
+    for (let i = 0; i < numGenerations; i++) {
+        let row = `<tr><td>gen ${i + 1}</td>`;
+        for (let j = 0; j < numExperiments; j++) {
+            row += `<td>${bestValuesPerGeneration[j][i].toFixed(4)}</td>`;
+        }
+        row += `<td><strong>${meanBestIndividualsPerGeneration[i].toFixed(4)}</strong></td></tr>`;
+        table.innerHTML += row;
+    }
 }
 
 function renderBoxPlot(data) {
