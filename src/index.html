@@ -104,11 +104,11 @@
                     </div>
                     <div class="form-group-inline">
                         <label for="normalize_min">Min:</label>
-                        <input type="number" id="normalize_min" name="normalize_min" value="0" disabled>
+                        <input type="number" id="normalize_min" name="normalize_min" disabled>
                     </div>
                     <div class="form-group-inline">
                         <label for="normalize_max">Max:</label>
-                        <input type="number" id="normalize_max" name="normalize_max" value="100" disabled>
+                        <input type="number" id="normalize_max" name="normalize_max" disabled>
                     </div>
                     <div class="form-group">
                         <input type="checkbox" id="elitism" name="elitism">
@@ -124,7 +124,7 @@
                     </div>
                     <div class="form-group-inline">
                         <label for="gap">Gap (%):</label>
-                        <input type="number" id="gap" name="gap" value="80" disabled>
+                        <input type="number" id="gap" name="gap"  disabled>
                     </div>
                 </form>
             </div>
@@ -137,6 +137,9 @@
                 <canvas id="myChart"></canvas><div class="form-group"></div>
                     <div><input type="checkbox" id="keep_chart" name="keep_chart">
                     <label for="keep_chart">Keep Graph</label></div>
+                    <button id="download-chart" title="Download plot as a png" style="position: absolute; bottom: 10px; right: 10px; background: none; border: none;">
+                        <img src="https://img.icons8.com/?size=100&id=21340&format=png&color=000000" alt="Download" style="width: 24px; height: 24px;">
+                    </button>
                 
             </div>
             <div id="box-plot-chart">

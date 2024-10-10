@@ -65,12 +65,11 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     const intervalMax = document.getElementById('interval_max').value;
     const crossoverType = document.querySelector('input[name="crossover_type"]:checked').value;
     const normalizeLinear = document.getElementById('normalize_linear').checked;
-    const normalizeMin = document.getElementById('normalize_min').value;
-    const normalizeMax = document.getElementById('normalize_max').value;
-    const elitism = document.getElementById('elitism').checked;
-    const steadyState = document.getElementById('steady_state').checked;
-    const steadyStateWithoutDuplicates = document.getElementById('steady_state_without_duplicates').checked;
-    const gap = document.getElementById('gap').value;
+
+    // Verifica se os campos Min, Max e Gap têm valor antes de incluí-los
+    const normalizeMin = document.getElementById('normalize_min').value || null;
+    const normalizeMax = document.getElementById('normalize_max').value || null;
+    const gap = document.getElementById('gap').value || null;
 
     const requestBody = {
         num_generations: parseInt(numGenerations),
@@ -85,12 +84,12 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
             uniform: crossoverType === 'uniform'
         },
         normalize_linear: normalizeLinear,
-        normalize_min: parseFloat(normalizeMin),
-        normalize_max: parseFloat(normalizeMax),
-        elitism: elitism,
-        steady_state: steadyState,
-        steady_state_without_duplicates: steadyStateWithoutDuplicates,
-        gap: parseInt(gap)
+        ...(normalizeMin && { normalize_min: parseFloat(normalizeMin) }), // Só inclui se tiver valor
+        ...(normalizeMax && { normalize_max: parseFloat(normalizeMax) }), // Só inclui se tiver valor
+        ...(gap && { gap: parseInt(gap) }), // Só inclui se tiver valor
+        elitism: document.getElementById('elitism').checked,
+        steady_state: document.getElementById('steady_state').checked,
+        steady_state_without_duplicates: document.getElementById('steady_state_without_duplicates').checked
     };
 
     const apiUrl = `http://127.0.0.1:8000/run-experiments?func_str=${encodeURIComponent(funcStr)}&num_experiments=${numExperiments}`;
@@ -121,11 +120,19 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     }
 });
 
+
 function renderChart(data, numGenerations) {
     const labels = Array.from({ length: numGenerations }, (_, i) => i + 1);
 
     // Verifica se a checkbox "Manter gráfico" está marcada
     const keepChart = document.getElementById('keep_chart').checked;
+
+    document.getElementById('download-chart').addEventListener('click', function() {
+        const link = document.createElement('a');
+        link.href = myChart.toBase64Image();
+        link.download = 'chart_image.png';  // Nome do arquivo baixado
+        link.click();
+    });
 
     if (!keepChart && myChart) {
         myChart.destroy();
@@ -150,7 +157,7 @@ function renderChart(data, numGenerations) {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Mean Best Fitness per Generation',
+                    label: 'Run 1',  // Altere o rótulo aqui para 'Run 1'
                     data: data,
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: '#67A5C8',
@@ -159,6 +166,20 @@ function renderChart(data, numGenerations) {
                 }]
             },
             options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Mean Best Fitness per Generation',  // Título destacado aqui
+                        font: {
+                            size: 24,  // Tamanho da fonte do título
+                            weight: 'bold'
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 30
+                        }
+                    }
+                },
                 scales: {
                     x: {
                         beginAtZero: true,
@@ -179,6 +200,7 @@ function renderChart(data, numGenerations) {
         });
     }
 }
+
 
 function getRandomColor() {
     const letters = '0123456789ABCDEF';
