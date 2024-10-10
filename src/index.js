@@ -45,9 +45,8 @@ function storeResults(runData) {
     currentRunIndex = previousResults.length - 1;
     updateTableNavigationButtons();
     updateTableTitle(); // Atualiza o título com a rodada correta
+    updateUsedParametersDescription(runData.params, runData.numOfExperiments); // Atualiza os parâmetros
 }
-
-
 
 // Função para atualizar o estado dos botões de navegação
 function updateTableNavigationButtons() {
@@ -68,6 +67,7 @@ document.getElementById('prev-run').addEventListener('click', function() {
         renderBestValuesTableForCurrentRun();  // Renderiza a tabela para a rodada atual
         updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
         updateTableTitle();  // Atualiza o título com o número da rodada
+        updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments); // Atualiza os parâmetros
     }
 });
 
@@ -77,15 +77,35 @@ document.getElementById('next-run').addEventListener('click', function() {
         renderBestValuesTableForCurrentRun();  // Renderiza a tabela para a rodada atual
         updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
         updateTableTitle();  // Atualiza o título com o número da rodada
+        updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments); // Atualiza os parâmetros
     }
 });
-
 
 // Função para renderizar a tabela para a rodada atual
 function renderBestValuesTableForCurrentRun() {
     const runData = previousResults[currentRunIndex];
     renderBestValuesTable(runData.bestValuesPerGeneration, runData.meanBestIndividualsPerGeneration);
     updateTableTitle(); // Atualiza o título com o número da rodada
+    updateUsedParametersDescription(runData.params, runData.numOfExperiments); // Atualiza os parâmetros
+}
+
+// Função para atualizar a descrição dos parâmetros utilizados
+function updateUsedParametersDescription(params, numOfExp) {
+    const textElement = document.getElementById("used-parameters");
+    textElement.innerHTML = `
+        <p><strong>Number of Experiments:</strong> ${numOfExp || 'N/A'}</p>
+        <p><strong>Number of Generations:</strong> ${params.num_generations || 'N/A'}</p>
+        <p><strong>Population Size:</strong> ${params.population_size || 'N/A'}</p>
+        <p><strong>Crossover Rate:</strong> ${params.crossover_rate || 'N/A'}</p>
+        <p><strong>Mutation Rate:</strong> ${params.mutation_rate || 'N/A'}</p>
+        <p><strong>Interval Min:</strong> ${params.interval ? params.interval[0] : 'N/A'}</p>
+        <p><strong>Interval Max:</strong> ${params.interval ? params.interval[1] : 'N/A'}</p>
+        <p><strong>Crossover Type:</strong> ${params.crossover_type ? (params.crossover_type.one_point ? 'One Point' : params.crossover_type.two_point ? 'Two Point' : 'Uniform') : 'N/A'}</p>
+        <p><strong>Normalize Linear:</strong> ${params.normalize_linear ? 'Yes' : 'No'}</p>
+        <p><strong>Elitism:</strong> ${params.elitism ? 'Yes' : 'No'}</p>
+        <p><strong>Steady State:</strong> ${params.steady_state ? 'Yes' : 'No'}</p>
+        <p><strong>Steady State Without Duplicates:</strong> ${params.steady_state_without_duplicates ? 'Yes' : 'No'}</p>
+    `;
 }
 
 // Função de escuta para o envio do formulário
@@ -143,8 +163,8 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         storeResults({
             bestValuesPerGeneration: bestValuesPerGeneration,
             meanBestIndividualsPerGeneration: meanBestIndividuals,
-            numExperiments: requestBody.num_experiments,
-            numGenerations: requestBody.num_generations
+            params: requestBody, // Armazenando parâmetros da execução
+            numOfExperiments: numExperiments
         });
         renderBestValuesTableForCurrentRun();
         renderBoxPlot(meanBestIndividuals);
@@ -156,10 +176,10 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     }
 });
 
+// Funções para renderizar o gráfico e tabela
 function renderChart(data, numGenerations) {
     const labels = Array.from({ length: numGenerations }, (_, i) => i + 1);
 
-    // Verifica se a checkbox "Manter gráfico" está marcada
     const keepChart = document.getElementById('keep_chart').checked;
 
     document.getElementById('download-chart').addEventListener('click', function() {
@@ -173,13 +193,12 @@ function renderChart(data, numGenerations) {
         myChart.destroy();
     }
 
-    // Se o gráfico já existir e "Manter gráfico" estiver marcado, apenas adiciona um novo conjunto de dados
     if (keepChart && myChart) {
         const newDataset = {
-            label: `Run ${myChart.data.datasets.length + 1}`, // Novo rótulo para cada novo conjunto de dados
+            label: `Run ${myChart.data.datasets.length + 1}`,
             data: data,
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: getRandomColor(), // Define uma cor aleatória para cada nova linha
+            borderColor: getRandomColor(),
             borderWidth: 2,
             fill: false
         };
@@ -192,7 +211,7 @@ function renderChart(data, numGenerations) {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Run 1',  // Altere o rótulo aqui para 'Run 1'
+                    label: 'Run 1',
                     data: data,
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: '#67A5C8',
@@ -204,9 +223,9 @@ function renderChart(data, numGenerations) {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Mean Best Fitness per Generation',  // Título destacado aqui
+                        text: 'Mean Best Fitness per Generation',
                         font: {
-                            size: 24,  // Tamanho da fonte do título
+                            size: 24,
                             weight: 'bold'
                         },
                         padding: {
@@ -285,17 +304,17 @@ function renderBoxPlot(data) {
     var trace = {
         y: data,
         type: 'box',
-        boxpoints: 'all',  // Mostra todos os pontos no gráfico
-        jitter: 0.3,  // Deslocamento dos pontos para evitar sobreposição
-        pointpos: -1.8,  // Posição dos pontos à esquerda do boxplot
+        boxpoints: 'all',
+        jitter: 0.3,
+        pointpos: -1.8,
         marker: {
-            color: 'red',  // Cor dos pontos
-            size: 6  // Tamanho dos pontos
+            color: 'red',
+            size: 6
         },
         line: {
-            width: 2  // Largura da linha do boxplot
+            width: 2
         },
-        boxmean: true  // Adiciona uma linha indicando a média
+        boxmean: true
     };
 
     var layout = {
@@ -303,22 +322,22 @@ function renderBoxPlot(data) {
         yaxis: {
             title: 'Fitness Values',
             zeroline: true,
-            gridcolor: 'light grey',  // Cor da grade do eixo Y
+            gridcolor: 'light grey'
         },
         xaxis: {
             title: 'Fitness',
-            zeroline: false,  // Remove a linha zero do eixo X
+            zeroline: false
         },
         margin: {
-            l: 50,  // Ajuste da margem esquerda
-            r: 30,  // Ajuste da margem direita
-            b: 50,  // Ajuste da margem inferior
-            t: 50   // Ajuste da margem superior
+            l: 50,
+            r: 30,
+            b: 50,
+            t: 50
         },
-        paper_bgcolor: 'white',  // Cor de fundo do papel
-        plot_bgcolor: 'white',  // Cor de fundo do gráfico
-        showlegend: false,  // Remove a legenda
-        autosize: true,  // para gráfico se ajustar automaticamente
+        paper_bgcolor: 'white',
+        plot_bgcolor: 'white',
+        showlegend: false,
+        autosize: true,
         responsive: true 
     };
 
