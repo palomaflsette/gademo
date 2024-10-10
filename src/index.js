@@ -219,13 +219,25 @@ function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGe
     const numExperiments = bestValuesPerGeneration.length;
     const numGenerations = bestValuesPerGeneration[0].length;
 
-    let headerRow = '<tr><th>Generations</th>';
+    // Cabeçalho com as colunas principais
+    let headerRow = `
+        <tr>
+            <th rowspan="2">Generations</th>
+            <th colspan="${numExperiments}">Experiments</th>
+            <th rowspan="2">Average</th>
+        </tr>
+        <tr>`;
+
+    // Subcabeçalhos das colunas de experimentos (1º, 2º, 3º, etc.)
     for (let i = 1; i <= numExperiments; i++) {
         headerRow += `<th>${i}º</th>`;
     }
-    headerRow += '<th>Average</th></tr>';
+    headerRow += '</tr>';
+
+    // Adiciona a linha de cabeçalho ao conteúdo da tabela
     table.innerHTML += headerRow;
 
+    // Adiciona as linhas dos dados
     for (let i = 0; i < numGenerations; i++) {
         let row = `<tr><td>gen ${i + 1}</td>`;
         for (let j = 0; j < numExperiments; j++) {
@@ -235,6 +247,7 @@ function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGe
         table.innerHTML += row;
     }
 }
+
 
 function renderBoxPlot(data) {
     var trace = {
