@@ -164,14 +164,14 @@ function renderChart(data, numGenerations) {
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Geração'
+                            text: 'Generation'
                         }
                     },
                     y: {
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Avaliação'
+                            text: 'Function Value'
                         }
                     }
                 }
@@ -197,15 +197,15 @@ function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGe
     const numExperiments = bestValuesPerGeneration.length;
     const numGenerations = bestValuesPerGeneration[0].length;
 
-    let headerRow = '<tr><th>Gerações</th>';
+    let headerRow = '<tr><th>Generations</th>';
     for (let i = 1; i <= numExperiments; i++) {
         headerRow += `<th>${i}º</th>`;
     }
-    headerRow += '<th>Média</th></tr>';
+    headerRow += '<th>Average</th></tr>';
     table.innerHTML += headerRow;
 
     for (let i = 0; i < numGenerations; i++) {
-        let row = `<tr><td>ger ${i + 1}</td>`;
+        let row = `<tr><td>gen ${i + 1}</td>`;
         for (let j = 0; j < numExperiments; j++) {
             row += `<td>${bestValuesPerGeneration[j][i].toFixed(4)}</td>`;
         }
