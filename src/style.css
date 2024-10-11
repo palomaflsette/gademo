@@ -7,7 +7,6 @@ body {
     background-color: #f0f2f5;
 }
 
-
 header,
 footer {
     background: #386da6;
@@ -27,40 +26,42 @@ main {
     flex: 1;
     transition: margin-left 0.3s;
     background-color: #d7edf1;
-    padding: 20px;
+    padding: 2vw; /* Usar unidades vw para responsividade */
 }
 
 .content {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Mantém ambos os elementos com a mesma altura */
+    align-items: center;
     width: 100%;
-    max-width: 1200px;
+    max-width: 90vw; /* Responsivo com largura da viewport */
     margin: 0 auto;
     flex-direction: column;
 }
 
-
-
 #box-plot-chart {
-    width: 80%;
-    margin: 20px auto; /* Adiciona um espaço entre o gráfico e o box-plot */
-    text-align: center; /* Centraliza o conteúdo */
-    background-color: #ffffff; /* Cor de fundo para destacar */
-    padding: 20px; /* Adiciona um preenchimento */
-    border-radius: 8px; /* Canto arredondado */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
+    width: 90%; /* Usar porcentagem para largura responsiva */
+    margin: 20px auto;
+    text-align: center;
+    background-color: #ffffff;
+    padding: 2vw; /* Padding proporcional à largura da viewport */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: relative;
 }
 
-.keep_chart {
-    text-align: center;
+.line-chart-utilities {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Alinha verticalmente */
+    width: 100%;
 }
 
-
 #chart-container {
-    width: 80%; /* Gráfico ocupa 70% do espaço */
-    padding: 20px;
+    width: 50vw; /* Largura baseada na viewport */
+    height: 60vh; /* Altura baseada na viewport */
+    padding: 2vw;
+    left: 2%;
     margin: 20px auto;
     background-color: white;
     border-radius: 8px;
@@ -68,14 +69,13 @@ main {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    height: 500px; /* Define uma altura fixa */
     position: relative;
 }
 
 .spinner {
     position: absolute;
-    top: 50%; 
-    left: 50%; 
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
     border: 8px solid #e8e6e6;
     border-top: 8px solid #00cb29;
@@ -83,27 +83,35 @@ main {
     width: 60px;
     height: 60px;
     animation: spin 2s linear infinite;
-    z-index: 10; /* Isso garante que o spinner fique acima do conteúdo do gráfico */
+    z-index: 10;
 }
-
 
 #chart-container canvas {
     padding: flex;
     width: 100%;
-    height: 100%; /* O canvas ocupa toda a altura do contêiner */
+    height: 100%;
 }
 
-#results-container {
-    width: 30%;
-    padding: 20px;
-    margin: 20px auto;
+#main-container {
+    width: 60vw; /* Ajustado para responsividade */
+    display: flex;
+    padding: 1vw;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Ajusta ambos os contêineres para serem mais responsivos */
+#results-container, #execution-results-container {
+    width: 25vw;
+    padding: 2vw;
+    margin: 10px auto;
     background-color: #c3c3c3;
     border-radius: 10px;
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
     justify-content: center;
     font-size: small;
-    max-height: 500px;
+    max-height:450px;
     overflow-y: auto;
 }
 
@@ -121,20 +129,20 @@ main {
 }
 
 #results-container th {
-    background-color: #e0e0e0; /* Cor de fundo para o cabeçalho */
+    background-color: #e0e0e0;
     font-weight: bold;
 }
 
 #results-container td {
-    background-color: #f9f9f9; /* Cor de fundo para as células */
+    background-color: #f9f9f9;
 }
 
 #results-container th[colspan] {
-    border-bottom: 2px solid black; /* Linha mais grossa entre o cabeçalho e as células */
+    border-bottom: 2px solid black;
 }
 
 #results-container tr:nth-child(odd) td {
-    background-color: #f1f1f1; /* Alterna as cores das linhas para melhor visualização */
+    background-color: #f1f1f1;
 }
 
 #used-parameters-table {
@@ -144,23 +152,24 @@ main {
     color: rgb(2, 75, 127);
     font-family: "Courier New";
 }
+
 #used-parameters-table tr, #used-parameters-table td {
-    border: 1px solid  #c3c3c3; 
-    padding: 3px; /* Espaçamento interno das células */
-    
+    border: 1px solid #c3c3c3;
+    padding: 3px;
 }
+
 #used-parameters-table td {
-    background-color:  #c3c3c3; 
-    text-align: left; 
+    background-color: #c3c3c3;
+    text-align: left;
 }
 
 #used-parameters-table tr:nth-child(odd) td {
-    background-color: #a2a2a2; /* Cor desejada para as linhas ímpares */
+    background-color: #a2a2a2;
 }
 
 .function-input-container {
     background: #1f1f1f;
-    padding: 10px;
+    padding: 2vw;
     border-radius: 8px;
     box-shadow: 8px 10px 10px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -232,7 +241,6 @@ div.math-keyboard-symbols {
     height: 125px;
 }
 
-
 .math-keyboard-numbers {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -240,7 +248,6 @@ div.math-keyboard-symbols {
     max-width: 400px;
     margin-bottom: 10px;
 }
-
 
 div.math-keyboard-numbers {
     width: 254px;
@@ -303,19 +310,21 @@ aside {
 }
 
 .sidebar-container {
-    padding-top: 60px; /* Espaço para o botão */
+    padding-top: 60px;
 }
 
 .aside-visible {
     transform: translateX(0);
 }
 
-
-
-
 @keyframes spin {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }
 
 form {
@@ -388,30 +397,28 @@ form button:hover {
 }
 
 a {
-  text-decoration: none;
-  display: inline-block;
-  padding: 8px 16px;
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
 }
 
 a:hover {
-  background-color: #ddd;
-  color: black;
+    background-color: #ddd;
+    color: black;
 }
 
 .previous {
-  background-color: #f1f1f1;
-  color: black;
+    background-color: #f1f1f1;
+    color: black;
 }
 
 .next {
-  background-color: #04AA6D;
-  color: white;
+    background-color: #04AA6D;
+    color: white;
 }
 
 .round {
-  border-radius: 50%;
+    border-radius: 50%;
 }
 
-@media (max-width: 1310px) {
-    
-}
+@media (max-width: 1310px) {}
