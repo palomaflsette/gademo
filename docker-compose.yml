@@ -1,7 +1,8 @@
 services:
   frontend:
     container_name: FrontEnd
-    build: .
+    build: 
+      context: apache/
     ports:
       - "80:80" # Porta 80 no host mapeada para a porta 80 no container (APache)
     volumes:
