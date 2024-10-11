@@ -29,15 +29,27 @@ O projeto está organizado da seguinte maneira:
 
 ### Configuração Docker
 
-$ Docker Execute no terminal
-```
-docker compose up
-```
+$ Docker Execute no terminal:
+
+    Caso não tenha somente o frontend execute:
+
+    ```
+    bash start.sh
+    ```
+
+Ou
+
+Caso ja tenha os 2 projetos em paralelo
+    ```
+    docker compose up --build
+    ```
+
 Necessário ter o clone da API E Front em diretórios irmãos
 ```
-├── gademo-front/
-└──GAdemo-back/
+├──gademo-front/
+└──GAdemo-api/
 ```
+
 
 ### Configuração Tradicional
 
