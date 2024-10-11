@@ -7,7 +7,6 @@ services:
     volumes:
       - ./src:/usr/local/apache2/htdocs
     networks:
-      - frontend_network
       - backend_network
     depends_on:
       - api
@@ -23,5 +22,5 @@ services:
     networks:
       - backend_network
 networks:
-  frontend_network:
   backend_network:
+    driver: bridge
