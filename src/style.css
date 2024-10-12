@@ -6,6 +6,7 @@ body {
     margin: 0;
     font-family: 'Arial', sans-serif;
     background-color: #f0f2f5;
+    position: relative;
 }
 
 header,
@@ -288,7 +289,7 @@ div.math-keyboard-numbers {
     font-size: 1.2em;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 2;
+    z-index: 11;
     transition: background 0.3s;
 }
 
@@ -298,6 +299,17 @@ div.math-keyboard-numbers {
 
 .toggle-button:focus {
     outline: none;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Cor preta com opacidade 50% */
+    z-index: 5;
+    display: none; /* Inicia oculto */
 }
 
 aside {
@@ -310,7 +322,7 @@ aside {
     top: 0;
     bottom: 0;
     overflow-y: auto;
-    z-index: 1;
+    z-index: 10; /* Sidebar acima do overlay */
     transform: translateX(-100%);
     transition: transform 0.3s ease;
 }

@@ -9,6 +9,7 @@
     </head>
 
     <body>
+        <div id="overlay" onclick="toggleSidebar()"></div>
         <header id="header">
             <h1>GAdemo</h1>
             <div class="function-input-container">
@@ -186,6 +187,15 @@
         <!-- <script src="./node_modules/chart.js/dist/chart.js"></script>
         <script src="./node_modules/chartjs-chart-box-and-violin-plot/dist/chartjs-chart-box-and-violin-plot.js"></script> -->
         <script src="index.js"></script>
+        <script>
+            function toggleSidebar() {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('overlay');
+
+                sidebar.classList.toggle('aside-visible');
+                overlay.classList.toggle('visible');
+            }
+        </script>
     </body>
 
     </html>
