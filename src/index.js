@@ -4,23 +4,49 @@ let currentRunIndex = 0;   // Índice para a rodada atual
 
 
 function toggleAside() {
-    const aside = document.getElementById('sidebar');
-    const header = document.getElementById('header');
-    const main = document.getElementById('main');
-    const footer = document.getElementById('footer');
-
-    if (aside.classList.contains('aside-visible')) {
-        aside.classList.remove('aside-visible');
-        header.style.marginLeft = '0';
-        main.style.marginLeft = '0';
-        footer.style.marginLeft = '0';
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    
+    if (sidebar.classList.contains('aside-visible')) {
+        // Fechar sidebar
+        sidebar.classList.remove('aside-visible');
+        overlay.style.display = 'none';
     } else {
-        aside.classList.add('aside-visible');
-        header.style.marginLeft = '250px';
-        main.style.marginLeft = '250px';
-        footer.style.marginLeft = '250px';
+        // Abrir sidebar
+        sidebar.classList.add('aside-visible');
+        overlay.style.display = 'block';
     }
 }
+
+// Fechar a sidebar ao clicar no overlay
+document.getElementById('overlay').addEventListener('click', function() {
+    document.getElementById('sidebar').classList.remove('aside-visible');
+    this.style.display = 'none'; // Esconde o overlay
+});
+
+document.getElementById('steady_state_without_duplicates').addEventListener('change', function () {
+    const gapInput = document.getElementById('gap');
+    if (this.checked) {
+        gapInput.disabled = false;  // Habilita o campo "Gap"
+    } else {
+        gapInput.disabled = true;  // Desabilita o campo "Gap"
+        gapInput.value = '';  // Limpa o valor
+    }
+});
+
+document.getElementById('normalize_linear').addEventListener('change', function () {
+    const minInput = document.getElementById('normalize_min');
+    const maxInput = document.getElementById('normalize_max');
+    if (this.checked) {
+        minInput.disabled = false;  // Habilita o campo "Min"
+        maxInput.disabled = false;  // Habilita o campo "Max"
+    } else {
+        minInput.disabled = true;  // Desabilita o campo "Min"
+        maxInput.disabled = true;  // Desabilita o campo "Max"
+        minInput.value = '';  // Limpa o valor
+        maxInput.value = '';  // Limpa o valor
+    }
+});
 
 // Adicionando as funções showSpinner e hideSpinner
 function showSpinner() {
@@ -45,7 +71,7 @@ function storeResults(runData) {
     currentRunIndex = previousResults.length - 1;
     updateTableNavigationButtons();
     updateTableTitle(); // Atualiza o título com a rodada correta
-    updateUsedParametersDescription(runData.params, runData.numOfExperiments); // Atualiza os parâmetros
+    updateUsedParametersDescription(runData.params, runData.numOfExperiments, runData.objective); // Atualiza os parâmetros
 }
 
 // Função para atualizar o estado dos botões de navegação
@@ -67,7 +93,7 @@ document.getElementById('prev-run').addEventListener('click', function() {
         renderBestValuesTableForCurrentRun();  // Renderiza a tabela para a rodada atual
         updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
         updateTableTitle();  // Atualiza o título com o número da rodada
-        updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments); // Atualiza os parâmetros
+        updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments, previousResults[currentRunIndex].objective); // Atualiza os parâmetros
     }
 });
 
@@ -77,7 +103,7 @@ document.getElementById('next-run').addEventListener('click', function() {
         renderBestValuesTableForCurrentRun();  // Renderiza a tabela para a rodada atual
         updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
         updateTableTitle();  // Atualiza o título com o número da rodada
-        updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments); // Atualiza os parâmetros
+        updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments, previousResults[currentRunIndex].objective); // Atualiza os parâmetros
     }
 });
 
@@ -86,32 +112,34 @@ function renderBestValuesTableForCurrentRun() {
     const runData = previousResults[currentRunIndex];
     renderBestValuesTable(runData.bestValuesPerGeneration, runData.meanBestIndividualsPerGeneration);
     updateTableTitle(); // Atualiza o título com o número da rodada
-    updateUsedParametersDescription(runData.params, runData.numOfExperiments); // Atualiza os parâmetros
+    updateUsedParametersDescription(runData.params, runData.numOfExperiments, runData.objective); // Atualiza os parâmetros
 }
 
-// Função para atualizar a descrição dos parâmetros utilizados
-function updateUsedParametersDescription(params, numOfExp) {
+function updateUsedParametersDescription(params, numOfExp, objective) {
     const textElement = document.getElementById("used-parameters");
     textElement.innerHTML = `
-        <p><strong>Number of Experiments:</strong> ${numOfExp || 'N/A'}</p>
-        <p><strong>Number of Generations:</strong> ${params.num_generations || 'N/A'}</p>
-        <p><strong>Population Size:</strong> ${params.population_size || 'N/A'}</p>
-        <p><strong>Crossover Rate:</strong> ${params.crossover_rate || 'N/A'}</p>
-        <p><strong>Mutation Rate:</strong> ${params.mutation_rate || 'N/A'}</p>
-        <p><strong>Interval Min:</strong> ${params.interval ? params.interval[0] : 'N/A'}</p>
-        <p><strong>Interval Max:</strong> ${params.interval ? params.interval[1] : 'N/A'}</p>
-        <p><strong>Crossover Type:</strong> ${params.crossover_type ? (params.crossover_type.one_point ? 'One Point' : params.crossover_type.two_point ? 'Two Point' : 'Uniform') : 'N/A'}</p>
-        <p><strong>Normalize Linear:</strong> ${params.normalize_linear ? 'Yes' : 'No'}</p>
-        <p><strong>Elitism:</strong> ${params.elitism ? 'Yes' : 'No'}</p>
-        <p><strong>Steady State:</strong> ${params.steady_state ? 'Yes' : 'No'}</p>
-        <p><strong>Steady State Without Duplicates:</strong> ${params.steady_state_without_duplicates ? 'Yes' : 'No'}</p>
+        <table id="used-parameters-table">
+            <tr><td>Number of Experiments:</td><td>${numOfExp || 'N/A'}</td></tr>
+            <tr><td>Number of Generations:</td><td>${params.num_generations || 'N/A'}</td></tr>
+            <tr><td>Population Size:</td><td>${params.population_size || 'N/A'}</td></tr>
+            <tr><td>Crossover Rate:</td><td>${params.crossover_rate + "%"|| 'N/A'}</td></tr>
+            <tr><td>Mutation Rate:</td><td>${params.mutation_rate + "%"|| 'N/A'}</td></tr>
+            <tr><td>Intent:</td><td>${objective || 'N/A'}</td></tr>
+            <tr><td>Interval:</td><td>${params.interval ? '['+params.interval[0]+','+params.interval[1]+']' : 'N/A'}</td></tr>
+            <tr><td>Crossover Type:</td><td>${params.crossover_type ? (params.crossover_type.one_point ? 'One Point' : params.crossover_type.two_point ? 'Two Point' : 'Uniform') : 'N/A'}</td></tr>
+            <tr><td>Normalize Linear:</td><td>${params.normalize_linear ? '['+params.normalize_min+','+params.normalize_max+']' : 'No'}</td></tr>
+            <tr><td>Elitism:</td><td>${params.elitism ? 'Yes' : 'No'}</td></tr>
+            <tr><td>Steady State:</td><td>${params.steady_state ? 'Yes' : 'No'}</td></tr>
+            <tr><td>Steady State Without Duplicates:</td><td>${params.steady_state_without_duplicates ? 'Yes' : 'No'}</td></tr>
+            <tr><td>Gap:</td><td>${params.gap ? params.gap+'%' : 'No'}</td></tr>
+        </table>
     `;
 }
 
 // Função de escuta para o envio do formulário
 document.getElementById('experimentForm').addEventListener('submit', async function (event) {
     event.preventDefault();
-
+    
     showSpinner();
 
     const funcStr = document.getElementById('func_str').value;
@@ -125,6 +153,12 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     const intervalMax = document.getElementById('interval_max').value;
     const crossoverType = document.querySelector('input[name="crossover_type"]:checked').value;
     const normalizeLinear = document.getElementById('normalize_linear').checked;
+    const normalizeMin = document.getElementById('normalize_min').value;
+    const normalizeMax = document.getElementById('normalize_max').value;
+    const gap = document.getElementById('gap').value;
+    
+    // Corrigindo o nome da variável para steady_state_without_duplicateds
+    const steadyStateWithoutDuplicateds = document.getElementById('steady_state_without_duplicates').checked;
 
     const requestBody = {
         num_generations: parseInt(numGenerations),
@@ -139,9 +173,12 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
             uniform: crossoverType === 'uniform'
         },
         normalize_linear: normalizeLinear,
+        normalize_min: parseFloat(normalizeMin) || 0, // Adicionando normalize_min
+        normalize_max: parseFloat(normalizeMax) || 100, // Adicionando normalize_max
         elitism: document.getElementById('elitism').checked,
         steady_state: document.getElementById('steady_state').checked,
-        steady_state_without_duplicates: document.getElementById('steady_state_without_duplicates').checked
+        steady_state_without_duplicateds: steadyStateWithoutDuplicateds, // Corrigido
+        gap: parseFloat(gap) || 0 // Adicionando gap
     };
 
     try {
@@ -156,15 +193,21 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         const data = await response.json();
         const meanBestIndividuals = data.mean_best_individuals_per_generation;
         const bestValuesPerGeneration = data.best_values_per_generation;
+        let objective = "none";
 
         renderChart(meanBestIndividuals, requestBody.num_generations);
+
+        if (requestBody.maximize) {
+            objective = "Maximize"
+        } else { objective = "Minimize"}
 
         // Salva os dados da rodada e renderiza a tabela
         storeResults({
             bestValuesPerGeneration: bestValuesPerGeneration,
             meanBestIndividualsPerGeneration: meanBestIndividuals,
             params: requestBody, // Armazenando parâmetros da execução
-            numOfExperiments: numExperiments
+            numOfExperiments: numExperiments,
+            objective: objective
         });
         renderBestValuesTableForCurrentRun();
         renderBoxPlot(meanBestIndividuals);
@@ -220,12 +263,13 @@ function renderChart(data, numGenerations) {
                 }]
             },
             options: {
+                responsive: true,
                 plugins: {
                     title: {
                         display: true,
                         text: 'Mean Best Fitness per Generation',
                         font: {
-                            size: 24,
+                            size: 18,
                             weight: 'bold'
                         },
                         padding: {
