@@ -261,12 +261,13 @@ function renderChart(data, numGenerations) {
                 }]
             },
             options: {
+                responsive: true,
                 plugins: {
                     title: {
                         display: true,
                         text: 'Mean Best Fitness per Generation',
                         font: {
-                            size: 24,
+                            size: 18,
                             weight: 'bold'
                         },
                         padding: {

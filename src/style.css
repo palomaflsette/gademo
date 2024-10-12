@@ -1,3 +1,4 @@
+
 body {
     display: flex;
     flex-direction: column;
@@ -58,8 +59,8 @@ main {
 }
 
 #chart-container {
-    width: 50vw; /* Largura baseada na viewport */
-    height: 60vh; /* Altura baseada na viewport */
+    width: 55vw; /* Largura baseada na viewport */
+    /*height: 60vh;  Altura baseada na viewport */
     padding: 2vw;
     left: 2%;
     margin: 20px auto;
@@ -116,6 +117,7 @@ main {
     max-height:430px;
     min-height: 28vw;
     overflow-y: auto;
+    color:#414040;
 }
 
 #results-container table {
@@ -123,6 +125,7 @@ main {
     border-collapse: collapse;
     border: 1px solid black;
 }
+
 
 #results-container th, #results-container td {
     padding: 8px;
@@ -321,7 +324,7 @@ aside {
 }
 
 @keyframes spin {
-    0% {
+    100% {
         transform: translate(-50%, -50%) rotate(0deg);
     }
 
@@ -424,4 +427,40 @@ a:hover {
     border-radius: 50%;
 }
 
-@media (max-width: 1310px) {}
+@media (max-width: 1300px) {
+
+    main 
+    {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        transition: margin-left 0.3s;
+        background-color: #d7edf1;
+        padding: 2vw; /* Usar unidades vw para responsividade */
+    }
+
+    #chart-container
+    {
+        width: 100%; /* O gráfico ocupará 90% da largura da viewport em telas menores */
+        padding: 1vw;
+        margin: 10px auto; /* Margem menor para manter o layout compacto */
+        border-radius: 8px;
+    }
+    
+
+    .line-chart-utilities {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    #main-container {
+
+        display: flex;
+        padding: 1vw;
+        flex-direction: column;
+        align-items: flex-start;
+        overflow-x:auto;
+    }
+
+}
