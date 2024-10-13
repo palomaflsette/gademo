@@ -2,7 +2,6 @@ let myChart, boxPlotChart;
 let previousResults = [];  // Armazena os resultados anteriores
 let currentRunIndex = 0;   // Índice para a rodada atual
 
-
 function toggleAside() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
@@ -157,7 +156,6 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     const normalizeMax = document.getElementById('normalize_max').value;
     const gap = document.getElementById('gap').value;
     
-    // Corrigindo o nome da variável para steady_state_without_duplicateds
     const steadyStateWithoutDuplicateds = document.getElementById('steady_state_without_duplicates').checked;
 
     const requestBody = {
@@ -173,12 +171,12 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
             uniform: crossoverType === 'uniform'
         },
         normalize_linear: normalizeLinear,
-        normalize_min: parseFloat(normalizeMin) || 0, // Adicionando normalize_min
-        normalize_max: parseFloat(normalizeMax) || 100, // Adicionando normalize_max
+        normalize_min: parseFloat(normalizeMin) || 0,
+        normalize_max: parseFloat(normalizeMax) || 100,
         elitism: document.getElementById('elitism').checked,
         steady_state: document.getElementById('steady_state').checked,
-        steady_state_without_duplicateds: steadyStateWithoutDuplicateds, // Corrigido
-        gap: parseFloat(gap) || 0 // Adicionando gap
+        steady_state_without_duplicateds: steadyStateWithoutDuplicateds,
+        gap: parseFloat(gap) || 0
     };
 
     try {
@@ -196,21 +194,20 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         let objective = "none";
 
         renderChart(meanBestIndividuals, requestBody.num_generations);
+        renderBoxPlot(bestValuesPerGeneration, requestBody.num_generations);  // Adiciona o gráfico de box-plot também
 
         if (requestBody.maximize) {
             objective = "Maximize"
         } else { objective = "Minimize"}
 
-        // Salva os dados da rodada e renderiza a tabela
         storeResults({
             bestValuesPerGeneration: bestValuesPerGeneration,
             meanBestIndividualsPerGeneration: meanBestIndividuals,
-            params: requestBody, // Armazenando parâmetros da execução
+            params: requestBody,
             numOfExperiments: numExperiments,
             objective: objective
         });
         renderBestValuesTableForCurrentRun();
-        renderBoxPlot(meanBestIndividuals);
 
     } catch (error) {
         console.error('Error:', error);
@@ -219,7 +216,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     }
 });
 
-// Funções para renderizar o gráfico e tabela
+// Função para renderizar o gráfico de linha
 function renderChart(data, numGenerations) {
     const labels = Array.from({ length: numGenerations }, (_, i) => i + 1);
 
@@ -228,7 +225,7 @@ function renderChart(data, numGenerations) {
     document.getElementById('download-chart').addEventListener('click', function() {
         const link = document.createElement('a');
         link.href = myChart.toBase64Image();
-        link.download = 'chart_image.png';  // Nome do arquivo baixado
+        link.download = 'chart_image.png';
         link.click();
     });
 
@@ -299,6 +296,74 @@ function renderChart(data, numGenerations) {
     }
 }
 
+function renderBoxPlot(bestValuesPerGeneration, numGenerations) {
+    const labels = Array.from({ length: numGenerations }, (_, i) => `Gen ${i + 1}`);
+
+    const ctx = document.getElementById("box-plot-chart").getContext("2d");
+
+    var randomColor = Math.floor(Math.random()*16777215).toString(16);
+
+
+    // Reorganizar os dados para que cada geração tenha um array com os valores de todos os experimentos
+    const boxplotData = bestValuesPerGeneration[0].map((_, genIndex) => {
+        return bestValuesPerGeneration.map(experiment => experiment[genIndex]);
+    });
+
+    // Dados formatados para o gráfico de box plot
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Best Fitness per Generation (Box Plot)',
+            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+            outlierColor: '#494848',
+            padding: 10,
+            itemRadius: 0,
+            data: boxplotData  // Dados organizados por geração, agregando todos os experimentos
+        }]
+    };
+
+    if (boxPlotChart) {
+        boxPlotChart.destroy();  // Destroi o gráfico anterior, se houver
+    }
+
+    boxPlotChart = new Chart(ctx, {
+        type: 'boxplot',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Box Plot of Best Fitness per Generation for All Experiments',
+                    font: {
+                        size: 18,
+                        weight: 'bold'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Generation'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Best Individual Value'
+                    }
+                }
+            }
+        }
+    });
+}
+
+
+
 function getRandomColor() {
     const letters = '0123456789ABCDEF';
     let color = '#';
@@ -315,7 +380,6 @@ function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGe
     const numExperiments = bestValuesPerGeneration.length;
     const numGenerations = bestValuesPerGeneration[0].length;
 
-    // Cabeçalho com as colunas principais
     let headerRow = `
         <tr>
             <th rowspan="2">Generations</th>
@@ -324,16 +388,13 @@ function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGe
         </tr>
         <tr>`;
 
-    // Subcabeçalhos das colunas de experimentos (1º, 2º, 3º, etc.)
     for (let i = 1; i <= numExperiments; i++) {
         headerRow += `<th>${i}º</th>`;
     }
     headerRow += '</tr>';
 
-    // Adiciona a linha de cabeçalho ao conteúdo da tabela
     table.innerHTML += headerRow;
 
-    // Adiciona as linhas dos dados
     for (let i = 0; i < numGenerations; i++) {
         let row = `<tr><td>gen ${i + 1}</td>`;
         for (let j = 0; j < numExperiments; j++) {
@@ -342,48 +403,4 @@ function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGe
         row += `<td><strong>${meanBestIndividualsPerGeneration[i].toFixed(4)}</strong></td></tr>`;
         table.innerHTML += row;
     }
-}
-
-function renderBoxPlot(data) {
-    var trace = {
-        y: data,
-        type: 'box',
-        boxpoints: 'all',
-        jitter: 0.3,
-        pointpos: -1.8,
-        marker: {
-            color: 'red',
-            size: 6
-        },
-        line: {
-            width: 2
-        },
-        boxmean: true
-    };
-
-    var layout = {
-        title: 'Box Plot for Fitness',
-        yaxis: {
-            title: 'Fitness Values',
-            zeroline: true,
-            gridcolor: 'light grey'
-        },
-        xaxis: {
-            title: 'Fitness',
-            zeroline: false
-        },
-        margin: {
-            l: 50,
-            r: 30,
-            b: 50,
-            t: 50
-        },
-        paper_bgcolor: 'white',
-        plot_bgcolor: 'white',
-        showlegend: false,
-        autosize: true,
-        responsive: true 
-    };
-
-    Plotly.newPlot('box-plot-chart', [trace], layout);
 }

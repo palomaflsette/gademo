@@ -133,7 +133,7 @@
             <div class="content">
                 
                 
-                <div id="chart-container">
+                <div id="chart-line-container">
                     <div id="spinner" class="spinner" style="display: none;"></div>
                     <canvas id="myChart"></canvas><div class="form-group"></div>
                         <div class="line-chart-utilities">
@@ -144,8 +144,11 @@
                             <label for="keep_chart">Keep Graph</label></div>
                         </div>
                 </div>
-                <!-- <div id="box-plot-chart">
-                </div> -->
+                <div id="box-plot-container">
+                    <canvas id="box-plot-chart"></canvas>
+
+                    </div>
+                </div>
             </div>
         
             <!-- Nova tabela de resultados ao lado do gráfico -->
@@ -183,6 +186,9 @@
         <!-- Adicionar o BoxPlot e ViolinPlot plugin -->
         <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-and-violin-plot"></script>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="https://unpkg.com/chart.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0/chartjs-plugin-datalabels.js"></script>
+        <script src="https://unpkg.com/@sgratzl/chartjs-chart-boxplot@3.6.0/build/index.umd.min.js"></script>
 
         <!-- <script src="./node_modules/chart.js/dist/chart.js"></script>
         <script src="./node_modules/chartjs-chart-box-and-violin-plot/dist/chartjs-chart-box-and-violin-plot.js"></script> -->

@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/palomaflsette/gademo-front#readme",
   "dependencies": {
+    "@sgratzl/chartjs-chart-boxplot": "^4.4.2",
     "chart.js": "^4.4.4",
     "chartjs-chart-box-and-violin-plot": "^4.0.0",
     "gademo-front": "file:",
