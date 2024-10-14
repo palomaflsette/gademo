@@ -133,7 +133,7 @@
             <div class="content">
                 
                 
-                <div id="chart-container">
+                <div id="chart-line-container">
                     <div id="spinner" class="spinner" style="display: none;"></div>
                     <canvas id="myChart"></canvas><div class="form-group"></div>
                         <div class="line-chart-utilities">
@@ -144,8 +144,14 @@
                             <label for="keep_chart">Keep Graph</label></div>
                         </div>
                 </div>
-                <!-- <div id="box-plot-chart">
-                </div> -->
+                <div id="box-plot-container">
+                    <canvas id="box-plot-chart"></canvas>
+                    <div class="boxplot-chart-utilities"></div>
+                        <button id="download-bxplot-chart" title="Download plot as a png" style="position: absolute; background: none; border: none;"></button>
+                            <img src="https://img.icons8.com/?size=100&id=21340&format=png&color=000000" alt="Download" style="width: 24px; height: 24px;">
+                        </button>
+                    </div>
+                </div>
             </div>
         
             <!-- Nova tabela de resultados ao lado do gráfico -->
@@ -156,18 +162,28 @@
                         <div id="used-parameters">
                             <!-- Parâmetros utilizados aparecerão aqui -->
                         </div>
-                        <div id="table-navigation" style="text-align: center; margin-bottom: 10px;">
+                        <!-- <div id="table-navigation" style="text-align: center; margin-bottom: 10px;">
                             <button id="prev-run" disabled style="padding: 5px 10px;">◀</button>
                             <button id="next-run" disabled style="padding: 5px 10px;">▶</button>
-                        </div>
+                        </div> -->
                         <table id="best-values-table">
                             <!-- Tabela dinâmica será preenchida aqui -->
                         </table>
                     </div>
 
+                    <div id="buttons-next-prev">
+                        <button id="prev-run" disabled style="padding: 5px 10px;">◀</button>
+                        <button id="next-run" disabled style="padding: 5px 10px;">▶</button>
+                    </div>
+
                     <!-- Segundo contêiner -->
                     <div id="execution-results-container">
-                        <h3 id="title-exec-results">Execution</h3>
+                        <h3 id="status-tittle">Execution</h3>
+                        <div id="exection-status">
+                            <!-- status das execuções aparecerá aqui -->
+                        </div>
+                        <!-- <div id="table-navigation" style="text-align: center; margin-bottom: 10px;"></div> -->
+                            
                     </div>
                 </div>
 
@@ -183,6 +199,9 @@
         <!-- Adicionar o BoxPlot e ViolinPlot plugin -->
         <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-and-violin-plot"></script>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="https://unpkg.com/chart.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0/chartjs-plugin-datalabels.js"></script>
+        <script src="https://unpkg.com/@sgratzl/chartjs-chart-boxplot@3.6.0/build/index.umd.min.js"></script>
 
         <!-- <script src="./node_modules/chart.js/dist/chart.js"></script>
         <script src="./node_modules/chartjs-chart-box-and-violin-plot/dist/chartjs-chart-box-and-violin-plot.js"></script> -->
