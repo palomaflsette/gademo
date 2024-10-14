@@ -82,6 +82,8 @@ function updateTableNavigationButtons() {
 // Função para atualizar o título com o número da rodada atual
 function updateTableTitle() {
     const titleElement = document.getElementById('table-title');
+    const executionStats = document.getElementById("status-tittle")
+    executionStats.innerText = `Execution (Run ${currentRunIndex + 1})`;
     titleElement.innerText = `Best Fitness Per Generation & Experiments (Run ${currentRunIndex + 1})`; // +1 para exibir como 1-based
 }
 
@@ -110,7 +112,7 @@ document.getElementById('next-run').addEventListener('click', function() {
 function renderBestValuesTableForCurrentRun() {
     const runData = previousResults[currentRunIndex];
     renderBestValuesTable(runData.bestValuesPerGeneration, runData.meanBestIndividualsPerGeneration);
-    updateTableTitle(); // Atualiza o título com o número da rodada
+    updateTableTitle(); // Atualiza o título com o número da rodadaupdateExecutionStatus();
     updateUsedParametersDescription(runData.params, runData.numOfExperiments, runData.objective); // Atualiza os parâmetros
 }
 
@@ -133,6 +135,10 @@ function updateUsedParametersDescription(params, numOfExp, objective) {
             <tr><td>Gap:</td><td>${params.gap ? params.gap+'%' : 'No'}</td></tr>
         </table>
     `;
+}
+
+function updateExecutionStats() {
+    
 }
 
 // Função de escuta para o envio do formulário

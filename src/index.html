@@ -146,7 +146,10 @@
                 </div>
                 <div id="box-plot-container">
                     <canvas id="box-plot-chart"></canvas>
-
+                    <div class="boxplot-chart-utilities"></div>
+                        <button id="download-bxplot-chart" title="Download plot as a png" style="position: absolute; background: none; border: none;"></button>
+                            <img src="https://img.icons8.com/?size=100&id=21340&format=png&color=000000" alt="Download" style="width: 24px; height: 24px;">
+                        </button>
                     </div>
                 </div>
             </div>
@@ -159,18 +162,28 @@
                         <div id="used-parameters">
                             <!-- Parâmetros utilizados aparecerão aqui -->
                         </div>
-                        <div id="table-navigation" style="text-align: center; margin-bottom: 10px;">
+                        <!-- <div id="table-navigation" style="text-align: center; margin-bottom: 10px;">
                             <button id="prev-run" disabled style="padding: 5px 10px;">◀</button>
                             <button id="next-run" disabled style="padding: 5px 10px;">▶</button>
-                        </div>
+                        </div> -->
                         <table id="best-values-table">
                             <!-- Tabela dinâmica será preenchida aqui -->
                         </table>
                     </div>
 
+                    <div id="buttons-next-prev">
+                        <button id="prev-run" disabled style="padding: 5px 10px;">◀</button>
+                        <button id="next-run" disabled style="padding: 5px 10px;">▶</button>
+                    </div>
+
                     <!-- Segundo contêiner -->
                     <div id="execution-results-container">
-                        <h3 id="title-exec-results">Execution</h3>
+                        <h3 id="status-tittle">Execution</h3>
+                        <div id="exection-status">
+                            <!-- status das execuções aparecerá aqui -->
+                        </div>
+                        <!-- <div id="table-navigation" style="text-align: center; margin-bottom: 10px;"></div> -->
+                            
                     </div>
                 </div>
 

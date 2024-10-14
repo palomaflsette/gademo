@@ -42,6 +42,7 @@ main {
 }
 
 
+
 .line-chart-utilities {
     display: flex;
     justify-content: space-between;
@@ -89,9 +90,11 @@ main {
     width: 60vw; /* Ajustado para responsividade */
     display: flex;
     padding: 1vw;
+    gap: 0.9%;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     overflow-x:auto;
+    
 }
 
 /* Ajusta ambos os contêineres para serem mais responsivos */
