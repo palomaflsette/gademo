@@ -71,7 +71,9 @@ function storeResults(runData) {
     updateTableNavigationButtons();
     updateTableTitle(); // Atualiza o título com a rodada correta
     updateUsedParametersDescription(runData.params, runData.numOfExperiments, runData.objective); // Atualiza os parâmetros
+    updateExecutionStats(runData); // Passa o numExp e o runData
 }
+
 
 // Função para atualizar o estado dos botões de navegação
 function updateTableNavigationButtons() {
@@ -95,6 +97,7 @@ document.getElementById('prev-run').addEventListener('click', function() {
         updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
         updateTableTitle();  // Atualiza o título com o número da rodada
         updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments, previousResults[currentRunIndex].objective); // Atualiza os parâmetros
+        updateExecutionStats(previousResults[currentRunIndex]); // Passa o numExp e runData
     }
 });
 
@@ -105,8 +108,10 @@ document.getElementById('next-run').addEventListener('click', function() {
         updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
         updateTableTitle();  // Atualiza o título com o número da rodada
         updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments, previousResults[currentRunIndex].objective); // Atualiza os parâmetros
+        updateExecutionStats(previousResults[currentRunIndex]); // Passa o numExp e runData
     }
 });
+
 
 // Função para renderizar a tabela para a rodada atual
 function renderBestValuesTableForCurrentRun() {
@@ -114,6 +119,7 @@ function renderBestValuesTableForCurrentRun() {
     renderBestValuesTable(runData.bestValuesPerGeneration, runData.meanBestIndividualsPerGeneration);
     updateTableTitle(); // Atualiza o título com o número da rodadaupdateExecutionStatus();
     updateUsedParametersDescription(runData.params, runData.numOfExperiments, runData.objective); // Atualiza os parâmetros
+    updateExecutionStats(runData);
 }
 
 function updateUsedParametersDescription(params, numOfExp, objective) {
@@ -137,9 +143,7 @@ function updateUsedParametersDescription(params, numOfExp, objective) {
     `;
 }
 
-function updateExecutionStats() {
-    
-}
+
 
 // Função de escuta para o envio do formulário
 document.getElementById('experimentForm').addEventListener('submit', async function (event) {
@@ -197,6 +201,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         const data = await response.json();
         const meanBestIndividuals = data.mean_best_individuals_per_generation;
         const bestValuesPerGeneration = data.best_values_per_generation;
+        const bestIndividualsPerGeneration = data.best_individuals_per_generation;
         let objective = "none";
 
         renderChart(meanBestIndividuals, requestBody.num_generations);
@@ -209,6 +214,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         storeResults({
             bestValuesPerGeneration: bestValuesPerGeneration,
             meanBestIndividualsPerGeneration: meanBestIndividuals,
+            bestIndividualsPerGeneration: bestIndividualsPerGeneration,
             params: requestBody,
             numOfExperiments: numExperiments,
             objective: objective
@@ -378,6 +384,42 @@ function getRandomColor() {
     }
     return color;
 }
+
+// Função para atualizar o contêiner de execuções
+function updateExecutionStats(runData) {
+    const textElement = document.getElementById("execution-status");
+    textElement.innerHTML = ''; // Limpa o conteúdo anterior
+
+    const bestValuesPerGeneration = runData.bestValuesPerGeneration;
+    const bestIndividualsPerGeneration = runData.bestIndividualsPerGeneration;
+
+    // Itera pelos experimentos e exibe as informações no contêiner
+    for (let exp = 0; exp < bestValuesPerGeneration.length; exp++) {
+        const bestSolution = bestValuesPerGeneration[exp][bestValuesPerGeneration[exp].length - 1];
+        const bestIndividuals = bestIndividualsPerGeneration[exp];
+
+        // Formatação da string para exibir as gerações
+        let individualsHTML = '<div class="generation-values">'; // Classe adicionada aqui
+        for (let genIndex = 0; genIndex < bestIndividuals.length; genIndex++) {
+            individualsHTML += `${genIndex + 1} gen: [${bestIndividuals[genIndex].map(num => num.toFixed(4)).join(', ')}]<br>`;
+        }
+        individualsHTML += '</div>';
+
+        // Adiciona o conteúdo ao HTML do contêiner 'execution-status'
+        textElement.innerHTML += `
+            <div class="result-container" > <!-- Adiciona uma div para agrupar tudo -->
+                <h4 style="text-align: center; font-size: 16px">Experiment ${exp + 1}</h4>
+                <p>• Best found solution: ${bestSolution.toFixed(4)}</p>
+                <p>• Best individuals:</p>
+                ${individualsHTML}
+            </div>
+            <hr>
+        `;
+    }
+}
+
+
+
 
 function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGeneration) {
     const table = document.getElementById('best-values-table');

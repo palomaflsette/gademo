@@ -97,6 +97,44 @@ main {
     
 }
 
+#execution-status {
+    padding-left: 15px; /* Ajuste de alinhamento geral */
+}
+
+
+.result-container {
+    background-color: #0f0e0e; /* Fundo branco */
+    color: #0fd336;
+    padding: 10px;
+    border-radius: 8px;
+    font-family: monospace; /* Fonte monoespaçada para alinhamento */
+    line-height: 1.5;
+    margin-bottom: 10px;
+    text-align: justify;
+}
+
+.result-container p {
+    font-family: monospace;
+    margin: 5px 0;
+    text-align: justify; /* Garante o alinhamento à esquerda dos parágrafos */
+}
+
+.generation-values {
+    font-family: monospace;
+    margin-left: 30px; /* Move os valores das gerações para a direita */
+    white-space: pre-wrap; /* Garante que as quebras de linha sejam respeitadas */
+}
+
+pre {
+    font-family: monospace;
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 0;
+}
+
+
+
 /* Ajusta ambos os contêineres para serem mais responsivos */
 #results-container, #execution-results-container {
     width: 25vw;
