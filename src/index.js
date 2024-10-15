@@ -71,8 +71,9 @@ function storeResults(runData) {
     updateTableNavigationButtons();
     updateTableTitle(); // Atualiza o título com a rodada correta
     updateUsedParametersDescription(runData.params, runData.numOfExperiments, runData.objective); // Atualiza os parâmetros
-    updateExecutionStats(runData.numOfExperiments)
+    updateExecutionStats(runData); // Passa o numExp e o runData
 }
+
 
 // Função para atualizar o estado dos botões de navegação
 function updateTableNavigationButtons() {
@@ -96,7 +97,7 @@ document.getElementById('prev-run').addEventListener('click', function() {
         updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
         updateTableTitle();  // Atualiza o título com o número da rodada
         updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments, previousResults[currentRunIndex].objective); // Atualiza os parâmetros
-        updateExecutionStats(previousResults[currentRunIndex].numOfExperiments);
+        updateExecutionStats(previousResults[currentRunIndex]); // Passa o numExp e runData
     }
 });
 
@@ -107,18 +108,18 @@ document.getElementById('next-run').addEventListener('click', function() {
         updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
         updateTableTitle();  // Atualiza o título com o número da rodada
         updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments, previousResults[currentRunIndex].objective); // Atualiza os parâmetros
-        updateExecutionStats(previousResults[currentRunIndex].numOfExperiments);
+        updateExecutionStats(previousResults[currentRunIndex]); // Passa o numExp e runData
     }
 });
+
 
 // Função para renderizar a tabela para a rodada atual
 function renderBestValuesTableForCurrentRun() {
     const runData = previousResults[currentRunIndex];
     renderBestValuesTable(runData.bestValuesPerGeneration, runData.meanBestIndividualsPerGeneration);
-    updateExecutionStats(runData.numOfExperiments);
     updateTableTitle(); // Atualiza o título com o número da rodadaupdateExecutionStatus();
     updateUsedParametersDescription(runData.params, runData.numOfExperiments, runData.objective); // Atualiza os parâmetros
-    updateExecutionStats(runData.numOfExperiments);
+    updateExecutionStats(runData);
 }
 
 function updateUsedParametersDescription(params, numOfExp, objective) {
@@ -200,6 +201,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         const data = await response.json();
         const meanBestIndividuals = data.mean_best_individuals_per_generation;
         const bestValuesPerGeneration = data.best_values_per_generation;
+        const bestIndividualsPerGeneration = data.best_individuals_per_generation;
         let objective = "none";
 
         renderChart(meanBestIndividuals, requestBody.num_generations);
@@ -212,6 +214,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         storeResults({
             bestValuesPerGeneration: bestValuesPerGeneration,
             meanBestIndividualsPerGeneration: meanBestIndividuals,
+            bestIndividualsPerGeneration: bestIndividualsPerGeneration,
             params: requestBody,
             numOfExperiments: numExperiments,
             objective: objective
@@ -382,24 +385,47 @@ function getRandomColor() {
     return color;
 }
 
-function updateExecutionStats(numExp) {
+// Função para atualizar o contêiner de execuções
+function updateExecutionStats(runData) {
     const textElement = document.getElementById("execution-status");
-    textElement.innerHTML = '';
+    textElement.innerHTML = ''; // Limpa o conteúdo anterior
 
-    //const numExp  =bestValuesPerGeneration.length;
+    // Verificação de depuração mais detalhada
+    console.log("Dados de runData recebidos: ", runData);
 
-    for (let exp = 1; exp <= parseInt(numExp); exp++) {
-        console.log(exp)
+    const bestValuesPerGeneration = runData.bestValuesPerGeneration; // Corrigido para a chave correta
+    const bestIndividualsPerGeneration = runData.bestIndividualsPerGeneration; // Corrigido para a chave correta
+
+    // Itera pelos experimentos e exibe as informações no contêiner
+    for (let exp = 0; exp < bestValuesPerGeneration.length; exp++) {
+        // Melhor solução encontrada para o experimento
+        const bestSolution = bestValuesPerGeneration[exp][bestValuesPerGeneration[exp].length - 1]; // Pegamos o último valor como "melhor"
+
+        // Indivíduos de melhor performance ao longo das gerações para o experimento
+        const bestIndividuals = bestIndividualsPerGeneration[exp]; // Itera sobre os indivíduos de cada experimento
+
+        // Formatação da string para exibir as gerações
+        let individualsHTML = '';
+        for (let genIndex = 0; genIndex < bestIndividuals.length; genIndex++) {
+            // Itera sobre o array de valores para cada indivíduo e formata cada valor com toFixed(4)
+            const individualValues = bestIndividuals[genIndex].map(val => val.toFixed(4)).join(', ');
+            individualsHTML += `${genIndex + 1} gen: [${individualValues}]<br>`;
+        }
+
+        // Adiciona o conteúdo ao HTML do contêiner 'execution-status'
         textElement.innerHTML += `
-                                <h4>Experiment ${exp}</h4><br>
-
-                                • Best found solution:  <br>
-
-                                • Best individuals:
-
-                                <br>--------------------------------------------------------------<br>`
+            <h4>Experiment ${exp + 1}</h4>
+            <p>• Best found solution: ${bestSolution.toFixed(4)}</p>
+            <p>• Best individuals:</p>
+            <pre>${individualsHTML}</pre>
+            <hr> <!-- Divisória entre experimentos -->
+        `;
     }
 }
+
+
+
+
 
 function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGeneration) {
     const table = document.getElementById('best-values-table');
