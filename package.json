@@ -4,7 +4,7 @@
   "description": "gademo web",
   "main": "src/index.js",
   "scripts": {
-    "start": "http-server ./src"
+    "start": "serve -s src"
   },
   "repository": {
     "type": "git",
