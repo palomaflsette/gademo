@@ -71,6 +71,7 @@ function storeResults(runData) {
     updateTableNavigationButtons();
     updateTableTitle(); // Atualiza o título com a rodada correta
     updateUsedParametersDescription(runData.params, runData.numOfExperiments, runData.objective); // Atualiza os parâmetros
+    updateExecutionStats(runData.numOfExperiments)
 }
 
 // Função para atualizar o estado dos botões de navegação
@@ -95,6 +96,7 @@ document.getElementById('prev-run').addEventListener('click', function() {
         updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
         updateTableTitle();  // Atualiza o título com o número da rodada
         updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments, previousResults[currentRunIndex].objective); // Atualiza os parâmetros
+        updateExecutionStats(previousResults[currentRunIndex].numOfExperiments);
     }
 });
 
@@ -105,6 +107,7 @@ document.getElementById('next-run').addEventListener('click', function() {
         updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
         updateTableTitle();  // Atualiza o título com o número da rodada
         updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments, previousResults[currentRunIndex].objective); // Atualiza os parâmetros
+        updateExecutionStats(previousResults[currentRunIndex].numOfExperiments);
     }
 });
 
@@ -112,8 +115,10 @@ document.getElementById('next-run').addEventListener('click', function() {
 function renderBestValuesTableForCurrentRun() {
     const runData = previousResults[currentRunIndex];
     renderBestValuesTable(runData.bestValuesPerGeneration, runData.meanBestIndividualsPerGeneration);
+    updateExecutionStats(runData.numOfExperiments);
     updateTableTitle(); // Atualiza o título com o número da rodadaupdateExecutionStatus();
     updateUsedParametersDescription(runData.params, runData.numOfExperiments, runData.objective); // Atualiza os parâmetros
+    updateExecutionStats(runData.numOfExperiments);
 }
 
 function updateUsedParametersDescription(params, numOfExp, objective) {
@@ -137,9 +142,7 @@ function updateUsedParametersDescription(params, numOfExp, objective) {
     `;
 }
 
-function updateExecutionStats() {
-    
-}
+
 
 // Função de escuta para o envio do formulário
 document.getElementById('experimentForm').addEventListener('submit', async function (event) {
@@ -377,6 +380,25 @@ function getRandomColor() {
         color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+}
+
+function updateExecutionStats(numExp) {
+    const textElement = document.getElementById("execution-status");
+    textElement.innerHTML = '';
+
+    //const numExp  =bestValuesPerGeneration.length;
+
+    for (let exp = 1; exp <= parseInt(numExp); exp++) {
+        console.log(exp)
+        textElement.innerHTML += `
+                                <h4>Experiment ${exp}</h4><br>
+
+                                • Best found solution:  <br>
+
+                                • Best individuals:
+
+                                <br>--------------------------------------------------------------<br>`
+    }
 }
 
 function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGeneration) {
