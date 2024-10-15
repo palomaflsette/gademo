@@ -390,7 +390,7 @@ function updateExecutionStats(runData) {
     const textElement = document.getElementById("execution-status");
     textElement.innerHTML = ''; // Limpa o conteúdo anterior
 
-    const bestValuesPerGeneration = runData.bestValuesPerGeneration; 
+    const bestValuesPerGeneration = runData.bestValuesPerGeneration;
     const bestIndividualsPerGeneration = runData.bestIndividualsPerGeneration;
 
     // Itera pelos experimentos e exibe as informações no contêiner
@@ -399,16 +399,16 @@ function updateExecutionStats(runData) {
         const bestIndividuals = bestIndividualsPerGeneration[exp];
 
         // Formatação da string para exibir as gerações
-        let individualsHTML = '<pre>';
+        let individualsHTML = '<div class="generation-values">'; // Classe adicionada aqui
         for (let genIndex = 0; genIndex < bestIndividuals.length; genIndex++) {
-            individualsHTML += `${genIndex + 1} gen: [${bestIndividuals[genIndex].map(num => num.toFixed(4)).join(', ')}]\n`;
+            individualsHTML += `${genIndex + 1} gen: [${bestIndividuals[genIndex].map(num => num.toFixed(4)).join(', ')}]<br>`;
         }
-        individualsHTML += '</pre>';
+        individualsHTML += '</div>';
 
         // Adiciona o conteúdo ao HTML do contêiner 'execution-status'
         textElement.innerHTML += `
-            <div class="result-container"> <!-- Adiciona uma div para agrupar tudo -->
-                <h4>Experiment ${exp + 1}</h4>
+            <div class="result-container" > <!-- Adiciona uma div para agrupar tudo -->
+                <h4 style="text-align: center; font-size: 16px">Experiment ${exp + 1}</h4>
                 <p>• Best found solution: ${bestSolution.toFixed(4)}</p>
                 <p>• Best individuals:</p>
                 ${individualsHTML}
@@ -417,6 +417,7 @@ function updateExecutionStats(runData) {
         `;
     }
 }
+
 
 
 
