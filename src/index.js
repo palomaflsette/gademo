@@ -390,40 +390,33 @@ function updateExecutionStats(runData) {
     const textElement = document.getElementById("execution-status");
     textElement.innerHTML = ''; // Limpa o conteúdo anterior
 
-    // Verificação de depuração mais detalhada
-    console.log("Dados de runData recebidos: ", runData);
-
-    const bestValuesPerGeneration = runData.bestValuesPerGeneration; // Corrigido para a chave correta
-    const bestIndividualsPerGeneration = runData.bestIndividualsPerGeneration; // Corrigido para a chave correta
+    const bestValuesPerGeneration = runData.bestValuesPerGeneration; 
+    const bestIndividualsPerGeneration = runData.bestIndividualsPerGeneration;
 
     // Itera pelos experimentos e exibe as informações no contêiner
     for (let exp = 0; exp < bestValuesPerGeneration.length; exp++) {
-        // Melhor solução encontrada para o experimento
-        const bestSolution = bestValuesPerGeneration[exp][bestValuesPerGeneration[exp].length - 1]; // Pegamos o último valor como "melhor"
-
-        // Indivíduos de melhor performance ao longo das gerações para o experimento
-        const bestIndividuals = bestIndividualsPerGeneration[exp]; // Itera sobre os indivíduos de cada experimento
+        const bestSolution = bestValuesPerGeneration[exp][bestValuesPerGeneration[exp].length - 1];
+        const bestIndividuals = bestIndividualsPerGeneration[exp];
 
         // Formatação da string para exibir as gerações
-        let individualsHTML = '';
+        let individualsHTML = '<pre>';
         for (let genIndex = 0; genIndex < bestIndividuals.length; genIndex++) {
-            // Itera sobre o array de valores para cada indivíduo e formata cada valor com toFixed(4)
-            const individualValues = bestIndividuals[genIndex].map(val => val.toFixed(4)).join(', ');
-            individualsHTML += `${genIndex + 1} gen: [${individualValues}]<br>`;
+            individualsHTML += `${genIndex + 1} gen: [${bestIndividuals[genIndex].map(num => num.toFixed(4)).join(', ')}]\n`;
         }
+        individualsHTML += '</pre>';
 
         // Adiciona o conteúdo ao HTML do contêiner 'execution-status'
         textElement.innerHTML += `
-            <h4>Experiment ${exp + 1}</h4>
-            <p>• Best found solution: ${bestSolution.toFixed(4)}</p>
-            <p>• Best individuals:</p>
-            <pre>${individualsHTML}</pre>
-            <hr> <!-- Divisória entre experimentos -->
+            <div class="result-container"> <!-- Adiciona uma div para agrupar tudo -->
+                <h4>Experiment ${exp + 1}</h4>
+                <p>• Best found solution: ${bestSolution.toFixed(4)}</p>
+                <p>• Best individuals:</p>
+                ${individualsHTML}
+            </div>
+            <hr>
         `;
     }
 }
-
-
 
 
 

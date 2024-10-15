@@ -97,6 +97,35 @@ main {
     
 }
 
+#execution-status {
+    padding-left: 15px; /* Ajuste de alinhamento */
+}
+
+.result-container {
+    background-color: #0a0808; /* Fundo branco */
+    color:#0fd336;
+    padding: 10px;
+    border-radius: 8px;
+    font-family: monospace; /* Fonte monoespaçada para alinhamento */
+    line-height: 1.5; /* Para espaçamento melhor */
+    margin-bottom: 10px;
+}
+
+.result-container p {
+    font-family: monospace; /* Garante a fonte monoespaçada para consistência */
+    margin: 5px 0;
+}
+
+pre {
+    font-family: monospace;
+    background-color: #0a0808;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 0;
+}
+
+
+
 /* Ajusta ambos os contêineres para serem mais responsivos */
 #results-container, #execution-results-container {
     width: 25vw;
