@@ -47,15 +47,6 @@ document.getElementById('normalize_linear').addEventListener('change', function 
     }
 });
 
-// Adicionando as funções showSpinner e hideSpinner
-function showSpinner() {
-    document.getElementById('spinner').style.display = 'block';
-}
-
-function hideSpinner() {
-    document.getElementById('spinner').style.display = 'none';
-}
-
 // Função para armazenar novos resultados
 function storeResults(runData) {
     const keepChart = document.getElementById('keep_chart').checked;
@@ -190,12 +181,15 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     };
 
     try {
+        showSpinner(); // Exibe o spinner antes de começar a requisição
         const response = await fetch(`/api/run-experiments?func_str=${encodeURIComponent(funcStr)}&num_experiments=${numExperiments}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(requestBody)
+        }).finally(() => {
+            hideSpinner(); // Esconde o spinner após a resposta (ou erro)
         });
 
         const data = await response.json();
@@ -233,13 +227,6 @@ function renderChart(data, numGenerations) {
     const labels = Array.from({ length: numGenerations }, (_, i) => i + 1);
 
     const keepChart = document.getElementById('keep_chart').checked;
-
-    document.getElementById('download-chart').addEventListener('click', function() {
-        const link = document.createElement('a');
-        link.href = myChart.toBase64Image();
-        link.download = 'chart_image.png';
-        link.click();
-    });
 
     if (!keepChart && myChart) {
         myChart.destroy();
@@ -451,4 +438,36 @@ function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGe
         row += `<td><strong>${meanBestIndividualsPerGeneration[i].toFixed(4)}</strong></td></tr>`;
         table.innerHTML += row;
     }
+}
+
+
+
+window.onload = function(){
+
+    document.getElementById('download-chart').addEventListener('click', function() {
+        const link = document.createElement('a');
+        if(!myChart)
+            return;
+        link.href = myChart.toBase64Image();
+        link.download = 'chart_image.jpeg';
+        link.click();
+    });
+
+    document.getElementById('download-bxplot-chart').addEventListener('click', function() {
+        const link = document.createElement('a');
+        if(!boxPlotChart)
+            return;
+        link.href = boxPlotChart.toBase64Image();
+        link.download = 'boxPlotChart.jpeg';
+        link.click();
+    });
+
+}
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    sidebar.classList.toggle('aside-visible');
+    overlay.classList.toggle('visible');
 }
