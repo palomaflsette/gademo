@@ -94,7 +94,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         gap: parseInt(gap)
     };
 
-    const apiUrl = `http://127.0.0.1:8000/run-experiments?func_str=${encodeURIComponent(funcStr)}&num_experiments=${numExperiments}`;
+    const apiUrl = `/api/run-experiments?func_str=${encodeURIComponent(funcStr)}&num_experiments=${numExperiments}`;
 
     try {
         const response = await fetch(apiUrl, {
