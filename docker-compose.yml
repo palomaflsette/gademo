@@ -4,7 +4,7 @@ services:
     build: 
       context: apache/
     ports:
-      - "80:80" # Porta 80 no host mapeada para a porta 80 no container (APache)
+      - "80:80" # Porta 80 no host mapeada para a porta 80 no container (Apache)
     volumes:
       - ./src:/usr/local/apache2/htdocs
     networks:
@@ -22,6 +22,12 @@ services:
     - ../GAdemo-api/src:/gademo/src
     networks:
       - backend_network
+    deploy:
+      resources:
+        limits:
+          cpus: "4.0"   # Limite o uso de CPU a 1 núcleo
+        reservations:
+          cpus: "0.5"   # Reserva 0.5 núcleo para garantir disponibilidade
 networks:
   backend_network:
     driver: bridge
