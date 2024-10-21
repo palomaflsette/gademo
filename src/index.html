@@ -1,180 +1,220 @@
-<!DOCTYPE html>
-<html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gademo</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Gademo</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
 
-<body>
-    <header id="header">
-        <h1>GAdemo</h1>
-        <div class="function-input-container">
-            <div class="math-keyboard-symbols">
-                <button onclick="insertSymbol('sin(')">sin</button>
-                <button onclick="insertSymbol('cos(')">cos</button>
-                <button onclick="insertSymbol('tan(')">tan</button>
-                <button onclick="insertSymbol('log(')">log</button>
-                <button onclick="insertSymbol('sqrt(')">√</button>
-                <button onclick="insertSymbol('^')">^</button>
-                <button onclick="insertSymbol('(')">(</button>
-                <button onclick="insertSymbol(')')">)</button>
-                <button onclick="insertSymbol('+')">+</button>
-                <button onclick="insertSymbol('-')">-</button>
-                <button onclick="insertSymbol('*')">*</button>
-                <button onclick="insertSymbol('/')">÷</button>
-                <button onclick="insertSymbol('pi')">π</button>
-                <button onclick="insertSymbol('exp(')">e</button>
-                <button onclick="insertSymbol('x')">x</button></div>
-            <div class="math-keyboard-numbers">
-                <button onclick="insertSymbol('0')">0</button>
-                <button onclick="insertSymbol('1')">1</button>
-                <button onclick="insertSymbol('2')">2</button>
-                <button onclick="insertSymbol('3')">3</button>
-                <button onclick="insertSymbol('4')">4</button>
-                <button onclick="insertSymbol('5')">5</button>
-                <button onclick="insertSymbol('6')">6</button>
-                <button onclick="insertSymbol('7')">7</button>
-                <button onclick="insertSymbol('8')">8</button>
-                <button onclick="insertSymbol('9')">9</button>
+    <body>
+        <div id="overlay" onclick="toggleSidebar()"></div>
+        <header id="header">
+            <h1>GAdemo</h1>
+            <div class="function-input-container">
+                <div class="math-keyboard-symbols">
+                    <button onclick="insertSymbol('sin(')">sin</button>
+                    <button onclick="insertSymbol('cos(')">cos</button>
+                    <button onclick="insertSymbol('tan(')">tan</button>
+                    <button onclick="insertSymbol('log(')">log</button>
+                    <button onclick="insertSymbol('sqrt(')">√</button>
+                    <button onclick="insertSymbol('^')">^</button>
+                    <button onclick="insertSymbol('(')">(</button>
+                    <button onclick="insertSymbol(')')">)</button>
+                    <button onclick="insertSymbol('+')">+</button>
+                    <button onclick="insertSymbol('-')">-</button>
+                    <button onclick="insertSymbol('*')">*</button>
+                    <button onclick="insertSymbol('/')">÷</button>
+                    <button onclick="insertSymbol('pi')">π</button>
+                    <button onclick="insertSymbol('exp(')">e</button>
+                    <button onclick="insertSymbol('x')">x</button></div>
+                <div class="math-keyboard-numbers">
+                    <button onclick="insertSymbol('0')">0</button>
+                    <button onclick="insertSymbol('1')">1</button>
+                    <button onclick="insertSymbol('2')">2</button>
+                    <button onclick="insertSymbol('3')">3</button>
+                    <button onclick="insertSymbol('4')">4</button>
+                    <button onclick="insertSymbol('5')">5</button>
+                    <button onclick="insertSymbol('6')">6</button>
+                    <button onclick="insertSymbol('7')">7</button>
+                    <button onclick="insertSymbol('8')">8</button>
+                    <button onclick="insertSymbol('9')">9</button>
+                </div>
+                <div class="function-input">
+                    <input type="text" id="func_str" placeholder="Enter your function"
+                        value="0.5 - (sin(sqrt(x^2 + y^2))^2 - 0.5) / (1 + 0.001 * (x^2 + y^2))^2">
+                    <button type="submit" form="experimentForm">Run</button>
+                </div>
             </div>
-            <div class="function-input">
-                <input type="text" id="func_str" placeholder="Enter your function"
-                    value="0.5 - (sin(sqrt(x^2 + y^2))^2 - 0.5) / (1 + 0.001 * (x^2 + y^2))^2">
-                <button type="submit" form="experimentForm">Run</button>
+        </header>
+        <main id="main">
+            <div class="menu-container">
+                <button class="toggle-button" onclick="toggleAside()">☰</button>
             </div>
-        </div>
-    </header>
-    <main id="main">
-        <div class="menu-container">
-            <button class="toggle-button" onclick="toggleAside()">☰</button>
-        </div>
-        <aside id="sidebar">
-            <div class="sidebar-container">
-                <form id="experimentForm">
-                    <div class="form-group">
-                        <label for="num_experiments">Number of Experiments:</label>
-                        <input type="number" id="num_experiments" name="num_experiments" required value="3">
-                    </div>
-                    <div class="form-group">
-                        <label for="num_generations">Number of Generations:</label>
-                        <input type="number" id="num_generations" name="num_generations" value="20">
-                    </div>
-                    <div class="form-group">
-                        <label for="population_size">Population Size:</label>
-                        <input type="number" id="population_size" name="population_size" value="100">
-                    </div>
-                    <div class="form-group">
-                        <label for="crossover_rate">Crossover Rate (%):</label>
-                        <input type="number" id="crossover_rate" name="crossover_rate" value="65.0">
-                    </div>
-                    <div class="form-group">
-                        <label for="mutation_rate">Mutation Rate (%):</label>
-                        <input type="number" id="mutation_rate" name="mutation_rate" value="0.8">
-                    </div>
-                    <div class="form-group">
-                        <label>Objective:</label>
-                        <input type="radio" id="maximize" name="objective" value="true" checked>
-                        <label for="maximize">Maximize</label>
-                        <input type="radio" id="minimize" name="objective" value="false">
-                        <label for="minimize">Minimize</label>
-                    </div>
-                    <div class="form-group-inline">
-                        <label for="interval_min">Interval Min:</label>
-                        <input type="number" id="interval_min" name="interval_min" value="-100">
-                    </div>
-                    <div class="form-group-inline">
-                        <label for="interval_max">Interval Max:</label>
-                        <input type="number" id="interval_max" name="interval_max" value="100">
-                    </div>
-                    <div class="form-group">
-                        <label>Crossover Type:</label>
-                        <input type="radio" id="one_point" name="crossover_type" value="one_point" checked>
-                        <label for="one_point">One Point</label>
-                        <input type="radio" id="two_point" name="crossover_type" value="two_point">
-                        <label for="two_point">Two Point</label>
-                        <input type="radio" id="uniform" name="crossover_type" value="uniform">
-                        <label for="uniform">Uniform</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="checkbox" id="normalize_linear" name="normalize_linear">
-                        <label for="normalize_linear">Normalize Linear</label>
-                    </div>
-                    <div class="form-group-inline">
-                        <label for="normalize_min">Min:</label>
-                        <input type="number" id="normalize_min" name="normalize_min" disabled>
-                    </div>
-                    <div class="form-group-inline">
-                        <label for="normalize_max">Max:</label>
-                        <input type="number" id="normalize_max" name="normalize_max" disabled>
-                    </div>
-                    <div class="form-group">
-                        <input type="checkbox" id="elitism" name="elitism">
-                        <label for="elitism">Elitism</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="checkbox" id="steady_state" name="steady_state">
-                        <label for="steady_state">Steady State</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="checkbox" id="steady_state_without_duplicates" name="steady_state_without_duplicates">
-                        <label for="steady_state_without_duplicates">Steady State Without Duplicates</label>
-                    </div>
-                    <div class="form-group-inline">
-                        <label for="gap">Gap (%):</label>
-                        <input type="number" id="gap" name="gap"  disabled>
-                    </div>
-                </form>
-            </div>
-        </aside>
-        <div class="content">
-            
-            
-            <div id="chart-container">
-                <div id="spinner" class="spinner" style="display: none;"></div>
-                <canvas id="myChart"></canvas><div class="form-group"></div>
-                    <div><input type="checkbox" id="keep_chart" name="keep_chart">
-                    <label for="keep_chart">Keep Graph</label></div>
-                    <button id="download-chart" title="Download plot as a png" style="position: absolute; bottom: 10px; right: 10px; background: none; border: none;">
-                        <img src="https://img.icons8.com/?size=100&id=21340&format=png&color=000000" alt="Download" style="width: 24px; height: 24px;">
-                    </button>
+            <aside id="sidebar">
+                <div class="sidebar-container">
+                    <form id="experimentForm">
+                        <div class="form-group">
+                            <label for="num_experiments">Number of Experiments:</label>
+                            <input type="number" id="num_experiments" name="num_experiments" required value="3">
+                        </div>
+                        <div class="form-group">
+                            <label for="num_generations">Number of Generations:</label>
+                            <input type="number" id="num_generations" name="num_generations" value="20">
+                        </div>
+                        <div class="form-group">
+                            <label for="population_size">Population Size:</label>
+                            <input type="number" id="population_size" name="population_size" value="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="crossover_rate">Crossover Rate (%):</label>
+                            <input type="number" id="crossover_rate" name="crossover_rate" value="65.0">
+                        </div>
+                        <div class="form-group">
+                            <label for="mutation_rate">Mutation Rate (%):</label>
+                            <input type="number" id="mutation_rate" name="mutation_rate" value="0.8">
+                        </div>
+                        <div class="form-group">
+                            <label>Objective:</label>
+                            <input type="radio" id="maximize" name="objective" value="true" checked>
+                            <label for="maximize">Maximize</label>
+                            <input type="radio" id="minimize" name="objective" value="false">
+                            <label for="minimize">Minimize</label>
+                        </div>
+                        <div class="form-group-inline">
+                            <label for="interval_min">Interval Min:</label>
+                            <input type="number" id="interval_min" name="interval_min" value="-100">
+                        </div>
+                        <div class="form-group-inline">
+                            <label for="interval_max">Interval Max:</label>
+                            <input type="number" id="interval_max" name="interval_max" value="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Crossover Type:</label>
+                            <input type="radio" id="one_point" name="crossover_type" value="one_point" checked>
+                            <label for="one_point">One Point</label>
+                            <input type="radio" id="two_point" name="crossover_type" value="two_point">
+                            <label for="two_point">Two Point</label>
+                            <input type="radio" id="uniform" name="crossover_type" value="uniform">
+                            <label for="uniform">Uniform</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="normalize_linear" name="normalize_linear">
+                            <label for="normalize_linear">Normalize Linear</label>
+                        </div>
+                        <div class="form-group-inline">
+                            <label for="normalize_min">Min:</label>
+                            <input type="number" id="normalize_min" name="normalize_min" disabled>
+                        </div>
+                        <div class="form-group-inline">
+                            <label for="normalize_max">Max:</label>
+                            <input type="number" id="normalize_max" name="normalize_max" disabled>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="elitism" name="elitism">
+                            <label for="elitism">Elitism</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="steady_state" name="steady_state">
+                            <label for="steady_state">Steady State</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="steady_state_without_duplicates" name="steady_state_without_duplicates">
+                            <label for="steady_state_without_duplicates">Steady State Without Duplicates</label>
+                        </div>
+                        <div class="form-group-inline">
+                            <label for="gap">Gap (%):</label>
+                            <input type="number" id="gap" name="gap"  disabled>
+                        </div>
+                    </form>
+                </div>
+            </aside>
+            <div class="content">
                 
-            </div>
-            <div id="box-plot-chart">
-            </div>
-        </div>
-    
-        <!-- Nova tabela de resultados ao lado do gráfico -->
-            <div id="results-container">
-                <h3 id="table-title">Best Fitness Per Generation & Experiments</h3>
-                <div id="used-parameters" style="text-align: center; margin-bottom: 10px;">
-                    <!-- Parâmetros utilizados aparecerão aqui -->
+                
+                <div id="chart-line-container">
+                    <div id="spinner" class="spinner" style="display: none;"></div>
+                    <canvas id="myChart"></canvas><div class="form-group"></div>
+                        <div class="line-chart-utilities">
+                            <button id="download-chart" title="Download plot as a png" style="position: absolute; background: none; border: none;"></button>
+                                <img src="https://img.icons8.com/?size=100&id=21340&format=png&color=000000" alt="Download" style="width: 24px; height: 24px;">
+                            </button>
+                            <div><input type="checkbox" id="keep_chart" name="keep_chart">
+                            <label for="keep_chart">Keep Graph</label></div>
+                        </div>
                 </div>
-                <div id="table-navigation" style="text-align: center; margin-bottom: 10px;">
-                    <button id="prev-run" disabled style="padding: 5px 10px;">◀</button>
-                    <button id="next-run" disabled style="padding: 5px 10px;">▶</button>
+                <div id="box-plot-container">
+                    <canvas id="box-plot-chart"></canvas>
+                    <div class="boxplot-chart-utilities"></div>
+                        <button id="download-bxplot-chart" title="Download plot as a png" style="position: absolute; background: none; border: none;"></button>
+                            <img src="https://img.icons8.com/?size=100&id=21340&format=png&color=000000" alt="Download" style="width: 24px; height: 24px;">
+                        </button>
+                    </div>
                 </div>
-                <table id="best-values-table">
-                    <!-- Tabela dinâmica será preenchida aqui -->
-                </table>
             </div>
-     
-    </main>
-    <footer id="footer">
-        <p>Rodapé</p>
-    </footer>
+        
+            <!-- Nova tabela de resultados ao lado do gráfico -->
+                <div id="main-container">
+                    <!-- Primeiro contêiner -->
+                    <div id="results-container">
+                        <h3 id="table-title">Best Fitness Per Generation & Experiments</h3>
+                        <div id="used-parameters">
+                            <!-- Parâmetros utilizados aparecerão aqui -->
+                        </div>
+                        <!-- <div id="table-navigation" style="text-align: center; margin-bottom: 10px;">
+                            <button id="prev-run" disabled style="padding: 5px 10px;">◀</button>
+                            <button id="next-run" disabled style="padding: 5px 10px;">▶</button>
+                        </div> -->
+                        <table id="best-values-table">
+                            <!-- Tabela dinâmica será preenchida aqui -->
+                        </table>
+                    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <div id="buttons-next-prev">
+                        <button id="prev-run" disabled style="padding: 5px 10px;">◀</button>
+                        <button id="next-run" disabled style="padding: 5px 10px;">▶</button>
+                    </div>
 
-    <!-- Adicionar o BoxPlot e ViolinPlot plugin -->
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-and-violin-plot"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                    <!-- Segundo contêiner -->
+                    <div id="execution-results-container">
+                        <h3 id="status-tittle">Execution</h3>
+                        <div id="execution-status">
+                            <!-- status das execuções aparecerá aqui -->
+                        </div>
+                        <!-- <div id="table-navigation" style="text-align: center; margin-bottom: 10px;"></div> -->
+                            
+                    </div>
+                </div>
 
-    <!-- <script src="./node_modules/chart.js/dist/chart.js"></script>
-    <script src="./node_modules/chartjs-chart-box-and-violin-plot/dist/chartjs-chart-box-and-violin-plot.js"></script> -->
-    <script src="index.js"></script>
-</body>
 
-</html>
+        
+        </main>
+        <footer id="footer">
+            <p>Rodapé</p>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <!-- Adicionar o BoxPlot e ViolinPlot plugin -->
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-and-violin-plot"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="https://unpkg.com/chart.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0/chartjs-plugin-datalabels.js"></script>
+        <script src="https://unpkg.com/@sgratzl/chartjs-chart-boxplot@3.6.0/build/index.umd.min.js"></script>
+
+        <!-- <script src="./node_modules/chart.js/dist/chart.js"></script>
+        <script src="./node_modules/chartjs-chart-box-and-violin-plot/dist/chartjs-chart-box-and-violin-plot.js"></script> -->
+        <script src="index.js"></script>
+        <script>
+            function toggleSidebar() {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('overlay');
+
+                sidebar.classList.toggle('aside-visible');
+                overlay.classList.toggle('visible');
+            }
+        </script>
+    </body>
+
+    </html>

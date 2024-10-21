@@ -2,25 +2,50 @@ let myChart, boxPlotChart;
 let previousResults = [];  // Armazena os resultados anteriores
 let currentRunIndex = 0;   // Índice para a rodada atual
 
-
 function toggleAside() {
-    const aside = document.getElementById('sidebar');
-    const header = document.getElementById('header');
-    const main = document.getElementById('main');
-    const footer = document.getElementById('footer');
-
-    if (aside.classList.contains('aside-visible')) {
-        aside.classList.remove('aside-visible');
-        header.style.marginLeft = '0';
-        main.style.marginLeft = '0';
-        footer.style.marginLeft = '0';
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    
+    if (sidebar.classList.contains('aside-visible')) {
+        // Fechar sidebar
+        sidebar.classList.remove('aside-visible');
+        overlay.style.display = 'none';
     } else {
-        aside.classList.add('aside-visible');
-        header.style.marginLeft = '250px';
-        main.style.marginLeft = '250px';
-        footer.style.marginLeft = '250px';
+        // Abrir sidebar
+        sidebar.classList.add('aside-visible');
+        overlay.style.display = 'block';
     }
 }
+
+// Fechar a sidebar ao clicar no overlay
+document.getElementById('overlay').addEventListener('click', function() {
+    document.getElementById('sidebar').classList.remove('aside-visible');
+    this.style.display = 'none'; // Esconde o overlay
+});
+
+document.getElementById('steady_state_without_duplicates').addEventListener('change', function () {
+    const gapInput = document.getElementById('gap');
+    if (this.checked) {
+        gapInput.disabled = false;  // Habilita o campo "Gap"
+    } else {
+        gapInput.disabled = true;  // Desabilita o campo "Gap"
+        gapInput.value = '';  // Limpa o valor
+    }
+});
+
+document.getElementById('normalize_linear').addEventListener('change', function () {
+    const minInput = document.getElementById('normalize_min');
+    const maxInput = document.getElementById('normalize_max');
+    if (this.checked) {
+        minInput.disabled = false;  // Habilita o campo "Min"
+        maxInput.disabled = false;  // Habilita o campo "Max"
+    } else {
+        minInput.disabled = true;  // Desabilita o campo "Min"
+        maxInput.disabled = true;  // Desabilita o campo "Max"
+        minInput.value = '';  // Limpa o valor
+        maxInput.value = '';  // Limpa o valor
+    }
+});
 
 // Adicionando as funções showSpinner e hideSpinner
 function showSpinner() {
@@ -45,8 +70,10 @@ function storeResults(runData) {
     currentRunIndex = previousResults.length - 1;
     updateTableNavigationButtons();
     updateTableTitle(); // Atualiza o título com a rodada correta
-    updateUsedParametersDescription(runData.params, runData.numOfExperiments); // Atualiza os parâmetros
+    updateUsedParametersDescription(runData.params, runData.numOfExperiments, runData.objective); // Atualiza os parâmetros
+    updateExecutionStats(runData); // Passa o numExp e o runData
 }
+
 
 // Função para atualizar o estado dos botões de navegação
 function updateTableNavigationButtons() {
@@ -57,6 +84,8 @@ function updateTableNavigationButtons() {
 // Função para atualizar o título com o número da rodada atual
 function updateTableTitle() {
     const titleElement = document.getElementById('table-title');
+    const executionStats = document.getElementById("status-tittle")
+    executionStats.innerText = `Execution (Run ${currentRunIndex + 1})`;
     titleElement.innerText = `Best Fitness Per Generation & Experiments (Run ${currentRunIndex + 1})`; // +1 para exibir como 1-based
 }
 
@@ -67,7 +96,8 @@ document.getElementById('prev-run').addEventListener('click', function() {
         renderBestValuesTableForCurrentRun();  // Renderiza a tabela para a rodada atual
         updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
         updateTableTitle();  // Atualiza o título com o número da rodada
-        updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments); // Atualiza os parâmetros
+        updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments, previousResults[currentRunIndex].objective); // Atualiza os parâmetros
+        updateExecutionStats(previousResults[currentRunIndex]); // Passa o numExp e runData
     }
 });
 
@@ -77,41 +107,48 @@ document.getElementById('next-run').addEventListener('click', function() {
         renderBestValuesTableForCurrentRun();  // Renderiza a tabela para a rodada atual
         updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
         updateTableTitle();  // Atualiza o título com o número da rodada
-        updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments); // Atualiza os parâmetros
+        updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments, previousResults[currentRunIndex].objective); // Atualiza os parâmetros
+        updateExecutionStats(previousResults[currentRunIndex]); // Passa o numExp e runData
     }
 });
+
 
 // Função para renderizar a tabela para a rodada atual
 function renderBestValuesTableForCurrentRun() {
     const runData = previousResults[currentRunIndex];
     renderBestValuesTable(runData.bestValuesPerGeneration, runData.meanBestIndividualsPerGeneration);
-    updateTableTitle(); // Atualiza o título com o número da rodada
-    updateUsedParametersDescription(runData.params, runData.numOfExperiments); // Atualiza os parâmetros
+    updateTableTitle(); // Atualiza o título com o número da rodadaupdateExecutionStatus();
+    updateUsedParametersDescription(runData.params, runData.numOfExperiments, runData.objective); // Atualiza os parâmetros
+    updateExecutionStats(runData);
 }
 
-// Função para atualizar a descrição dos parâmetros utilizados
-function updateUsedParametersDescription(params, numOfExp) {
+function updateUsedParametersDescription(params, numOfExp, objective) {
     const textElement = document.getElementById("used-parameters");
     textElement.innerHTML = `
-        <p><strong>Number of Experiments:</strong> ${numOfExp || 'N/A'}</p>
-        <p><strong>Number of Generations:</strong> ${params.num_generations || 'N/A'}</p>
-        <p><strong>Population Size:</strong> ${params.population_size || 'N/A'}</p>
-        <p><strong>Crossover Rate:</strong> ${params.crossover_rate || 'N/A'}</p>
-        <p><strong>Mutation Rate:</strong> ${params.mutation_rate || 'N/A'}</p>
-        <p><strong>Interval Min:</strong> ${params.interval ? params.interval[0] : 'N/A'}</p>
-        <p><strong>Interval Max:</strong> ${params.interval ? params.interval[1] : 'N/A'}</p>
-        <p><strong>Crossover Type:</strong> ${params.crossover_type ? (params.crossover_type.one_point ? 'One Point' : params.crossover_type.two_point ? 'Two Point' : 'Uniform') : 'N/A'}</p>
-        <p><strong>Normalize Linear:</strong> ${params.normalize_linear ? 'Yes' : 'No'}</p>
-        <p><strong>Elitism:</strong> ${params.elitism ? 'Yes' : 'No'}</p>
-        <p><strong>Steady State:</strong> ${params.steady_state ? 'Yes' : 'No'}</p>
-        <p><strong>Steady State Without Duplicates:</strong> ${params.steady_state_without_duplicates ? 'Yes' : 'No'}</p>
+        <table id="used-parameters-table">
+            <tr><td>Number of Experiments:</td><td>${numOfExp || 'N/A'}</td></tr>
+            <tr><td>Number of Generations:</td><td>${params.num_generations || 'N/A'}</td></tr>
+            <tr><td>Population Size:</td><td>${params.population_size || 'N/A'}</td></tr>
+            <tr><td>Crossover Rate:</td><td>${params.crossover_rate + "%"|| 'N/A'}</td></tr>
+            <tr><td>Mutation Rate:</td><td>${params.mutation_rate + "%"|| 'N/A'}</td></tr>
+            <tr><td>Intent:</td><td>${objective || 'N/A'}</td></tr>
+            <tr><td>Interval:</td><td>${params.interval ? '['+params.interval[0]+','+params.interval[1]+']' : 'N/A'}</td></tr>
+            <tr><td>Crossover Type:</td><td>${params.crossover_type ? (params.crossover_type.one_point ? 'One Point' : params.crossover_type.two_point ? 'Two Point' : 'Uniform') : 'N/A'}</td></tr>
+            <tr><td>Normalize Linear:</td><td>${params.normalize_linear ? '['+params.normalize_min+','+params.normalize_max+']' : 'No'}</td></tr>
+            <tr><td>Elitism:</td><td>${params.elitism ? 'Yes' : 'No'}</td></tr>
+            <tr><td>Steady State:</td><td>${params.steady_state ? 'Yes' : 'No'}</td></tr>
+            <tr><td>Steady State Without Duplicates:</td><td>${params.steady_state_without_duplicates ? 'Yes' : 'No'}</td></tr>
+            <tr><td>Gap:</td><td>${params.gap ? params.gap+'%' : 'No'}</td></tr>
+        </table>
     `;
 }
+
+
 
 // Função de escuta para o envio do formulário
 document.getElementById('experimentForm').addEventListener('submit', async function (event) {
     event.preventDefault();
-
+    
     showSpinner();
 
     const funcStr = document.getElementById('func_str').value;
@@ -125,6 +162,11 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     const intervalMax = document.getElementById('interval_max').value;
     const crossoverType = document.querySelector('input[name="crossover_type"]:checked').value;
     const normalizeLinear = document.getElementById('normalize_linear').checked;
+    const normalizeMin = document.getElementById('normalize_min').value;
+    const normalizeMax = document.getElementById('normalize_max').value;
+    const gap = document.getElementById('gap').value;
+    
+    const steadyStateWithoutDuplicateds = document.getElementById('steady_state_without_duplicates').checked;
 
     const requestBody = {
         num_generations: parseInt(numGenerations),
@@ -139,9 +181,12 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
             uniform: crossoverType === 'uniform'
         },
         normalize_linear: normalizeLinear,
+        normalize_min: parseFloat(normalizeMin) || 0,
+        normalize_max: parseFloat(normalizeMax) || 100,
         elitism: document.getElementById('elitism').checked,
         steady_state: document.getElementById('steady_state').checked,
-        steady_state_without_duplicates: document.getElementById('steady_state_without_duplicates').checked
+        steady_state_without_duplicateds: steadyStateWithoutDuplicateds,
+        gap: parseFloat(gap) || 0
     };
 
     try {
@@ -156,18 +201,25 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         const data = await response.json();
         const meanBestIndividuals = data.mean_best_individuals_per_generation;
         const bestValuesPerGeneration = data.best_values_per_generation;
+        const bestIndividualsPerGeneration = data.best_individuals_per_generation;
+        let objective = "none";
 
         renderChart(meanBestIndividuals, requestBody.num_generations);
+        renderBoxPlot(bestValuesPerGeneration, requestBody.num_generations);  // Adiciona o gráfico de box-plot também
 
-        // Salva os dados da rodada e renderiza a tabela
+        if (requestBody.maximize) {
+            objective = "Maximize"
+        } else { objective = "Minimize"}
+
         storeResults({
             bestValuesPerGeneration: bestValuesPerGeneration,
             meanBestIndividualsPerGeneration: meanBestIndividuals,
-            params: requestBody, // Armazenando parâmetros da execução
-            numOfExperiments: numExperiments
+            bestIndividualsPerGeneration: bestIndividualsPerGeneration,
+            params: requestBody,
+            numOfExperiments: numExperiments,
+            objective: objective
         });
         renderBestValuesTableForCurrentRun();
-        renderBoxPlot(meanBestIndividuals);
 
     } catch (error) {
         console.error('Error:', error);
@@ -176,7 +228,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     }
 });
 
-// Funções para renderizar o gráfico e tabela
+// Função para renderizar o gráfico de linha
 function renderChart(data, numGenerations) {
     const labels = Array.from({ length: numGenerations }, (_, i) => i + 1);
 
@@ -185,7 +237,7 @@ function renderChart(data, numGenerations) {
     document.getElementById('download-chart').addEventListener('click', function() {
         const link = document.createElement('a');
         link.href = myChart.toBase64Image();
-        link.download = 'chart_image.png';  // Nome do arquivo baixado
+        link.download = 'chart_image.png';
         link.click();
     });
 
@@ -220,12 +272,13 @@ function renderChart(data, numGenerations) {
                 }]
             },
             options: {
+                responsive: true,
                 plugins: {
                     title: {
                         display: true,
                         text: 'Mean Best Fitness per Generation',
                         font: {
-                            size: 24,
+                            size: 18,
                             weight: 'bold'
                         },
                         padding: {
@@ -255,6 +308,74 @@ function renderChart(data, numGenerations) {
     }
 }
 
+function renderBoxPlot(bestValuesPerGeneration, numGenerations) {
+    const labels = Array.from({ length: numGenerations }, (_, i) => `Gen ${i + 1}`);
+
+    const ctx = document.getElementById("box-plot-chart").getContext("2d");
+
+    var randomColor = Math.floor(Math.random()*16777215).toString(16);
+
+
+    // Reorganizar os dados para que cada geração tenha um array com os valores de todos os experimentos
+    const boxplotData = bestValuesPerGeneration[0].map((_, genIndex) => {
+        return bestValuesPerGeneration.map(experiment => experiment[genIndex]);
+    });
+
+    // Dados formatados para o gráfico de box plot
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Best Fitness per Generation (Box Plot)',
+            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+            outlierColor: '#494848',
+            padding: 10,
+            itemRadius: 0,
+            data: boxplotData  // Dados organizados por geração, agregando todos os experimentos
+        }]
+    };
+
+    if (boxPlotChart) {
+        boxPlotChart.destroy();  // Destroi o gráfico anterior, se houver
+    }
+
+    boxPlotChart = new Chart(ctx, {
+        type: 'boxplot',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Box Plot of Best Fitness per Generation for All Experiments',
+                    font: {
+                        size: 18,
+                        weight: 'bold'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Generation'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Best Individual Value'
+                    }
+                }
+            }
+        }
+    });
+}
+
+
+
 function getRandomColor() {
     const letters = '0123456789ABCDEF';
     let color = '#';
@@ -264,6 +385,42 @@ function getRandomColor() {
     return color;
 }
 
+// Função para atualizar o contêiner de execuções
+function updateExecutionStats(runData) {
+    const textElement = document.getElementById("execution-status");
+    textElement.innerHTML = ''; // Limpa o conteúdo anterior
+
+    const bestValuesPerGeneration = runData.bestValuesPerGeneration;
+    const bestIndividualsPerGeneration = runData.bestIndividualsPerGeneration;
+
+    // Itera pelos experimentos e exibe as informações no contêiner
+    for (let exp = 0; exp < bestValuesPerGeneration.length; exp++) {
+        const bestSolution = bestValuesPerGeneration[exp][bestValuesPerGeneration[exp].length - 1];
+        const bestIndividuals = bestIndividualsPerGeneration[exp];
+
+        // Formatação da string para exibir as gerações
+        let individualsHTML = '<div class="generation-values">'; // Classe adicionada aqui
+        for (let genIndex = 0; genIndex < bestIndividuals.length; genIndex++) {
+            individualsHTML += `${genIndex + 1} gen: [${bestIndividuals[genIndex].map(num => num.toFixed(4)).join(', ')}]<br>`;
+        }
+        individualsHTML += '</div>';
+
+        // Adiciona o conteúdo ao HTML do contêiner 'execution-status'
+        textElement.innerHTML += `
+            <div class="result-container" > <!-- Adiciona uma div para agrupar tudo -->
+                <h4 style="text-align: center; font-size: 16px">Experiment ${exp + 1}</h4>
+                <p>• Best found solution: ${bestSolution.toFixed(4)}</p>
+                <p>• Best individuals:</p>
+                ${individualsHTML}
+            </div>
+            <hr>
+        `;
+    }
+}
+
+
+
+
 function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGeneration) {
     const table = document.getElementById('best-values-table');
     table.innerHTML = ''; // Limpa a tabela anterior
@@ -271,7 +428,6 @@ function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGe
     const numExperiments = bestValuesPerGeneration.length;
     const numGenerations = bestValuesPerGeneration[0].length;
 
-    // Cabeçalho com as colunas principais
     let headerRow = `
         <tr>
             <th rowspan="2">Generations</th>
@@ -280,16 +436,13 @@ function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGe
         </tr>
         <tr>`;
 
-    // Subcabeçalhos das colunas de experimentos (1º, 2º, 3º, etc.)
     for (let i = 1; i <= numExperiments; i++) {
         headerRow += `<th>${i}º</th>`;
     }
     headerRow += '</tr>';
 
-    // Adiciona a linha de cabeçalho ao conteúdo da tabela
     table.innerHTML += headerRow;
 
-    // Adiciona as linhas dos dados
     for (let i = 0; i < numGenerations; i++) {
         let row = `<tr><td>gen ${i + 1}</td>`;
         for (let j = 0; j < numExperiments; j++) {
@@ -298,48 +451,4 @@ function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGe
         row += `<td><strong>${meanBestIndividualsPerGeneration[i].toFixed(4)}</strong></td></tr>`;
         table.innerHTML += row;
     }
-}
-
-function renderBoxPlot(data) {
-    var trace = {
-        y: data,
-        type: 'box',
-        boxpoints: 'all',
-        jitter: 0.3,
-        pointpos: -1.8,
-        marker: {
-            color: 'red',
-            size: 6
-        },
-        line: {
-            width: 2
-        },
-        boxmean: true
-    };
-
-    var layout = {
-        title: 'Box Plot for Fitness',
-        yaxis: {
-            title: 'Fitness Values',
-            zeroline: true,
-            gridcolor: 'light grey'
-        },
-        xaxis: {
-            title: 'Fitness',
-            zeroline: false
-        },
-        margin: {
-            l: 50,
-            r: 30,
-            b: 50,
-            t: 50
-        },
-        paper_bgcolor: 'white',
-        plot_bgcolor: 'white',
-        showlegend: false,
-        autosize: true,
-        responsive: true 
-    };
-
-    Plotly.newPlot('box-plot-chart', [trace], layout);
 }
