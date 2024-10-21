@@ -40,8 +40,10 @@ main {
     margin: 0 auto;
     flex-direction: column;
 }
-
-
+.download-image{
+    width: 24px;
+    height: 24px;
+}
 
 .line-chart-utilities {
     display: flex;
