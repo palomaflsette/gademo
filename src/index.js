@@ -182,7 +182,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
 
     try {
         showSpinner(); // Exibe o spinner antes de começar a requisição
-        const response = await fetch(`/api/run-experiments?func_str=${encodeURIComponent(funcStr)}&num_experiments=${numExperiments}`, {
+        const response = await fetch(`${API_ENDPOINT}/run-experiments?func_str=${encodeURIComponent(funcStr)}&num_experiments=${numExperiments}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -191,6 +191,10 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         }).finally(() => {
             hideSpinner(); // Esconde o spinner após a resposta (ou erro)
         });
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Error Data:', errorData);
+        }
 
         const data = await response.json();
         const meanBestIndividuals = data.mean_best_individuals_per_generation;
