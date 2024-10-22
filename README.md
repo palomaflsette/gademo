@@ -2,21 +2,6 @@
 
 Projeto de experimentos de Algoritmo Genético desenvolvido com HTML, CSS e JavaScript. A aplicação permite aos usuários configurar vários parâmetros de um algoritmo genético e visualizar os resultados em um gráfico.
 
-## Estrutura do Projeto
-
-O projeto está organizado da seguinte maneira:
-
-```
-├── index.html
-├── style.css
-└── script.js
-```
-
-### Arquivos
-
-* **index.html** : Contém a estrutura principal da aplicação, incluindo o formulário de entrada de dados, teclado virtual e o container do gráfico.
-* **style.css** : Contém o estilo CSS para a aplicação, definindo a aparência e o layout dos elementos.
-* **script.js** : Contém a lógica JavaScript para manipular a interação do usuário, enviar os dados do formulário para o backend e renderizar o gráfico.
 
 ## Funcionalidades
 
@@ -24,35 +9,7 @@ O projeto está organizado da seguinte maneira:
 * **Formulário de Parâmetros** : Permite ao usuário configurar parâmetros do algoritmo genético, como número de gerações, tamanho da população, taxa de crossover e mutação, entre outros.
 * **Gráfico de Resultados** : Exibe os resultados dos experimentos em um gráfico de linha.
 
-
-
-
-### Configuração Docker
-
-$ Docker Execute no terminal:
-
-    Caso não tenha somente o frontend execute:
-
-    ```
-    bash start.sh
-    ```
-
-Ou
-
-Caso ja tenha os 2 projetos em paralelo
-    ```
-    docker compose up --build
-    ```
-
-Necessário ter o clone da API E Front em diretórios irmãos
-```
-├──gademo-front/
-└──GAdemo-api/
-```
-
-
-### Configuração Tradicional
-
+## Configuração
 
 ### Pré-requisitos
 
@@ -69,13 +26,7 @@ Para rodar a aplicação localmente, você precisa ter instalado:
 git clone [HTTPS]
 ```
 
-2. Navegue até o diretório do projeto:
-
-```
-cd genetic-algorithm-experiments/src
-```
-
-3. Instale as dependências:
+3. Navege até o diretório do projeto e instale as dependências:
 
 ```
 npm install
@@ -87,11 +38,10 @@ npm install
 npm start
 ```
 
-
 5. Abra o navegador e acesse:
 
 ```
-http://localhost/
+http://localhost:8000/src
 ```
 
 ## Uso
