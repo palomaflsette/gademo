@@ -2,21 +2,6 @@
 
 Projeto de experimentos de Algoritmo Genético desenvolvido com HTML, CSS e JavaScript. A aplicação permite aos usuários configurar vários parâmetros de um algoritmo genético e visualizar os resultados em um gráfico.
 
-## Estrutura do Projeto
-
-O projeto está organizado da seguinte maneira:
-
-```
-├── index.html
-├── style.css
-└── index.js
-```
-
-### Arquivos
-
-* **index.html** : Contém a estrutura principal da aplicação, incluindo o formulário de entrada de dados, teclado virtual e o container do gráfico.
-* **style.css** : Contém o estilo CSS para a aplicação, definindo a aparência e o layout dos elementos.
-* **script.js** : Contém a lógica JavaScript para manipular a interação do usuário, enviar os dados do formulário para o backend e renderizar o gráfico.
 
 ## Funcionalidades
 

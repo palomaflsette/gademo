@@ -40,14 +40,21 @@ main {
     margin: 0 auto;
     flex-direction: column;
 }
-
-
+.download-image{
+    width: 24px;
+    height: 24px;
+}
 
 .line-chart-utilities {
     display: flex;
     justify-content: space-between;
     align-items: center; /* Alinha verticalmente */
     width: 100%;
+    
+}
+
+.chart-utilities img{
+    cursor: pointer;
 }
 
 
@@ -64,20 +71,6 @@ main {
     justify-content: center;
     flex-direction: column;
     position: relative;
-}
-
-.spinner {
-    position: absolute;
-    top: 50%; 
-    left: 50%; 
-    transform: translate(-50%, -50%); /* Corrige o deslocamento para ficar exatamente no centro */
-    border: 8px solid rgba(203, 198, 198, 0.6); /* Fundo da borda */
-    border-top: 8px solid #0fd336; /* Cor da parte animada */
-    border-radius: 50%; /* Deixa em formato de círculo */
-    width: 60px; /* Largura */
-    height: 60px; /* Altura */
-    animation: spin 2s linear infinite; /* Animação de rotação */
-    z-index: 10; /* Mantém no topo */
 }
 
 #chart-line-container canvas {
@@ -249,64 +242,6 @@ pre {
 
 .function-input button:hover {
     background: #70b8e9;
-}
-
-.math-keyboard-symbols {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
-    max-width: 400px;
-    margin-bottom: 10px;
-}
-
-.math-keyboard-symbols button {
-    padding: 10px;
-    background: #5f6368;
-    border: 1px solid #5f6368;
-    box-shadow: 1px 2px 2px rgba(10, 10, 10, 0.1);
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background 0.3s;
-}
-
-.math-keyboard-symbols button:hover {
-    background: #b9b8b8;
-}
-
-div.math-keyboard-symbols {
-    width: 254px;
-    height: 125px;
-}
-
-.math-keyboard-numbers {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
-    max-width: 400px;
-    margin-bottom: 10px;
-}
-
-div.math-keyboard-numbers {
-    width: 254px;
-    height: 83px;
-}
-
-.math-keyboard-numbers button {
-    padding: 10px;
-    background: #3c4043;
-    border: 1px solid #3c4043;
-    box-shadow: 1px 2px 2px rgba(10, 10, 10, 0.1);
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
-    color: white;
-    transition: background 0.3s;
-}
-
-.math-keyboard-numbers button:hover {
-    background: #b9b8b8;
 }
 
 .toggle-button {
