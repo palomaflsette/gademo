@@ -1,0 +1,1 @@
+window.API_ENDPOINT = 'https://gademo-api-faeafef8493e.herokuapp.com';
