@@ -197,8 +197,28 @@
             </div>
             <div class="secondary-wrapper">
                 <div id="secondary">
-                    Conteúdo da div secondary
+                    <div class="carousel-container">
+                        <!-- Botão para navegar para o gráfico anterior -->
+                        <button class="carousel-nav" id="prev-experiment" onclick="navigateExperiment(-1)">◀</button>
+                        
+                        <!-- Contêiner do gráfico -->
+                        <div class="chart-container">
+                            <!-- Gráfico de linha -->
+                            <canvas id="lineChartExperiment"></canvas>
+                            
+                            <!-- Histograma -->
+                            <canvas id="histogramChartExperiment"></canvas>
+                            
+                            <!-- Legenda do experimento -->
+                            <p id="experimentLabel">Experiment 1</p>
+                        </div>
+                        
+                        <!-- Botão para navegar para o próximo gráfico -->
+                        <button class="carousel-nav" id="next-experiment" onclick="navigateExperiment(1)">▶</button>
+                    </div>
                 </div>
+            </div>
+
             </div>
         </div>
         

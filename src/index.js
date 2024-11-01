@@ -2,6 +2,109 @@ let myChart, boxPlotChart;
 let previousResults = [];  // Armazena os resultados anteriores
 let currentRunIndex = 0;   // Índice para a rodada atual
 
+let currentExperimentIndex = 0;
+let lineChart, histogramChart;
+
+// Função para renderizar o gráfico de linha de cada experimento
+function renderLineChart(data, generations) {
+    const ctx = document.getElementById('lineChartExperiment').getContext('2d');
+    if (lineChart) lineChart.destroy(); // Destroi o gráfico anterior
+
+    lineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: Array.from({ length: generations }, (_, i) => i + 1),
+            datasets: [{
+                label: `Experiment ${currentExperimentIndex + 1} - Best Fitness per Generation`,
+                data: data,
+                borderColor: 'rgba(0, 123, 255, 0.7)',
+                backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true },
+                title: {
+                    display: true,
+                    text: 'Best Fitness per Generation'
+                }
+            },
+            scales: {
+                x: { title: { display: true, text: 'Generation' }},
+                y: { title: { display: true, text: 'Fitness Value' }}
+            }
+        }
+    });
+}
+
+// Função para renderizar o histograma da última geração de cada experimento
+function renderHistogram(data) {
+   const ctx = document.getElementById('histogramChartExperiment').getContext('2d');
+    if (histogramChart) histogramChart.destroy(); // Destroi o gráfico anterior
+
+    histogramChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.map((_, i) => `Individual ${i + 1}`),  // Rótulos para cada indivíduo
+            datasets: [{
+                label: `Experiment ${currentExperimentIndex + 1} - Last Generation Scores`,
+                data: data,
+                backgroundColor: 'rgba(0, 255, 123, 0.7)',
+                borderColor: 'rgba(0, 255, 123, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true },
+                title: {
+                    display: true,
+                    text: 'Last Generation Scores'
+                }
+            },
+            scales: {
+                x: { title: { display: true, text: 'Population Individuals' }},
+                y: { title: { display: true, text: 'Score Values' }}
+            }
+        }
+    });
+}
+
+// Função para navegar entre os experimentos dentro de uma rodada
+function navigateExperiment(direction) {
+    const numExperiments = previousResults[currentRunIndex].bestValuesPerGeneration.length;
+    currentExperimentIndex = (currentExperimentIndex + direction + numExperiments) % numExperiments;
+    updateExperimentCharts();
+}
+
+// Função para atualizar os gráficos conforme o experimento atual na rodada
+function updateExperimentCharts() {
+    const experimentData = previousResults[currentRunIndex];
+    
+    // Atualiza o gráfico de linha com os dados do experimento atual
+    renderLineChart(
+        experimentData.bestValuesPerGeneration[currentExperimentIndex], 
+        experimentData.bestValuesPerGeneration[currentExperimentIndex].length
+    );
+    
+    // Atualiza o histograma com os dados da última geração do experimento atual
+    renderHistogram(
+        experimentData.bestIndividualsPerGeneration.slice(-1)[0]
+    );
+
+    // Atualiza o rótulo do experimento
+    document.getElementById('experimentLabel').textContent = `Experiment ${currentExperimentIndex + 1}`;
+}
+
+
+
+
+
+
 function toggleAside() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
