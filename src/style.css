@@ -23,14 +23,37 @@ header {
     transition: margin-left 0.3s;
 }
 
-main {
+/* main {
+    display: flex;
+    flex: 1;
+     transition: margin-left 0.3s;
+    background-color: #d7edf1;
+    padding: 2vw; /* Usar unidades vw para responsividade }*/
+
+#primary {
     display: flex;
     flex: 1;
     transition: margin-left 0.3s;
-    background-color: #d7edf1;
     padding: 2vw; /* Usar unidades vw para responsividade */
 }
 
+.secondary-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px; /* Espaço entre primary e secondary */
+}
+
+#secondary {
+    width: 70vw; /* Mesma largura de primary */
+    max-width: 1200px; /* Limita a largura em telas grandes */
+    background-color: white;
+    padding: 2vw;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center; /* Centraliza o conteúdo dentro de secondary */
+    margin-bottom: 60px;
+}
 .content {
     display: flex;
     justify-content: space-between;

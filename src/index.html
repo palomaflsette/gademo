@@ -136,64 +136,75 @@
                 </form>
             </div>
         </aside>
-        <div class="content">
+        <div id="core">
+            <div id="primary">
 
-
-            <div id="chart-line-container">
-                <div id="spinner" class="spinner" style="display: none;"></div>
-                <canvas id="myChart"></canvas>
-                <div class="form-group"></div>
-                <div class="line-chart-utilities chart-utilities">
-                    <img class="download-image" src="images/download-ico.png"
-                        alt="Download" id="download-chart">
-                    <div>
-                        <input type="checkbox" id="keep_chart" name="keep_chart">
-                        <label for="keep_chart">Keep Graph</label>
+            <div class="content">
+                <div id="chart-line-container">
+                    <div id="spinner" class="spinner" style="display: none;"></div>
+                    <canvas id="myChart"></canvas>
+                    <div class="form-group"></div>
+                    <div class="line-chart-utilities chart-utilities">
+                        <img class="download-image" src="images/download-ico.png"
+                            alt="Download" id="download-chart">
+                        <div>
+                            <input type="checkbox" id="keep_chart" name="keep_chart">
+                            <label for="keep_chart">Keep Graph</label>
+                        </div>
+                    </div>
+                </div>
+                <div id="box-plot-container">
+                    <div id="spinner" class="spinner" style="display: none;"></div>
+                    <canvas id="box-plot-chart"></canvas>
+                    <div class="boxplot-chart-utilities chart-utilities">
+                        <img id="download-bxplot-chart" class="download-image"
+                            src="images/download-ico.png" alt="Download">
                     </div>
                 </div>
             </div>
-            <div id="box-plot-container">
-                <div id="spinner" class="spinner" style="display: none;"></div>
-                <canvas id="box-plot-chart"></canvas>
-                <div class="boxplot-chart-utilities chart-utilities">
-                    <img id="download-bxplot-chart" class="download-image"
-                        src="images/download-ico.png" alt="Download">
+            <!-- Nova tabela de resultados ao lado do gráfico -->
+            <div id="main-container">
+                <!-- Primeiro contêiner -->
+                <div id="results-container">
+                    <h3 id="table-title">Best Fitness Per Generation & Experiments</h3>
+                    <div id="used-parameters">
+                        <!-- Parâmetros utilizados aparecerão aqui -->
+                    </div>
+                    <!-- <div id="table-navigation" style="text-align: center; margin-bottom: 10px;">
+                                <button id="prev-run" disabled style="padding: 5px 10px;">◀</button>
+                                <button id="next-run" disabled style="padding: 5px 10px;">▶</button>
+                            </div> -->
+                    <table id="best-values-table">
+                        <!-- Tabela dinâmica será preenchida aqui -->
+                    </table>
+                </div>
+
+                <div id="buttons-next-prev">
+                    <button id="prev-run" disabled style="padding: 5px 10px;">◀</button>
+                    <button id="next-run" disabled style="padding: 5px 10px;">▶</button>
+                </div>
+
+                <!-- Segundo contêiner -->
+                <div id="execution-results-container">
+                    <h3 id="status-tittle">Execution</h3>
+                    <div id="execution-status">
+                        <!-- status das execuções aparecerá aqui -->
+                    </div>
+                    <!-- <div id="table-navigation" style="text-align: center; margin-bottom: 10px;"></div> -->
+
+                </div>
+            </div>
+            </div>
+            <div class="secondary-wrapper">
+                <div id="secondary">
+                    Conteúdo da div secondary
                 </div>
             </div>
         </div>
+        
+        
 
-        <!-- Nova tabela de resultados ao lado do gráfico -->
-        <div id="main-container">
-            <!-- Primeiro contêiner -->
-            <div id="results-container">
-                <h3 id="table-title">Best Fitness Per Generation & Experiments</h3>
-                <div id="used-parameters">
-                    <!-- Parâmetros utilizados aparecerão aqui -->
-                </div>
-                <!-- <div id="table-navigation" style="text-align: center; margin-bottom: 10px;">
-                            <button id="prev-run" disabled style="padding: 5px 10px;">◀</button>
-                            <button id="next-run" disabled style="padding: 5px 10px;">▶</button>
-                        </div> -->
-                <table id="best-values-table">
-                    <!-- Tabela dinâmica será preenchida aqui -->
-                </table>
-            </div>
-
-            <div id="buttons-next-prev">
-                <button id="prev-run" disabled style="padding: 5px 10px;">◀</button>
-                <button id="next-run" disabled style="padding: 5px 10px;">▶</button>
-            </div>
-
-            <!-- Segundo contêiner -->
-            <div id="execution-results-container">
-                <h3 id="status-tittle">Execution</h3>
-                <div id="execution-status">
-                    <!-- status das execuções aparecerá aqui -->
-                </div>
-                <!-- <div id="table-navigation" style="text-align: center; margin-bottom: 10px;"></div> -->
-
-            </div>
-        </div>
+        
     </main>
     <footer class="footer">
         <div class="container">
