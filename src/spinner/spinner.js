@@ -1,11 +1,11 @@
 // Função para exibir o spinner
-function showSpinner() {
+function showSpinner(spinnerId = 'spinner') {
   document.getElementById('runExperimentButton').style.display = "none";
-  document.getElementById('spinner').style.display = "flex";
+  document.getElementById(spinnerId).style.display = "flex";
 }
 
 // Função para esconder o spinner
-function hideSpinner() {
+function hideSpinner(spinnerId = 'spinner') {
   document.getElementById('runExperimentButton').style.display = "flex";
-  document.getElementById('spinner').style.display = "none";
+  document.getElementById(spinnerId).style.display = "none";
 }
