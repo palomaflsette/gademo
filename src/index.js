@@ -246,7 +246,7 @@ function updateUsedParametersDescription(params, numOfExp, objective) {
 document.getElementById('experimentForm').addEventListener('submit', async function (event) {
     event.preventDefault();
     
-    showSpinner();
+    showSpinner('spinner-boxplot');
 
     const funcStr = document.getElementById('func_str').value;
     const numExperiments = document.getElementById('num_experiments').value;
@@ -287,7 +287,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     };
 
     try {
-        showSpinner(); // Exibe o spinner antes de começar a requisição
+        showSpinner('spinner'); // Exibe o spinner antes de começar a requisição
         const response = await fetch(`${API_ENDPOINT}/run-experiments?func_str=${encodeURIComponent(funcStr)}&num_experiments=${numExperiments}`, {
             method: 'POST',
             headers: {
@@ -295,7 +295,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
             },
             body: JSON.stringify(requestBody)
         }).finally(() => {
-            hideSpinner(); // Esconde o spinner após a resposta (ou erro)
+            hideSpinner('spinner'); // Esconde o spinner após a resposta (ou erro)
         });
         if (!response.ok) {
             const errorData = await response.json();
@@ -330,7 +330,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     } catch (error) {
         console.error('Error:', error);
     } finally {
-        hideSpinner();
+        hideSpinner('spinner-boxplot');
     }
 });
 
