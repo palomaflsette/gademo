@@ -42,15 +42,15 @@ function renderLineChart(data, generations) {
 
 // Função para renderizar o histograma da última geração de cada experimento
 function renderHistogram(data) {
-   const ctx = document.getElementById('histogramChartExperiment').getContext('2d');
-    if (histogramChart) histogramChart.destroy(); // Destroi o gráfico anterior
+    const ctx = document.getElementById('histogramChartExperiment').getContext('2d');
+    if (histogramChart) histogramChart.destroy(); // Destroi o histograma anterior
 
     histogramChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: data.map((_, i) => `Individual ${i + 1}`),  // Rótulos para cada indivíduo
+            labels: data.map((_, i) => `Individual ${i + 1}`),
             datasets: [{
-                label: `Experiment ${currentExperimentIndex + 1} - Last Generation Scores`,
+                label: `Experiment ${currentExperimentIndex + 1} - Last Generation Fitness`,
                 data: data,
                 backgroundColor: 'rgba(0, 255, 123, 0.7)',
                 borderColor: 'rgba(0, 255, 123, 1)',
@@ -63,12 +63,12 @@ function renderHistogram(data) {
                 legend: { display: true },
                 title: {
                     display: true,
-                    text: 'Last Generation Scores'
+                    text: 'Last Generation Fitness Distribution'
                 }
             },
             scales: {
-                x: { title: { display: true, text: 'Population Individuals' }},
-                y: { title: { display: true, text: 'Score Values' }}
+                x: { title: { display: true, text: 'Population Objects' }},
+                y: { title: { display: true, text: 'Fitness Values' }}
             }
         }
     });
@@ -91,14 +91,15 @@ function updateExperimentCharts() {
         experimentData.bestValuesPerGeneration[currentExperimentIndex].length
     );
     
-    // Atualiza o histograma com os dados da última geração do experimento atual
+    // Atualiza o histograma com os dados específicos da última geração do experimento atual
     renderHistogram(
-        experimentData.bestIndividualsPerGeneration.slice(-1)[0]
+        experimentData.lastGenerationValues[currentExperimentIndex]
     );
 
     // Atualiza o rótulo do experimento
     document.getElementById('experimentLabel').textContent = `Experiment ${currentExperimentIndex + 1}`;
 }
+
 
 
 
@@ -166,6 +167,8 @@ function storeResults(runData) {
     updateTableTitle(); // Atualiza o título com a rodada correta
     updateUsedParametersDescription(runData.params, runData.numOfExperiments, runData.objective); // Atualiza os parâmetros
     updateExecutionStats(runData); // Passa o numExp e o runData
+
+    updateExperimentCharts();
 }
 
 
@@ -303,6 +306,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         const meanBestIndividuals = data.mean_best_individuals_per_generation;
         const bestValuesPerGeneration = data.best_values_per_generation;
         const bestIndividualsPerGeneration = data.best_individuals_per_generation;
+        const lastGenerationValues = data.last_generation_values;
         let objective = "none";
 
         renderChart(meanBestIndividuals, requestBody.num_generations);
@@ -316,6 +320,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
             bestValuesPerGeneration: bestValuesPerGeneration,
             meanBestIndividualsPerGeneration: meanBestIndividuals,
             bestIndividualsPerGeneration: bestIndividualsPerGeneration,
+            lastGenerationValues : lastGenerationValues,
             params: requestBody,
             numOfExperiments: numExperiments,
             objective: objective
