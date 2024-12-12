@@ -165,7 +165,7 @@ function storeResults(runData) {
     currentRunIndex = previousResults.length - 1;
     updateTableNavigationButtons();
     updateTableTitle(); // Atualiza o título com a rodada correta
-    updateUsedParametersDescription(runData.params, runData.numOfExperiments, runData.objective); // Atualiza os parâmetros
+    updateUsedParametersDescription(runData.params, runData.numOfExperiments, runData.objective, runData.executionTime); // Atualiza os parâmetros
     updateExecutionStats(runData); // Passa o numExp e o runData
 
     updateExperimentCharts();
@@ -193,7 +193,7 @@ document.getElementById('prev-run').addEventListener('click', function() {
         renderBestValuesTableForCurrentRun();  // Renderiza a tabela para a rodada atual
         updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
         updateTableTitle();  // Atualiza o título com o número da rodada
-        updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments, previousResults[currentRunIndex].objective); // Atualiza os parâmetros
+        updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments, previousResults[currentRunIndex].objective, previousResults[currentRunIndex].executionTime); // Atualiza os parâmetros
         updateExecutionStats(previousResults[currentRunIndex]); // Passa o numExp e runData
     }
 });
@@ -204,7 +204,7 @@ document.getElementById('next-run').addEventListener('click', function() {
         renderBestValuesTableForCurrentRun();  // Renderiza a tabela para a rodada atual
         updateTableNavigationButtons();  // Atualiza os botões para habilitar/desabilitar
         updateTableTitle();  // Atualiza o título com o número da rodada
-        updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments, previousResults[currentRunIndex].objective); // Atualiza os parâmetros
+        updateUsedParametersDescription(previousResults[currentRunIndex].params, previousResults[currentRunIndex].numOfExperiments, previousResults[currentRunIndex].objective, previousResults[currentRunIndex].executionTime); // Atualiza os parâmetros
         updateExecutionStats(previousResults[currentRunIndex]); // Passa o numExp e runData
     }
 });
@@ -215,11 +215,12 @@ function renderBestValuesTableForCurrentRun() {
     const runData = previousResults[currentRunIndex];
     renderBestValuesTable(runData.bestValuesPerGeneration, runData.meanBestIndividualsPerGeneration);
     updateTableTitle(); // Atualiza o título com o número da rodadaupdateExecutionStatus();
-    updateUsedParametersDescription(runData.params, runData.numOfExperiments, runData.objective); // Atualiza os parâmetros
+    updateUsedParametersDescription(runData.params, runData.numOfExperiments, runData.objective, runData.executionTime); // Atualiza os parâmetros
     updateExecutionStats(runData);
 }
 
-function updateUsedParametersDescription(params, numOfExp, objective) {
+function updateUsedParametersDescription(params, numOfExp, objective, executionTime) {
+    console.log("Execution Time inside updateUsedParametersDescription:", executionTime);
     const textElement = document.getElementById("used-parameters");
     textElement.innerHTML = `
         <table id="used-parameters-table">
@@ -236,6 +237,7 @@ function updateUsedParametersDescription(params, numOfExp, objective) {
             <tr><td>Steady State:</td><td>${params.steady_state ? 'Yes' : 'No'}</td></tr>
             <tr><td>Steady State Without Duplicates:</td><td>${params.steady_state_without_duplicates ? 'Yes' : 'No'}</td></tr>
             <tr><td>Gap:</td><td>${params.gap ? params.gap+'%' : 'No'}</td></tr>
+            <tr><td>Execution Time:</td><td>${executionTime ? executionTime.toFixed(2) + " seconds" : 'N/A'}</td></tr>
         </table>
     `;
 }
@@ -307,6 +309,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         const bestValuesPerGeneration = data.best_values_per_generation;
         const bestIndividualsPerGeneration = data.best_individuals_per_generation;
         const lastGenerationValues = data.last_generation_values;
+        const executionTime = data.execution_time_seconds;
         let objective = "none";
 
         renderChart(meanBestIndividuals, requestBody.num_generations);
@@ -323,7 +326,8 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
             lastGenerationValues : lastGenerationValues,
             params: requestBody,
             numOfExperiments: numExperiments,
-            objective: objective
+            objective: objective,
+            executionTime: executionTime
         });
         renderBestValuesTableForCurrentRun();
 
