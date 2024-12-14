@@ -127,15 +127,18 @@ document.getElementById('overlay').addEventListener('click', function() {
     this.style.display = 'none'; // Esconde o overlay
 });
 
-document.getElementById('steady_state_without_duplicates').addEventListener('change', function () {
-    const gapInput = document.getElementById('gap');
-    if (this.checked) {
-        gapInput.disabled = false;  // Habilita o campo "Gap"
-    } else {
-        gapInput.disabled = true;  // Desabilita o campo "Gap"
-        gapInput.value = '';  // Limpa o valor
-    }
+document.querySelectorAll('input[name="steady_state"]').forEach(radio => {
+    radio.addEventListener('change', function () {
+        const gapInput = document.getElementById('gap');
+        if (this.value === 'without_duplicates' || this.value === 'with_duplicates') {
+            gapInput.disabled = false; // Habilita o campo "Gap" para steady state
+        } else {
+            gapInput.disabled = true; // Desabilita o campo "Gap" para steady state OFF
+            gapInput.value = ''; // Limpa o valor
+        }
+    });
 });
+
 
 document.getElementById('normalize_linear').addEventListener('change', function () {
     const minInput = document.getElementById('normalize_min');
@@ -241,7 +244,6 @@ function updateUsedParametersDescription(params, numOfExp, objective, executionT
         </table>
     `;
 }
-
 
 
 // Função de escuta para o envio do formulário
