@@ -57,3 +57,8 @@ http://localhost:8000/src
 ### Executar o Experimento
 
 * Clique no botão "Run" para executar o experimento. Os resultados serão exibidos no gráfico abaixo do teclado matemático.
+
+
+## Licença
+
+Este projeto está licenciado sob a [Licença MIT](LICENSE).
