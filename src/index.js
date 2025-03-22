@@ -185,8 +185,8 @@ function updateTableNavigationButtons() {
 function updateTableTitle() {
     const titleElement = document.getElementById('table-title');
     const executionStats = document.getElementById("status-tittle")
-    executionStats.innerText = `Execution (Run ${currentRunIndex + 1})`;
-    titleElement.innerText = `Best Fitness Per Generation & Experiments (Run ${currentRunIndex + 1})`; // +1 para exibir como 1-based
+    executionStats.innerText = `Execution (Round ${currentRunIndex + 1})`;
+    titleElement.innerText = `Best Fitness Per Generation & Experiments (Round ${currentRunIndex + 1})`; // +1 para exibir como 1-based
 }
 
 // Listeners para os botões de navegação
@@ -352,7 +352,7 @@ function renderChart(data, numGenerations) {
 
     if (keepChart && myChart) {
         const newDataset = {
-            label: `Run ${myChart.data.datasets.length + 1}`,
+            label: `Round ${myChart.data.datasets.length + 1}`,
             data: data,
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
             borderColor: getRandomColor(),
@@ -368,7 +368,7 @@ function renderChart(data, numGenerations) {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Run 1',
+                    label: 'Round 1',
                     data: data,
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: '#67A5C8',
