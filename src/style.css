@@ -9,6 +9,7 @@ body {
     position: relative;
 }
 
+
 header,
 footer {
     background: #295078;
@@ -110,6 +111,43 @@ header {
 
 .chart-utilities img{
     cursor: pointer;
+}
+
+.top-right-buttons {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.top-right-buttons a,
+.top-right-buttons button {
+  padding: 8px 14px;
+  font-size: 0.9em;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.doc-btn {
+  background-color: #ffffff20;
+  color: #ffffff;
+  border: 1px solid #ffffff50;
+}
+
+.tour-btn {
+  background-color: #ffffff20;
+  color: #ffffff;
+  border: 1px solid #ffffff50;
+}
+
+.doc-btn:hover,
+.tour-btn:hover {
+  background-color: #ffffff30;
 }
 
 

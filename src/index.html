@@ -19,12 +19,17 @@
 <!-- Shepherd JS -->
 <script src="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/js/shepherd.min.js"></script>
 
-<script src="shepherd-tour.js"></script>
+<script src="tour.js"></script>
 
 
 <body>
     <div id="overlay" onclick="toggleSidebar()"></div>
     <header id="header" style=" justify-content: center; align-items: center; padding: 20px;">
+        <div class="top-right-buttons">
+            <a href="https://gademo.readthedocs.io" target="_blank" class="doc-btn">📖 Documentation</a>
+            <button class="tour-btn" onclick="startTour()">🚀 Take a Tour</button>
+        </div>
+
         <img src="images/gademo-logo.PNG" alt="GAdemo Logo" style="max-height: 60px; width: auto;">
         
 
@@ -336,6 +341,14 @@
     <script src="modal/modal.js"></script>
     <script src="spinner/spinner.js"></script>
     <script src="keyboard/keyboard.js"></script>
+
+    <script src="tour.js"></script>
+    <script>
+    window.addEventListener('DOMContentLoaded', () => {
+        startGademoTour(); // Inicia automaticamente (se ainda não foi feito)
+    });
+    </script>
+
 </body>
 
 </html>
