@@ -83,22 +83,27 @@ function navigateExperiment(direction) {
 
 // Função para atualizar os gráficos conforme o experimento atual na rodada
 function updateExperimentCharts() {
-    const experimentData = previousResults[currentRunIndex];
-    
-    // Atualiza o gráfico de linha com os dados do experimento atual
+  const experimentData = previousResults[currentRunIndex];
+
+
+  setTimeout(() => {
+    // Atualiza o gráfico de linha
     renderLineChart(
-        experimentData.bestValuesPerGeneration[currentExperimentIndex], 
-        experimentData.bestValuesPerGeneration[currentExperimentIndex].length
+      experimentData.bestValuesPerGeneration[currentExperimentIndex],
+      experimentData.bestValuesPerGeneration[currentExperimentIndex].length
     );
-    
-    // Atualiza o histograma com os dados específicos da última geração do experimento atual
+
+    // Atualiza o histograma
     renderHistogram(
-        experimentData.lastGenerationValues[currentExperimentIndex]
+      experimentData.lastGenerationValues[currentExperimentIndex]
     );
 
     // Atualiza o rótulo do experimento
     document.getElementById('experimentLabel').textContent = `Experiment ${currentExperimentIndex + 1}`;
+
+  }, 100); // tempo pequeno só pra garantir que o DOM atualize o spinner antes
 }
+
 
 
 
@@ -251,6 +256,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     event.preventDefault();
     
     showSpinner('spinner-boxplot');
+    showSpinner('spinner-carousel');
 
     const funcStr = document.getElementById('func_str').value;
     const numExperiments = document.getElementById('num_experiments').value;
@@ -292,6 +298,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
 
     try {
         showSpinner('spinner'); // Exibe o spinner antes de começar a requisição
+        
         const response = await fetch(`${API_ENDPOINT}/run-experiments?func_str=${encodeURIComponent(funcStr)}&num_experiments=${numExperiments}`, {
             method: 'POST',
             headers: {
@@ -300,6 +307,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
             body: JSON.stringify(requestBody)
         }).finally(() => {
             hideSpinner('spinner'); // Esconde o spinner após a resposta (ou erro)
+            
         });
         if (!response.ok) {
             const errorData = await response.json();
@@ -337,6 +345,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         console.error('Error:', error);
     } finally {
         hideSpinner('spinner-boxplot');
+        hideSpinner('spinner-carousel');
     }
 });
 

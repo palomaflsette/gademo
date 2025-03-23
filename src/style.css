@@ -41,10 +41,12 @@ header {
 
 .carousel-container {
     display: flex;
+    position: relative;
     align-items: center;
     justify-content: center;
     gap: 10px;
 }
+
 
 .carousel-nav {
     background-color: #386da6;

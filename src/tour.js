@@ -36,7 +36,7 @@ function startGademoTour(forceRestart = false) {
 
   gademoTour.addStep({
     id: 'function-input',
-    text: 'In this field, you insert the function to be optimized.',
+    text: 'In this field, you insert the function to be optimized. Feel free to use this virtual keyboard or your physical keyboard.',
     attachTo: { element: '#func_str', on: 'bottom' },
     buttons: [
       { text: 'Next', action: gademoTour.next }
@@ -80,7 +80,7 @@ function startGademoTour(forceRestart = false) {
 
   gademoTour.addStep({
     id: 'run-button',
-    text: "After entering the parameters, you will click on 'run' to process the genetic algorithm with the defined parameters. It's important to keep in your mind: when you click Run, you are generating a ROUND.",
+    text: "After entering the parameters, you will click on 'Run' button to process the genetic algorithm with the defined parameters. It's important to keep in your mind: when you click Run, you are generating a ROUND.",
     attachTo: { element: '#runExperimentButton', on: 'top' },
     buttons: [
       {
@@ -171,6 +171,19 @@ function startGademoTour(forceRestart = false) {
   id: 'carousel-histogram',
   text: 'This graph represents the fitness distribution of the last generation for each experiment in the last round.',
   attachTo: { element: '#histogramChartExperiment', on: 'top' },
+  buttons: [
+    {
+      text: 'Next',
+      action: gademoTour.next,
+      classes: 'shepherd-button-primary'
+    }
+  ]
+});
+
+  gademoTour.addStep({
+  id: 'next-experiment',
+  text: 'You can check the graphical results of the other experiments from the last round by toggling these buttons.',
+  attachTo: { element: '#next-experiment', on: 'top' },
   buttons: [
     {
       text: 'Finish',

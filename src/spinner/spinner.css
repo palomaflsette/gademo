@@ -12,3 +12,17 @@
   animation: spin 2s linear infinite; /* Animação de rotação */
   z-index: 10; /* Mantém no topo */
 }
+
+#spinner-carousel {
+  position: absolute;
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); /* Corrige o deslocamento para ficar exatamente no centro */
+  border: 8px solid rgba(203, 198, 198, 0.6); /* Fundo da borda */
+  border-top: 8px solid #0fd336; /* Cor da parte animada */
+  border-radius: 50%; /* Deixa em formato de círculo */
+  width: 60px; /* Largura */
+  height: 60px; /* Altura */
+  animation: spin 2s linear infinite; /* Animação de rotação */
+  z-index: 10; /* Mantém no topo */
+}
