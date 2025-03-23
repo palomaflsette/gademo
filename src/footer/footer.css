@@ -1,8 +1,41 @@
 .footer {
-  background-color: #386da6;
+  background-color: #30577c;
   color: #fff;
   padding: 20px 0;
   text-align: center;
+}
+
+.img-puc-logo {
+  text-decoration: none; 
+  background: transparent; 
+}
+
+.img-puc-logo:hover {
+  background: transparent;
+  text-decoration: none;
+  opacity: 1;
+}
+
+.img-dee-logo {
+  text-decoration: none; 
+  background: transparent; 
+}
+
+.img-dee-logo:hover {
+  background: transparent;
+  text-decoration: none;
+  opacity: 1;
+}
+
+.img-lira-logo {
+  text-decoration: none; 
+  background: transparent; 
+}
+
+.img-lira-logo:hover {
+  background: transparent;
+  text-decoration: none;
+  opacity: 1;
 }
 
 .container {
@@ -10,6 +43,16 @@
   margin: 0 auto;
   padding: 0 15px;
 }
+
+.footer-line {
+  width: 80%;
+  margin: 30px auto;
+  height: 1px;
+  background-color: #999;
+  border: none;
+  opacity: 0.4;
+}
+
 
 .footer-content {
   margin-bottom: 15px;
