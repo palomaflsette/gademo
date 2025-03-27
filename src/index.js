@@ -509,7 +509,7 @@ function updateExecutionStats(runData) {
 
     // Itera pelos experimentos e exibe as informações no contêiner
     for (let exp = 0; exp < bestValuesPerGeneration.length; exp++) {
-        const bestSolution = bestValuesPerGeneration[exp][bestValuesPerGeneration[exp].length - 1];
+        const bestSolution = Math.max(...bestValuesPerGeneration[exp]);
         const bestIndividuals = bestIndividualsPerGeneration[exp];
 
         // Formatação da string para exibir as gerações
