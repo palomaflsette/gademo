@@ -275,11 +275,18 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     
     const steadyStateWithoutDuplicateds = document.getElementById('steady_state_without_duplicates').checked;
 
+    const crossRate = parseFloat(document.getElementById('crossover_rate').value.replace(',', '.'));
+    const mutRate = parseFloat(document.getElementById('mutation_rate').value.replace(',', '.'));
+
+    const crossoverRateDecimal = crossRate > 1 ? crossRate / 100 : crossRate;
+    const mutationRateDecimal = mutRate > 1 ? mutRate / 100 : mutRate;
+
+
     const requestBody = {
         num_generations: parseInt(numGenerations),
         population_size: parseInt(populationSize),
-        crossover_rate: parseFloat(crossoverRate),
-        mutation_rate: parseFloat(mutationRate),
+        crossover_rate: crossoverRateDecimal,
+        mutation_rate: mutationRateDecimal,
         maximize: maximize,
         interval: [parseFloat(intervalMin), parseFloat(intervalMax)],
         crossover_type: {
@@ -587,6 +594,40 @@ window.onload = function(){
         link.href = boxPlotChart.toBase64Image();
         link.download = 'boxPlotChart.jpeg';
         link.click();
+    });
+
+    // Lógica de exclusão entre Elitism e Steady-State
+    const elitismCheckbox = document.getElementById('elitism');
+    const steadyRadios = document.querySelectorAll('input[name="steady_state"]');
+
+    function toggleSteadyState(disabled) {
+        steadyRadios.forEach(radio => {
+            radio.disabled = disabled;
+        });
+    }
+
+    function toggleElitism(disabled) {
+        elitismCheckbox.disabled = disabled;
+    }
+
+    // Quando Elitism é marcado/desmarcado
+    elitismCheckbox.addEventListener('change', function () {
+        if (elitismCheckbox.checked) {
+            toggleSteadyState(true);
+        } else {
+            toggleSteadyState(false);
+        }
+    });
+
+    // Quando alguma opção de Steady-State é selecionada
+    steadyRadios.forEach(radio => {
+        radio.addEventListener('change', function () {
+            if (this.value !== 'off') {
+                toggleElitism(true);
+            } else {
+                toggleElitism(false);
+            }
+        });
     });
 
 }
