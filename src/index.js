@@ -235,14 +235,14 @@ function updateUsedParametersDescription(params, numOfExp, objective, executionT
             <tr><td>Number of Experiments:</td><td>${numOfExp || 'N/A'}</td></tr>
             <tr><td>Number of Generations:</td><td>${params.num_generations || 'N/A'}</td></tr>
             <tr><td>Population Size:</td><td>${params.population_size || 'N/A'}</td></tr>
-            <tr><td>Crossover Rate:</td><td>${params.crossover_rate + "%"|| 'N/A'}</td></tr>
-            <tr><td>Mutation Rate:</td><td>${params.mutation_rate + "%"|| 'N/A'}</td></tr>
+            <tr><td>Crossover Rate:</td><td>${params.crossover_rate*100 + "%"|| 'N/A'}</td></tr>
+            <tr><td>Mutation Rate:</td><td>${params.mutation_rate*100 + "%"|| 'N/A'}</td></tr>
             <tr><td>Intent:</td><td>${objective || 'N/A'}</td></tr>
             <tr><td>Interval:</td><td>${params.interval ? '['+params.interval[0]+','+params.interval[1]+']' : 'N/A'}</td></tr>
             <tr><td>Crossover Type:</td><td>${params.crossover_type ? (params.crossover_type.one_point ? 'One Point' : params.crossover_type.two_point ? 'Two Point' : 'Uniform') : 'N/A'}</td></tr>
             <tr><td>Normalize Linear:</td><td>${params.normalize_linear ? '['+params.normalize_min+','+params.normalize_max+']' : 'No'}</td></tr>
             <tr><td>Elitism:</td><td>${params.elitism ? 'Yes' : 'No'}</td></tr>
-            <tr><td>Steady State:</td><td>${params.steady_state ? 'Yes' : 'No'}</td></tr>
+            <tr><td>Steady State With Duplicates:</td><td>${params.steady_state ? 'Yes' : 'No'}</td></tr>
             <tr><td>Steady State Without Duplicates:</td><td>${params.steady_state_without_duplicates ? 'Yes' : 'No'}</td></tr>
             <tr><td>Gap:</td><td>${params.gap ? params.gap+'%' : 'No'}</td></tr>
             <tr><td>Execution Time:</td><td>${executionTime ? executionTime.toFixed(2) + " seconds" : 'N/A'}</td></tr>
