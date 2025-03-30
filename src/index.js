@@ -240,7 +240,7 @@ function updateUsedParametersDescription(params, numOfExp, objective, executionT
             <tr><td>Intent:</td><td>${objective || 'N/A'}</td></tr>
             <tr><td>Interval:</td><td>${params.interval ? '['+params.interval[0]+','+params.interval[1]+']' : 'N/A'}</td></tr>
             <tr><td>Crossover Type:</td><td>${params.crossover_type ? (params.crossover_type.one_point ? 'One Point' : params.crossover_type.two_point ? 'Two Point' : 'Uniform') : 'N/A'}</td></tr>
-            <tr><td>Normalize Linear:</td><td>${params.normalize_linear ? '['+params.normalize_min+','+params.normalize_max+']' : 'No'}</td></tr>
+            <tr><td>Linear Normalization:</td><td>${params.normalize_linear ? '['+params.normalize_min+','+params.normalize_max+']' : 'No'}</td></tr>
             <tr><td>Elitism:</td><td>${params.elitism ? 'Yes' : 'No'}</td></tr>
             <tr><td>Steady State With Duplicates:</td><td>${params.steady_state ? 'Yes' : 'No'}</td></tr>
             <tr><td>Steady State Without Duplicates:</td><td>${params.steady_state_without_duplicates ? 'Yes' : 'No'}</td></tr>
