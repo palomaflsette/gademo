@@ -273,8 +273,6 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     const normalizeMax = document.getElementById('normalize_max').value;
     const gap = document.getElementById('gap').value;
     
-    const steadyStateWithoutDuplicateds = document.getElementById('steady_state_without_duplicates').checked;
-
     const crossRate = parseFloat(document.getElementById('crossover_rate').value.replace(',', '.'));
     const mutRate = parseFloat(document.getElementById('mutation_rate').value.replace(',', '.'));
 
@@ -299,9 +297,28 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         normalize_max: parseFloat(normalizeMax) || 100,
         elitism: document.getElementById('elitism').checked,
         steady_state: document.getElementById('steady_state').checked,
-        steady_state_without_duplicateds: steadyStateWithoutDuplicateds,
+        steady_state_without_duplicates: document.getElementById('steady_state_without_duplicates').checked,
         gap: parseFloat(gap) || 0
     };
+
+    // Validação de limites
+    if (parseInt(numExperiments) > 20 || 
+        parseInt(numGenerations) > 35 || 
+        parseInt(populationSize) > 150 || 
+        parseFloat(intervalMin) < -100 || 
+        parseFloat(intervalMax) > 100) {
+        
+        alert("⚠️ Você excedeu os limites permitidos:\n\n" +
+            "• Experimentos: até 20\n" +
+            "• Gerações: até 35\n" +
+            "• Tamanho da população: até 150\n" +
+            "• Intervalo de busca: entre -100 e 100");
+
+        hideSpinner('spinner');
+        hideSpinner('spinner-boxplot');
+        hideSpinner('spinner-carousel');
+        return;  // Impede o envio para a API
+    }
 
     try {
         showSpinner('spinner'); // Exibe o spinner antes de começar a requisição
