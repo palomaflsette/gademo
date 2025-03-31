@@ -308,11 +308,11 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         parseFloat(intervalMin) < -100 || 
         parseFloat(intervalMax) > 100) {
         
-        alert("⚠️ Você excedeu os limites permitidos:\n\n" +
-            "• Experimentos: até 20\n" +
-            "• Gerações: até 35\n" +
-            "• Tamanho da população: até 150\n" +
-            "• Intervalo de busca: entre -100 e 100");
+        alert("⚠️ You have exceeded the allowed limits:\n\n" +
+            "• Experiments: up to 20\n" +
+            "• Generations: up to 35\n" +
+            "• Population size: up to 150\n" +
+            "• Search range: between -100 and 100");
 
         hideSpinner('spinner');
         hideSpinner('spinner-boxplot');

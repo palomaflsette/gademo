@@ -98,22 +98,32 @@
                         <label for="mutation_rate">Mutation Rate (%):</label>
                         <input type="number" id="mutation_rate" name="mutation_rate" value="5.0" step="any">
                     </div>
-                    <div class="form-group">
-                        <label>Objective:</label>
-                        <input type="radio" id="maximize" name="objective" value="true" checked>
-                        <label for="maximize">Maximize</label>
-                        <input type="radio" id="minimize" name="objective" value="false">
-                        <label for="minimize">Minimize</label>
-                    </div>
-                    <div class="form-group-inline">
-                        <label for="interval_min">Interval Min:</label>
-                        <input type="number" id="interval_min" name="interval_min" value="-100">
-                    </div>
-                    <div class="form-group-inline">
-                        <label for="interval_max">Interval Max:</label>
-                        <input type="number" id="interval_max" name="interval_max" value="100">
-                    </div>
+                    <fieldset>
+                        <legend>Objective</legend>
+                        <div class="form-group">
+                            <div class="objective">
+                                <input type="radio" id="maximize" name="objective" value="true" checked>
+                                <label for="maximize">Maximize</label>
+                                <input type="radio" id="minimize" name="objective" value="false">
+                                <label for="minimize">Minimize</label>
+                            </div>
+                        </div>
+                    </fieldset>
                     <br>
+                    
+                    <fieldset>
+                        <legend>Search Range</legend>
+                        <div class="form-group-inline">
+                            <label for="interval_min">Min:</label>
+                            <input type="number" id="interval_min" name="interval_min" style="width: 5cap; height: 1.5cap;" value="-100">
+                        </div>
+                        <div class="form-group-inline">
+                            <label for="interval_max">Max:</label>
+                            <input type="number" id="interval_max" name="interval_max" style="width: 5cap; height: 1.5cap;" value="100">
+                        </div>
+                    </fieldset>
+                    <br>
+                    
                     <div class="form-group">
                         <input type="checkbox" id="elitism" name="elitism">
                         <label for="elitism">Elitism</label> 

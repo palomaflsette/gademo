@@ -444,6 +444,13 @@ form button:hover {
     margin-bottom: 20px;
 }
 
+.objective {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* espaçamento entre os radios */
+}
+
+
 .form-group label {
     display: flexbox;
     margin-bottom: 5px;
