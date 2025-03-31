@@ -1,4 +1,4 @@
-# Genetic Algorithm Experiments
+# GADemo - Genetic Algorithm Demonstrations
 
 Projeto de experimentos de Algoritmo Genético desenvolvido com HTML, CSS e JavaScript. A aplicação permite aos usuários configurar vários parâmetros de um algoritmo genético e visualizar os resultados em um gráfico.
 
