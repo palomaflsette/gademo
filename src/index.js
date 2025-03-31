@@ -317,7 +317,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         hideSpinner('spinner');
         hideSpinner('spinner-boxplot');
         hideSpinner('spinner-carousel');
-        return;  // Impede o envio para a API
+        return;
     }
 
     try {
