@@ -122,6 +122,15 @@ function startGademoTour(forceRestart = false) {
     ]
   });
 
+    gademoTour.addStep({
+    id: 'button-export-results',
+    text: 'Here you can download the results that are displayed in this container. For each round you run, you can download the data for that, which comes in .XLSX format and can be used for any purpose, even if it is just to give you a more panoramic view of your results.',
+    attachTo: { element: '#button-export-results', on: 'top' },
+    buttons: [
+      { text: 'Next', action: gademoTour.next }
+    ]
+  });
+
   gademoTour.addStep({
     id: 'chart-boxplot',
     text: 'This box plot shows the distribution of best values ​​per generation across experiments. It shows the result of the last round only.',

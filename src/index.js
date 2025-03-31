@@ -112,11 +112,6 @@ function updateExperimentCharts() {
 
 
 
-
-
-
-
-
 function toggleAside() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
