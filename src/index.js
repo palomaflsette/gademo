@@ -5,6 +5,12 @@ let currentRunIndex = 0;   // Índice para a rodada atual
 let currentExperimentIndex = 0;
 let lineChart, histogramChart;
 
+function getOrdinal(n) {
+    const s = ["th", "st", "nd", "rd"],
+          v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
 // Função para renderizar o gráfico de linha de cada experimento
 function renderLineChart(data, generations) {
     const ctx = document.getElementById('lineChartExperiment').getContext('2d');
@@ -235,8 +241,8 @@ function updateUsedParametersDescription(params, numOfExp, objective, executionT
             <tr><td>Number of Experiments:</td><td>${numOfExp || 'N/A'}</td></tr>
             <tr><td>Number of Generations:</td><td>${params.num_generations || 'N/A'}</td></tr>
             <tr><td>Population Size:</td><td>${params.population_size || 'N/A'}</td></tr>
-            <tr><td>Crossover Rate:</td><td>${params.crossover_rate*100 + "%"|| 'N/A'}</td></tr>
-            <tr><td>Mutation Rate:</td><td>${params.mutation_rate*100 + "%"|| 'N/A'}</td></tr>
+            <tr><td>Crossover Rate:</td><td>${parseFloat(document.getElementById('crossover_rate').value.replace(',', '.'))}%</td></tr>
+            <tr><td>Mutation Rate:</td><td>${parseFloat(document.getElementById('mutation_rate').value.replace(',', '.'))}%</td></tr>
             <tr><td>Intent:</td><td>${objective || 'N/A'}</td></tr>
             <tr><td>Interval:</td><td>${params.interval ? '['+params.interval[0]+','+params.interval[1]+']' : 'N/A'}</td></tr>
             <tr><td>Crossover Type:</td><td>${params.crossover_type ? (params.crossover_type.one_point ? 'One Point' : params.crossover_type.two_point ? 'Two Point' : 'Uniform') : 'N/A'}</td></tr>
@@ -300,26 +306,24 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         steady_state_without_duplicates: document.getElementById('steady_state_without_duplicates').checked,
         gap: parseFloat(gap) || 0
     };
-
     // Validação de limites
-    if (parseInt(numExperiments) > 25 || 
-        parseInt(numGenerations) > 50 || 
-        parseInt(populationSize) > 200 || 
-        parseFloat(intervalMin) < -100 || 
-        parseFloat(intervalMax) > 100) {
+    // if (parseInt(numExperiments) > 25 || 
+    //     parseInt(numGenerations) > 50 || 
+    //     parseInt(populationSize) > 200 || 
+    //     parseFloat(intervalMin) < -100 || 
+    //     parseFloat(intervalMax) > 100) {
         
-        alert("⚠️ You have exceeded the allowed limits:\n\n" +
-            "• Experiments: up to 25\n" +
-            "• Generations: up to 50 \n" +
-            "• Population size: up to 200\n" +
-            "• Search range: between -100 and 100");
+    //     alert("⚠️ You have exceeded the allowed limits:\n\n" +
+    //         "• Experiments: up to 25\n" +
+    //         "• Generations: up to 50 \n" +
+    //         "• Population size: up to 200\n" +
+    //         "• Search range: between -100 and 100");
 
-        hideSpinner('spinner');
-        hideSpinner('spinner-boxplot');
-        hideSpinner('spinner-carousel');
-        return;
-    }
-
+    //     hideSpinner('spinner');
+    //     hideSpinner('spinner-boxplot');
+    //     hideSpinner('spinner-carousel');
+    //     return;
+    // }
     try {
         showSpinner('spinner'); // Exibe o spinner antes de começar a requisição
         
@@ -372,6 +376,133 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         hideSpinner('spinner-carousel');
     }
 });
+
+
+function downloadTableAsCSV() {
+    const table = document.getElementById('best-values-table');
+    let csv = [];
+
+    const numExperiments = table.rows[1].cells.length - 2;
+
+    // Cabeçalho 1
+    const header1 = ['Generations', ...Array(numExperiments).fill(''), 'Average'];
+    header1[1] = 'Experiments';
+    csv.push(header1.join(";"));
+
+    // Cabeçalho 2
+    const header2 = [''];
+    for (let i = 1; i <= numExperiments; i++) {
+        header2.push(getOrdinal(i)); // Usa 1st, 2nd, 3rd, ...
+    }
+
+    header2.push('');
+    csv.push(header2.join(";"));
+
+    // Corpo da tabela
+    for (let i = 2; i < table.rows.length; i++) {
+        const row = table.rows[i];
+        const rowData = [];
+
+        rowData.push(row.cells[0].textContent.trim()); // Geração
+
+        for (let j = 1; j < row.cells.length - 1; j++) {
+            rowData.push(row.cells[j].textContent.trim());
+        }
+
+        rowData.push(row.cells[row.cells.length - 1].textContent.trim()); // Média
+
+        csv.push(rowData.join(";"));
+    }
+
+    const csvContent = csv.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", "GA_results.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+
+function exportResultsToXLSX() {
+    const table = document.getElementById('best-values-table');
+    const ws_data = [];
+
+    const numExperiments = previousResults[currentRunIndex].bestValuesPerGeneration.length;
+
+    // Cabeçalho principal
+    const topHeader = ['Generations', ...Array(numExperiments).fill(''), 'Average'];
+    topHeader[1] = 'Experiments'; // Só a célula inicial recebe o texto
+    ws_data.push(topHeader);
+
+    // Subcabeçalho com os números dos experimentos
+    const secondHeader = [''];
+    for (let i = 1; i <= numExperiments; i++) {
+        secondHeader.push(getOrdinal(i));
+    }
+
+    secondHeader.push('');
+    ws_data.push(secondHeader);
+
+    for (let i = 2; i < table.rows.length; i++) {
+        const row = table.rows[i];
+        const rowData = [];
+
+        rowData.push(row.cells[0].textContent.trim());
+
+        for (let j = 1; j <= numExperiments; j++) {
+            rowData.push(row.cells[j].textContent.trim());
+        }
+
+        rowData.push(row.cells[row.cells.length - 1].textContent.trim());
+
+        ws_data.push(rowData);
+    }
+
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+
+    ws['!merges'] = [
+        { s: { r: 0, c: 1 }, e: { r: 0, c: numExperiments } }
+    ];
+
+    // Ajuste de largura
+    ws['!cols'] = Array.from({ length: numExperiments + 2 }, () => ({ wch: 12 }));
+
+    const runData = previousResults[currentRunIndex];
+    const p = runData.params;
+
+    const paramsSheetData = [
+        ['Number of Experiments:', runData.numOfExperiments],
+        ['Number of Generations:', p.num_generations],
+        ['Population Size:', p.population_size],
+        ['Crossover Rate:', `${parseFloat(document.getElementById('crossover_rate').value.replace(',', '.'))}%`],
+        ['Mutation Rate:', `${parseFloat(document.getElementById('mutation_rate').value.replace(',', '.'))}%`],
+        ['Intent:', runData.objective],
+        ['Interval:', `[${p.interval[0]}, ${p.interval[1]}]`],
+        ['Crossover Type:', p.crossover_type.one_point ? 'One Point' :
+                          p.crossover_type.two_point ? 'Two Point' : 'Uniform'],
+        ['Linear Normalization:', p.normalize_linear ? `[${p.normalize_min}, ${p.normalize_max}]` : 'No'],
+        ['Elitism:', p.elitism ? 'Yes' : 'No'],
+        ['Steady State With Duplicates:', p.steady_state ? 'Yes' : 'No'],
+        ['Steady State Without Duplicates:', p.steady_state_without_duplicates ? 'Yes' : 'No'],
+        ['Gap:', p.gap ? `${p.gap}%` : 'No'],
+        ['Execution Time:', `${runData.executionTime.toFixed(2)} seconds`],
+    ];
+
+    const ws_params = XLSX.utils.aoa_to_sheet(paramsSheetData);
+    ws_params['!cols'] = [{ wch: 35 }, { wch: 25 }];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'GA Results');
+    XLSX.utils.book_append_sheet(wb, ws_params, 'Used Params');
+    const now = new Date();
+    const timestamp = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}-${String(now.getMinutes()).padStart(2, '0')}`;
+    XLSX.writeFile(wb, `GA-Demo_results_Round${currentRunIndex + 1}_${timestamp}.xlsx`);
+}
+
+
 
 // Função para renderizar o gráfico de linha
 function renderChart(data, numGenerations) {
@@ -531,19 +662,16 @@ function updateExecutionStats(runData) {
     const bestValuesPerGeneration = runData.bestValuesPerGeneration;
     const bestIndividualsPerGeneration = runData.bestIndividualsPerGeneration;
 
-    // Itera pelos experimentos e exibe as informações no contêiner
     for (let exp = 0; exp < bestValuesPerGeneration.length; exp++) {
         const bestSolution = Math.max(...bestValuesPerGeneration[exp]);
         const bestIndividuals = bestIndividualsPerGeneration[exp];
 
-        // Formatação da string para exibir as gerações
-        let individualsHTML = '<div class="generation-values">'; // Classe adicionada aqui
+        let individualsHTML = '<div class="generation-values">'; 
         for (let genIndex = 0; genIndex < bestIndividuals.length; genIndex++) {
             individualsHTML += `${genIndex + 1} gen: [${bestIndividuals[genIndex].map(num => num.toFixed(4)).join(', ')}]<br>`;
         }
         individualsHTML += '</div>';
 
-        // Adiciona o conteúdo ao HTML do contêiner 'execution-status'
         textElement.innerHTML += `
             <div class="result-container" > <!-- Adiciona uma div para agrupar tudo -->
                 <h4 style="text-align: center; font-size: 16px">Experiment ${exp + 1}</h4>
@@ -575,8 +703,9 @@ function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGe
         <tr>`;
 
     for (let i = 1; i <= numExperiments; i++) {
-        headerRow += `<th>${i}º</th>`;
+        headerRow += `<th>${getOrdinal(i)}</th>`;
     }
+
     headerRow += '</tr>';
 
     table.innerHTML += headerRow;
