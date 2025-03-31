@@ -302,16 +302,16 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     };
 
     // Validação de limites
-    if (parseInt(numExperiments) > 20 || 
-        parseInt(numGenerations) > 35 || 
-        parseInt(populationSize) > 150 || 
+    if (parseInt(numExperiments) > 25 || 
+        parseInt(numGenerations) > 50 || 
+        parseInt(populationSize) > 200 || 
         parseFloat(intervalMin) < -100 || 
         parseFloat(intervalMax) > 100) {
         
         alert("⚠️ You have exceeded the allowed limits:\n\n" +
-            "• Experiments: up to 20\n" +
-            "• Generations: up to 35\n" +
-            "• Population size: up to 150\n" +
+            "• Experiments: up to 25\n" +
+            "• Generations: up to 50 \n" +
+            "• Population size: up to 200\n" +
             "• Search range: between -100 and 100");
 
         hideSpinner('spinner');

@@ -79,15 +79,15 @@
             <div class="sidebar-container">
                 <form id="experimentForm">
                     <div class="form-group">
-                        <label for="num_experiments">No. of Experiments (max. 20):</label>
-                        <input type="number" id="num_experiments" name="num_experiments" required value="3">
+                        <label for="num_experiments">No. of Experiments (max. 25):</label>
+                        <input type="number" id="num_experiments" name="num_experiments" required value="20">
                     </div>
                     <div class="form-group">
-                        <label for="num_generations">No. of Generations (max. 35):</label>
-                        <input type="number" id="num_generations" name="num_generations" value="20">
+                        <label for="num_generations">No. of Generations (max. 50):</label>
+                        <input type="number" id="num_generations" name="num_generations" value="40">
                     </div>
                     <div class="form-group">
-                        <label for="population_size">Population Size (max. 150):</label>
+                        <label for="population_size">Population Size (max. 200):</label>
                         <input type="number" id="population_size" name="population_size" value="100">
                     </div>
                     <div class="form-group">
@@ -96,7 +96,7 @@
                     </div>
                     <div class="form-group">
                         <label for="mutation_rate">Mutation Rate (%):</label>
-                        <input type="number" id="mutation_rate" name="mutation_rate" value="5.0" step="any">
+                        <input type="number" id="mutation_rate" name="mutation_rate" value="0.8" step="any">
                     </div>
                     <fieldset>
                         <legend>Objective</legend>
@@ -115,11 +115,11 @@
                         <legend>Search Range</legend>
                         <div class="form-group-inline">
                             <label for="interval_min">Min:</label>
-                            <input type="number" id="interval_min" name="interval_min" style="width: 5cap; height: 1.5cap;" value="-100">
+                            <input type="number" id="interval_min" name="interval_min" style="width: 5cap; height: 1.5cap;" value="-50">
                         </div>
                         <div class="form-group-inline">
                             <label for="interval_max">Max:</label>
-                            <input type="number" id="interval_max" name="interval_max" style="width: 5cap; height: 1.5cap;" value="100">
+                            <input type="number" id="interval_max" name="interval_max" style="width: 5cap; height: 1.5cap;" value="50">
                         </div>
                     </fieldset>
                     <br>
