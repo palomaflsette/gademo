@@ -272,7 +272,7 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     const normalizeLinear = document.getElementById('normalize_linear').checked;
     const normalizeMin = document.getElementById('normalize_min').value;
     const normalizeMax = document.getElementById('normalize_max').value;
-    const gap = document.getElementById('gap').value;
+    //const gap = document.getElementById('gap').value;
     
     const crossRate = parseFloat(document.getElementById('crossover_rate').value.replace(',', '.'));
     const mutRate = parseFloat(document.getElementById('mutation_rate').value.replace(',', '.'));
@@ -280,6 +280,9 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     const crossoverRateDecimal = crossRate > 1 ? crossRate / 100 : crossRate;
     const mutationRateDecimal = mutRate > 1 ? mutRate / 100 : mutRate;
 
+
+    const steadyStateMode = document.querySelector('input[name="steady_state"]:checked').value;
+    const gap = document.getElementById('gap').value;
 
     const requestBody = {
         num_generations: parseInt(numGenerations),
@@ -297,9 +300,11 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         normalize_min: parseFloat(normalizeMin) || 0,
         normalize_max: parseFloat(normalizeMax) || 100,
         elitism: document.getElementById('elitism').checked,
-        steady_state: document.getElementById('steady_state').checked,
-        steady_state_without_duplicates: document.getElementById('steady_state_without_duplicates').checked,
-        gap: parseFloat(gap) || 0
+        
+        steady_state_with_duplicates: steadyStateMode === 'with_duplicates',
+        steady_state_without_duplicates: steadyStateMode === 'without_duplicates',
+        
+        gap: (parseFloat(gap) / 100) || 0.0 // Converte % para decimal (ex: 50 -> 0.5)
     };
     // Validação de limites
     // if (parseInt(numExperiments) > 25 || 
