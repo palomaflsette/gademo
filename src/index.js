@@ -11,6 +11,11 @@ function getOrdinal(n) {
     return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
+function toggleAdvanced() {
+    const section = document.querySelector('.advanced-section');
+    section.classList.toggle('collapsed');
+}
+
 // Função para renderizar o gráfico de linha de cada experimento
 function renderLineChart(data, generations) {
     const ctx = document.getElementById('lineChartExperiment').getContext('2d');
@@ -110,20 +115,41 @@ function updateExperimentCharts() {
   }, 100); // tempo pequeno só pra garantir que o DOM atualize o spinner antes
 }
 
-
+function closeSidebarOnClickOutside(event) {
+    const sidebar = document.getElementById('sidebar');
+    const toggleButton = document.querySelector('.toggle-button');
+    
+    // Verifica se sidebar está aberta
+    if (!sidebar.classList.contains('aside-visible')) {
+        return;
+    }
+    
+    // Verifica se o clique foi fora da sidebar e não no botão toggle
+    if (!sidebar.contains(event.target) && !toggleButton.contains(event.target)) {
+        toggleAside();
+    }
+}
 
 function toggleAside() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
+    const body = document.body;
     
     if (sidebar.classList.contains('aside-visible')) {
         // Fechar sidebar
         sidebar.classList.remove('aside-visible');
+        overlay.classList.remove('visible');
         overlay.style.display = 'none';
+        body.classList.remove('sidebar-open');
     } else {
         // Abrir sidebar
         sidebar.classList.add('aside-visible');
         overlay.style.display = 'block';
+        // Pequeno delay para suavizar a transição
+        setTimeout(() => {
+            overlay.classList.add('visible');
+        }, 10);
+        body.classList.add('sidebar-open');
     }
 }
 
@@ -159,6 +185,59 @@ document.getElementById('normalize_linear').addEventListener('change', function 
         maxInput.value = '';  // Limpa o valor
     }
 });
+
+function updateSteadyStateAvailability() {
+    const elitismCheckbox = document.getElementById('elitism');
+    const steadyStateSection = document.querySelector('.steady-state-section');
+    const steadyStateRadios = document.querySelectorAll('input[name="steady_state"]');
+    const offRadio = document.getElementById('off_steady_state');
+    
+    if (elitismCheckbox && elitismCheckbox.checked) {
+        // Desabilita steady-state quando elitismo está ativo
+        steadyStateSection?.classList.add('disabled');
+        steadyStateRadios.forEach(radio => {
+            radio.disabled = true;
+        });
+        
+        // Force o OFF quando elitismo está ativo
+        if (offRadio) {
+            offRadio.checked = true;
+            offRadio.disabled = false; // Mantém OFF habilitado
+        }
+        
+        // Esconde GAP e Strategy quando forçado para OFF
+        const gapGroup = document.getElementById('gapInputGroup');
+        const strategySelection = document.getElementById('strategySelection');
+        if (gapGroup) gapGroup.style.display = 'none';
+        if (strategySelection) strategySelection.style.display = 'none';
+        
+    } else {
+        // Reabilita steady-state quando elitismo está inativo
+        steadyStateSection?.classList.remove('disabled');
+        steadyStateRadios.forEach(radio => {
+            radio.disabled = false;
+        });
+    }
+}
+
+// 3. FUNÇÃO PARA DESABILITAR ELITISMO QUANDO STEADY-STATE ATIVO
+function updateElitismAvailability() {
+    const elitismCheckbox = document.getElementById('elitism');
+    const steadyStateMode = document.querySelector('input[name="steady_state"]:checked')?.value;
+    
+    if (steadyStateMode && steadyStateMode !== 'off') {
+        // Desabilita elitismo quando steady-state está ativo
+        if (elitismCheckbox) {
+            elitismCheckbox.disabled = true;
+            elitismCheckbox.checked = false; // Force unchecked
+        }
+    } else {
+        // Reabilita elitismo quando steady-state está OFF
+        if (elitismCheckbox) {
+            elitismCheckbox.disabled = false;
+        }
+    }
+}
 
 // Função para armazenar novos resultados
 function storeResults(runData) {
@@ -284,6 +363,8 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     const steadyStateMode = document.querySelector('input[name="steady_state"]:checked').value;
     const gap = document.getElementById('gap').value;
 
+    const steadyStateRemoval = document.getElementById('steady_state_removal')?.value || 'random';
+
     const requestBody = {
         num_generations: parseInt(numGenerations),
         population_size: parseInt(populationSize),
@@ -304,7 +385,8 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
         steady_state_with_duplicates: steadyStateMode === 'with_duplicates',
         steady_state_without_duplicates: steadyStateMode === 'without_duplicates',
         
-        gap: (parseFloat(gap) / 100) || 0.0 // Converte % para decimal (ex: 50 -> 0.5)
+        gap: (parseFloat(gap) / 100) || 0.0,
+        steady_state_removal: steadyStateRemoval
     };
     // Validação de limites
     // if (parseInt(numExperiments) > 25 || 
@@ -721,13 +803,11 @@ function renderBestValuesTable(bestValuesPerGeneration, meanBestIndividualsPerGe
 }
 
 
-
 window.onload = function(){
-
+    // Downloads existentes (mantém igual)
     document.getElementById('download-chart').addEventListener('click', function() {
         const link = document.createElement('a');
-        if(!myChart)
-            return;
+        if(!myChart) return;
         link.href = myChart.toBase64Image();
         link.download = 'chart_image.jpeg';
         link.click();
@@ -735,48 +815,161 @@ window.onload = function(){
 
     document.getElementById('download-bxplot-chart').addEventListener('click', function() {
         const link = document.createElement('a');
-        if(!boxPlotChart)
-            return;
+        if(!boxPlotChart) return;
         link.href = boxPlotChart.toBase64Image();
         link.download = 'boxPlotChart.jpeg';
         link.click();
     });
 
-    // Lógica de exclusão entre Elitism e Steady-State
-    const elitismCheckbox = document.getElementById('elitism');
-    const steadyRadios = document.querySelectorAll('input[name="steady_state"]');
+    // ⭐ NOVO: Event listener para fechar sidebar ao clicar fora
+    document.addEventListener('click', closeSidebarOnClickOutside);
 
-    function toggleSteadyState(disabled) {
-        steadyRadios.forEach(radio => {
-            radio.disabled = disabled;
+    // ⭐ NOVO: Event listener para overlay
+    const overlay = document.getElementById('overlay');
+    if (overlay) {
+        overlay.addEventListener('click', function() {
+            toggleAside();
         });
     }
 
-    function toggleElitism(disabled) {
-        elitismCheckbox.disabled = disabled;
-    }
-
-    // Quando Elitism é marcado/desmarcado
-    elitismCheckbox.addEventListener('change', function () {
-        if (elitismCheckbox.checked) {
-            toggleSteadyState(true);
-        } else {
-            toggleSteadyState(false);
+    // ⭐ NOVO: Event listener para tecla ESC fechar sidebar
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.classList.contains('aside-visible')) {
+                toggleAside();
+            }
         }
     });
 
-    // Quando alguma opção de Steady-State é selecionada
-    steadyRadios.forEach(radio => {
-        radio.addEventListener('change', function () {
+    // GAP controls (com melhorias)
+    const gapSlider = document.getElementById('gapSlider');
+    const gapInput = document.getElementById('gap');
+    
+    if (gapSlider && gapInput) {
+        // Slider atualiza input
+        gapSlider.addEventListener('input', function() {
+            gapInput.value = this.value;
+        });
+        
+        // Input atualiza slider
+        gapInput.addEventListener('input', function() {
+            let value = parseInt(this.value);
+            
+            if (value < 0) {
+                value = 0;
+                this.value = 0;
+            } else if (value > 100) {
+                value = 100;
+                this.value = 100;
+            }
+            
+            gapSlider.value = value;
+        });
+        
+        // Valida quando perde foco
+        gapInput.addEventListener('blur', function() {
+            let value = parseInt(this.value) || 75;
+            
+            if (value < 0) value = 0;
+            if (value > 100) value = 100;
+            
+            this.value = value;
+            gapSlider.value = value;
+        });
+    }
+
+    // Steady-State controls
+    document.querySelectorAll('input[name="steady_state"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const gapGroup = document.getElementById('gapInputGroup');
+            const strategySelection = document.getElementById('strategySelection');
+            
             if (this.value !== 'off') {
-                toggleElitism(true);
+                if (gapGroup) gapGroup.style.display = 'block';
+                if (strategySelection) strategySelection.style.display = 'block';
+                updateElitismAvailability();
             } else {
-                toggleElitism(false);
+                if (gapGroup) gapGroup.style.display = 'none';
+                if (strategySelection) strategySelection.style.display = 'none';
+                updateElitismAvailability();
             }
         });
     });
 
+    // Normalization controls
+    const normalizeCheckbox = document.getElementById('normalize_linear');
+    if (normalizeCheckbox) {
+        normalizeCheckbox.addEventListener('change', function() {
+            const normInputs = document.getElementById('normInputs');
+            const minInput = document.getElementById('normalize_min');
+            const maxInput = document.getElementById('normalize_max');
+            
+            if (this.checked) {
+                if (normInputs) normInputs.style.display = 'block';
+                if (minInput) {
+                    minInput.disabled = false;
+                    minInput.value = minInput.value || '1';
+                }
+                if (maxInput) {
+                    maxInput.disabled = false;
+                    maxInput.value = maxInput.value || '100';
+                }
+            } else {
+                if (normInputs) normInputs.style.display = 'none';
+                if (minInput) {
+                    minInput.disabled = true;
+                    minInput.value = '';
+                }
+                if (maxInput) {
+                    maxInput.disabled = true;
+                    maxInput.value = '';
+                }
+            }
+        });
+    }
+
+    // Elitism controls
+    const elitismCheckbox = document.getElementById('elitism');
+    if (elitismCheckbox) {
+        elitismCheckbox.addEventListener('change', function() {
+            updateSteadyStateAvailability();
+        });
+    }
+
+    // Inicializa estados
+    updateSteadyStateAvailability();
+    updateElitismAvailability();
 }
+
+function toggleAdvanced() {
+    const section = document.querySelector('.advanced-section');
+    if (section) {
+        section.classList.toggle('collapsed');
+    }
+}
+
+
+
+
+const style = document.createElement('style');
+style.textContent = `
+.sidebar-open .toggle-button {
+    left: 360px !important;
+    transition: left 0.3s ease;
+}
+
+/* Evita overflow horizontal */
+.sidebar-container {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.param-section * {
+    box-sizing: border-box;
+}
+`;
+document.head.appendChild(style);
 
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
