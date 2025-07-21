@@ -75,113 +75,216 @@
         <div class="menu-container">
             <button class="toggle-button" onclick="toggleAside()">☰</button>
         </div>
+        <!-- ENCONTRE esta seção no seu index.html e SUBSTITUA por: -->
+
         <aside id="sidebar">
+            <!-- ⭐ HEADER FIXO FORA DO CONTAINER -->
+            <div class="sidebar-header">
+                <h3>𖤓  GA Settings</h3>
+                <button class="sidebar-close" onclick="toggleAside()">✕</button>
+            </div>
+        
+            <!-- ⭐ CONTAINER DE CONTEÚDO SCROLLÁVEL -->
             <div class="sidebar-container">
-                <form id="experimentForm">
-                    <div class="form-group">
-                        <label for="num_experiments">No. of Experiments:</label>
-                        <input type="number" id="num_experiments" name="num_experiments" required value="20">
-                    </div>
-                    <div class="form-group">
-                        <label for="num_generations">No. of Generations:</label>
-                        <input type="number" id="num_generations" name="num_generations" value="40">
-                    </div>
-                    <div class="form-group">
-                        <label for="population_size">Population Size:</label>
-                        <input type="number" id="population_size" name="population_size" value="100">
-                    </div>
-                    <div class="form-group">
-                        <label for="crossover_rate">Crossover Rate (%):</label>
-                        <input type="number" id="crossover_rate" name="crossover_rate" type="number" value="65.0" step="any">
-                    </div>
-                    <div class="form-group">
-                        <label for="mutation_rate">Mutation Rate (%):</label>
-                        <input type="number" id="mutation_rate" name="mutation_rate" type="numer" value="0.8" step="any">
-                    </div>
-                    <fieldset>
-                        <legend>Objective</legend>
-                        <div class="form-group">
-                            <div class="objective">
-                                <input type="radio" id="maximize" name="objective" value="true" checked>
-                                <label for="maximize">Maximize</label>
-                                <input type="radio" id="minimize" name="objective" value="false">
-                                <label for="minimize">Minimize</label>
+                <div class="sidebar-content">
+                    <form id="experimentForm">
+                        <!-- Basic Parameters -->
+                        <div class="param-section">
+                            <h4 class="section-title">✔️ Basic Parameters</h4>
+                            
+                            <div class="param-grid">
+                                <div class="form-group">
+                                    <label for="num_experiments">Experiments</label>
+                                    <input type="number" id="num_experiments" name="num_experiments" value="20" min="1" max="50" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="num_generations">Generations</label>
+                                    <input type="number" id="num_generations" name="num_generations" value="40" min="1" max="200">
+                                </div>
+                                <div class="form-group">
+                                    <label for="population_size">Population</label>
+                                    <input type="number" id="population_size" name="population_size" value="100" min="10" max="500">
+                                </div>
+                                <div class="form-group">
+                                    <label for="crossover_rate">Crossover (%)</label>
+                                    <input type="number" id="crossover_rate" name="crossover_rate" value="65.0" min="0" max="100" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="mutation_rate">Mutation (%)</label>
+                                    <input type="number" id="mutation_rate" name="mutation_rate" value="0.8" min="0" max="100" step="0.1">
+                                </div>
                             </div>
                         </div>
-                    </fieldset>
-                    <br>
-                    
-                    <fieldset>
-                        <legend>Search Range</legend>
-                        <div class="form-group-inline">
-                            <label for="interval_min">Min:</label>
-                            <input type="number" id="interval_min" name="interval_min" style="width: 5cap; height: 1.5cap;" value="-100">
+        
+                        <!-- Objective -->
+                        <div class="param-section">
+                            <h4 class="section-title">𖣠 Objective</h4>
+                            <div class="radio-group modern">
+                                <label class="radio-option">
+                                    <input type="radio" id="maximize" name="objective" value="true" checked>
+                                    <span class="radio-custom"></span>
+                                    Maximize
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" id="minimize" name="objective" value="false">
+                                    <span class="radio-custom"></span>
+                                    Minimize
+                                </label>
+                            </div>
                         </div>
-                        <div class="form-group-inline">
-                            <label for="interval_max">Max:</label>
-                            <input type="number" id="interval_max" name="interval_max" style="width: 5cap; height: 1.5cap;" value="100">
+        
+                        <!-- Search Range -->
+                        <div class="param-section">
+                            <h4 class="section-title">🔍︎ Search Range</h4>
+                            <div class="range-inputs">
+                                <div class="range-group">
+                                    <label>Min</label>
+                                    <input type="number" id="interval_min" name="interval_min" value="-100">
+                                </div>
+                                <span class="range-separator">to</span>
+                                <div class="range-group">
+                                    <label>Max</label>
+                                    <input type="number" id="interval_max" name="interval_max" value="100">
+                                </div>
+                            </div>
                         </div>
-                    </fieldset>
-                    <br>
-                    
-                    <div class="form-group">
-                        <input type="checkbox" id="elitism" name="elitism">
-                        <label for="elitism">Elitism</label> 
-                    </div>
-                    <div class="form-group">
-                        <input type="checkbox" id="normalize_linear" name="normalize_linear">
-                        <label for="normalize_linear">Linear Normalization</label>
-                        <br>
-                        <label for="normalize_min">Min:</label>
-                        <input type="number" id="normalize_min" name="normalize_min" style="width: 5cap; height: 1.5cap;" disabled>
-                        <label for="normalize_max">Max:</label>
-                        <input type="number" id="normalize_max" name="normalize_max" style="width: 5cap; height: 1.5cap;" disabled>
-                    </div>
-                    <fieldset>
-                        <legend>Crossover Type</legend>
-                        <div class="form-group">
-                            <input type="radio" id="one_point" name="crossover_type" value="one_point" checked>
-                            <label for="one_point">One Point</label><br>
-                            <input type="radio" id="two_point" name="crossover_type" value="two_point">
-                            <label for="two_point">Two Point</label><br>
-                            <input type="radio" id="uniform" name="crossover_type" value="uniform">
-                            <label for="uniform">Uniform</label>
+        
+                        <!-- Advanced Options -->
+                        <div class="param-section advanced-section">
+                            <div class="section-header" onclick="toggleAdvanced()">
+                                <h4 class="section-title">⚡ Advanced Options</h4>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                            
+                            <div class="advanced-content" id="advancedContent">
+                                <!-- Elitism Toggle -->
+                                <div class="toggle-group">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="elitism" name="elitism">
+                                        <span class="toggle-slider"></span>
+                                        <span class="toggle-label">Elitism</span>
+                                    </label>
+                                </div>
+        
+                                <!-- Linear Normalization -->
+                                <div class="normalization-group">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="normalize_linear" name="normalize_linear">
+                                        <span class="toggle-slider"></span>
+                                        <span class="toggle-label">Linear Normalization</span>
+                                    </label>
+                                    <div class="norm-inputs" id="normInputs" style="display: none;">
+                                        <div class="range-inputs small">
+                                            <div class="range-group">
+                                                <label>Min</label>
+                                                <input type="number" id="normalize_min" name="normalize_min" disabled>
+                                            </div>
+                                            <span class="range-separator">to</span>
+                                            <div class="range-group">
+                                                <label>Max</label>
+                                                <input type="number" id="normalize_max" name="normalize_max" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <!-- Crossover Type -->
+                                <div class="crossover-section">
+                                    <h5>Crossover Type</h5>
+                                    <div class="crossover-cards">
+                                        <label class="crossover-card">
+                                            <input type="radio" id="one_point" name="crossover_type" value="one_point" checked>
+                                            <div class="card-content">
+                                                <span class="card-icon">𝟙</span>
+                                                <span class="card-label">One Point</span>
+                                            </div>
+                                        </label>
+                                        <label class="crossover-card">
+                                            <input type="radio" id="two_point" name="crossover_type" value="two_point">
+                                            <div class="card-content">
+                                                <span class="card-icon">𝟚</span>
+                                                <span class="card-label">Two Point</span>
+                                            </div>
+                                        </label>
+                                        <label class="crossover-card">
+                                            <input type="radio" id="uniform" name="crossover_type" value="uniform">
+                                            <div class="card-content">
+                                                <span class="card-icon">⚡</span>
+                                                <span class="card-label">Uniform</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+        
+                                <!-- Steady-State -->
+                                <div class="steady-state-section">
+                                    <h5>Steady-State Strategy</h5>
+                                    <div class="steady-state-options">
+                                        <label class="steady-option">
+                                            <input type="radio" id="off_steady_state" name="steady_state" value="off" checked>
+                                            <span class="option-content">
+                                                <span class="option-icon">🚫</span>
+                                                <span class="option-text">
+                                                    <strong>OFF</strong>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <label class="steady-option">
+                                            <input type="radio" id="steady_state" name="steady_state" value="with_duplicates">
+                                            <span class="option-content">
+                                                <span class="option-icon">🗐</span>
+                                                <span class="option-text">
+                                                    <strong>With Duplicates</strong>
+                                                    <!-- <small>With Duplicates</small> -->
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <label class="steady-option">
+                                            <input type="radio" id="steady_state_without_duplicates" name="steady_state" value="without_duplicates">
+                                            <span class="option-content">
+                                                <span class="option-icon">𖤐</span>
+                                                <span class="option-text">
+                                                    <strong>Without Duplicates</strong>
+                                                    <!-- <small>Without Duplicates</small> -->
+                                                </span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                    
+                                    <!-- Gap Input -->
+                                    <div class="gap-input-group" id="gapInputGroup" style="display: none;">
+                                        <label for="gap">Gap (%)</label>
+                                        <div class="gap-controls">
+                                            <div class="gap-slider-container">
+                                                <input type="range" id="gapSlider" min="0" max="100" value="75" step="1">
+                                            </div>
+                                            <div class="gap-input-container">
+                                                <small>Value</small>
+                                                <input type="number" id="gap" name="gap" min="0" max="100" value="75" step="1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Strategy Selection -->
+                                    <div class="strategy-selection" id="strategySelection" style="display: none;">
+                                        <label for="steady_state_removal">Removal Strategy</label>
+                                        <select id="steady_state_removal" name="steady_state_removal">
+                                            <option value="random">Random (Classic)</option>
+                                            <option value="worst">Worst (Elitist)</option>
+                                            <option value="tournament">Tournament (Hybrid)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </fieldset>
-                    <br>
-                    
-                    
-                    <fieldset>
-                        <legend>Steady-State:</legend>
-                        <div class="form-group">
-                            <input type="radio" id="off_steady_state" name="steady_state" value="off" checked>
-                            <label for="off_steady_state">OFF</label>
-                            <br>
-                            <input type="radio" id="steady_state" name="steady_state" value="with_duplicates">
-                            <label for="steady_state">With Duplicates</label>
-                            <br>
-                            <input type="radio" id="steady_state_without_duplicates"
-                                name="steady_state" value="without_duplicates">
-                            <label for="steady_state_without_duplicates">Without Duplicates</label>
-                            <br><br>
-                            <label for="gap">Gap (%):</label>
-                            <input type="number" id="gap" name="gap" style="width: 5cap; height: 1.5cap;" disabled>
-                        </div>
-                    </fieldset>
-                    <!-- <div class="form-group">
-                        <input type="checkbox" id="steady_state" name="steady_state">
-                        <label for="steady_state">Steady State</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="checkbox" id="steady_state_without_duplicates"
-                            name="steady_state_without_duplicates">
-                        <label for="steady_state_without_duplicates">Steady State Without Duplicates</label>
-                    </div>
-                    <div class="form-group-inline">
-                        <label for="gap">Gap (%):</label>
-                        <input type="number" id="gap" name="gap" disabled>
-                    </div> -->
-                </form>
+        
+                        <!-- Run Button -->
+                        <button type="submit" class="run-button">
+                            <span class="button-icon"></span>
+                            <span class="button-text">Run Experiment</span>
+                        </button>
+                    </form>
+                </div>
             </div>
         </aside>
         <div id="core">
