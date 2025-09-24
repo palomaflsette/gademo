@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GADemo</title>
+    <link rel="stylesheet" href="https://unpkg.com/shepherd.js/dist/css/shepherd.css">
+    <script src="https://unpkg.com/shepherd.js/dist/js/shepherd.min.js"></script>
+
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="footer/footer.css">
+    <link rel="stylesheet" href="modal/modal.css">
+    <link rel="stylesheet" href="spinner/spinner.css">
+    <link rel="stylesheet" href="keyboard/keyboard.css">
+</head>
+
+<!-- Shepherd JS -->
+<script src="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/js/shepherd.min.js"></script>
+
+<script src="tour.js"></script>
+
+
+<body>
+    <div id="overlay" onclick="toggleSidebar()"></div>
+    <header id="header" style=" justify-content: center; align-items: center; padding: 20px;">
+        <div class="top-right-buttons">
+            <a href="https://gademo.readthedocs.io" target="_blank" class="doc-btn">📖 Documentation</a>
+            <button class="tour-btn" onclick="startTour()">🚀 Take a Tour</button>
+        </div>
+
+        <img src="images/gademo-logo.PNG" alt="GAdemo Logo" style="max-height: 60px; width: auto;">
+        
+
+
+        <div class="function-input-container">
+            <div class="math-keyboard-symbols">
+                <button onclick="insertSymbol('sin(')">sin</button>
+                <button onclick="insertSymbol('cos(')">cos</button>
+                <button onclick="insertSymbol('tan(')">tan</button>
+                <button onclick="insertSymbol('log(')">log</button>
+                <button onclick="insertSymbol('sqrt(')">√</button>
+                <button onclick="insertSymbol('^')">^</button>
+                <button onclick="insertSymbol('(')">(</button>
+                <button onclick="insertSymbol(')')">)</button>
+                <button onclick="insertSymbol('+')">+</button>
+                <button onclick="insertSymbol('-')">-</button>
+                <button onclick="insertSymbol('*')">*</button>
+                <button onclick="insertSymbol('/')">÷</button>
+                <button onclick="insertSymbol('pi')">π</button>
+                <button onclick="insertSymbol('exp(')">e</button>
+                <button onclick="insertSymbol('x')">x</button>
+            </div>
+            <div class="math-keyboard-numbers">
+                <button onclick="insertSymbol('0')">0</button>
+                <button onclick="insertSymbol('1')">1</button>
+                <button onclick="insertSymbol('2')">2</button>
+                <button onclick="insertSymbol('3')">3</button>
+                <button onclick="insertSymbol('4')">4</button>
+                <button onclick="insertSymbol('5')">5</button>
+                <button onclick="insertSymbol('6')">6</button>
+                <button onclick="insertSymbol('7')">7</button>
+                <button onclick="insertSymbol('8')">8</button>
+                <button onclick="insertSymbol('9')">9</button>
+            </div>
+            <div class="function-input">
+                <input type="text" id="func_str" placeholder="Enter your function"
+                    value="0.5 - (sin(sqrt(x^2 + y^2))^2 - 0.5) / (1 + 0.001 * (x^2 + y^2))^2">
+                <button id="runExperimentButton" type="submit" form="experimentForm">Run</button>
+            </div>
+        </div>
+    </header>
+    <main id="main">
+        <div class="menu-container">
+            <button class="toggle-button" onclick="toggleAside()">☰</button>
+        </div>
+        <!-- ENCONTRE esta seção no seu index.html e SUBSTITUA por: -->
+
+        <aside id="sidebar">
+            <!-- ⭐ HEADER FIXO FORA DO CONTAINER -->
+            <div class="sidebar-header">
+                <h3>𖤓  GA Settings</h3>
+                <button class="sidebar-close" onclick="toggleAside()">✕</button>
+            </div>
+        
+            <!-- ⭐ CONTAINER DE CONTEÚDO SCROLLÁVEL -->
+            <div class="sidebar-container">
+                <div class="sidebar-content">
+                    <form id="experimentForm">
+                        <!-- Basic Parameters -->
+                        <div class="param-section">
+                            <h4 class="section-title">✔️ Basic Parameters</h4>
+                            
+                            <div class="param-grid">
+                                <div class="form-group">
+                                    <label for="num_experiments">Experiments</label>
+                                    <input type="number" id="num_experiments" name="num_experiments" value="20" min="1" max="50" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="num_generations">Generations</label>
+                                    <input type="number" id="num_generations" name="num_generations" value="40" min="1" max="200">
+                                </div>
+                                <div class="form-group">
+                                    <label for="population_size">Population</label>
+                                    <input type="number" id="population_size" name="population_size" value="100" min="10" max="500">
+                                </div>
+                                <div class="form-group">
+                                    <label for="crossover_rate">Crossover (%)</label>
+                                    <input type="number" id="crossover_rate" name="crossover_rate" value="65.0" min="0" max="100" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="mutation_rate">Mutation (%)</label>
+                                    <input type="number" id="mutation_rate" name="mutation_rate" value="0.8" min="0" max="100" step="0.1">
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Objective -->
+                        <div class="param-section">
+                            <h4 class="section-title">𖣠 Objective</h4>
+                            <div class="radio-group modern">
+                                <label class="radio-option">
+                                    <input type="radio" id="maximize" name="objective" value="true" checked>
+                                    <span class="radio-custom"></span>
+                                    Maximize
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" id="minimize" name="objective" value="false">
+                                    <span class="radio-custom"></span>
+                                    Minimize
+                                </label>
+                            </div>
+                        </div>
+        
+                        <!-- Search Range -->
+                        <div class="param-section">
+                            <h4 class="section-title">🔍︎ Search Range</h4>
+                            <div class="range-inputs">
+                                <div class="range-group">
+                                    <label>Min</label>
+                                    <input type="number" id="interval_min" name="interval_min" value="-100">
+                                </div>
+                                <span class="range-separator">to</span>
+                                <div class="range-group">
+                                    <label>Max</label>
+                                    <input type="number" id="interval_max" name="interval_max" value="100">
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Advanced Options -->
+                        <div class="param-section advanced-section">
+                            <div class="section-header" onclick="toggleAdvanced()">
+                                <h4 class="section-title">⚡ Advanced Options</h4>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                            
+                            <div class="advanced-content" id="advancedContent">
+                                <!-- Elitism Toggle -->
+                                <div class="toggle-group">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="elitism" name="elitism">
+                                        <span class="toggle-slider"></span>
+                                        <span class="toggle-label">Elitism</span>
+                                    </label>
+                                </div>
+        
+                                <!-- Linear Normalization -->
+                                <div class="normalization-group">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="normalize_linear" name="normalize_linear">
+                                        <span class="toggle-slider"></span>
+                                        <span class="toggle-label">Linear Normalization</span>
+                                    </label>
+                                    <div class="norm-inputs" id="normInputs" style="display: none;">
+                                        <div class="range-inputs small">
+                                            <div class="range-group">
+                                                <label>Min</label>
+                                                <input type="number" id="normalize_min" name="normalize_min" disabled>
+                                            </div>
+                                            <span class="range-separator">to</span>
+                                            <div class="range-group">
+                                                <label>Max</label>
+                                                <input type="number" id="normalize_max" name="normalize_max" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <!-- Crossover Type -->
+                                <div class="crossover-section">
+                                    <h5>Crossover Type</h5>
+                                    <div class="crossover-cards">
+                                        <label class="crossover-card">
+                                            <input type="radio" id="one_point" name="crossover_type" value="one_point" checked>
+                                            <div class="card-content">
+                                                <span class="card-icon">𝟙</span>
+                                                <span class="card-label">One Point</span>
+                                            </div>
+                                        </label>
+                                        <label class="crossover-card">
+                                            <input type="radio" id="two_point" name="crossover_type" value="two_point">
+                                            <div class="card-content">
+                                                <span class="card-icon">𝟚</span>
+                                                <span class="card-label">Two Point</span>
+                                            </div>
+                                        </label>
+                                        <label class="crossover-card">
+                                            <input type="radio" id="uniform" name="crossover_type" value="uniform">
+                                            <div class="card-content">
+                                                <span class="card-icon">⚡</span>
+                                                <span class="card-label">Uniform</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+        
+                                <!-- Steady-State -->
+                                <div class="steady-state-section">
+                                    <h5>Steady-State Strategy</h5>
+                                    <div class="steady-state-options">
+                                        <label class="steady-option">
+                                            <input type="radio" id="off_steady_state" name="steady_state" value="off" checked>
+                                            <span class="option-content">
+                                                <span class="option-icon">🚫</span>
+                                                <span class="option-text">
+                                                    <strong>OFF</strong>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <label class="steady-option">
+                                            <input type="radio" id="steady_state" name="steady_state" value="with_duplicates">
+                                            <span class="option-content">
+                                                <span class="option-icon">🗐</span>
+                                                <span class="option-text">
+                                                    <strong>With Duplicates</strong>
+                                                    <!-- <small>With Duplicates</small> -->
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <label class="steady-option">
+                                            <input type="radio" id="steady_state_without_duplicates" name="steady_state" value="without_duplicates">
+                                            <span class="option-content">
+                                                <span class="option-icon">𖤐</span>
+                                                <span class="option-text">
+                                                    <strong>Without Duplicates</strong>
+                                                    <!-- <small>Without Duplicates</small> -->
+                                                </span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                    
+                                    <!-- Gap Input -->
+                                    <div class="gap-input-group" id="gapInputGroup" style="display: none;">
+                                        <label for="gap">Gap (%)</label>
+                                        <div class="gap-controls">
+                                            <div class="gap-slider-container">
+                                                <input type="range" id="gapSlider" min="0" max="100" value="75" step="1">
+                                            </div>
+                                            <div class="gap-input-container">
+                                                <small>Value</small>
+                                                <input type="number" id="gap" name="gap" min="0" max="100" value="75" step="1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Strategy Selection -->
+                                    <div class="strategy-selection" id="strategySelection" style="display: none;">
+                                        <label for="steady_state_removal">Removal Strategy</label>
+                                        <select id="steady_state_removal" name="steady_state_removal">
+                                            <option value="random">Random (Classic)</option>
+                                            <option value="worst">Replace Worsts (Elitist)</option>
+                                            <option value="tournament">Tournament (Hybrid)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Run Button -->
+                        <button type="submit" class="run-button">
+                            <span class="button-icon"></span>
+                            <span class="button-text">Run Experiment</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </aside>
+        <div id="core">
+            <div id="primary">
+
+            <div class="content">
+                <div id="chart-line-container">
+                    <div id="spinner" class="spinner" style="display: none;"></div>
+                    <canvas id="myChart"></canvas>
+                    <div class="form-group"></div>
+                    <div class="line-chart-utilities chart-utilities">
+                        <img class="download-image" src="images/download-ico.png"
+                            alt="Download" id="download-chart">
+                        <div>
+                            <input type="checkbox" id="keep_chart" name="keep_chart">
+                            <label for="keep_chart">Keep Graph</label>
+                        </div>
+                    </div>
+                </div>
+                <div id="box-plot-container">
+                    <div id="spinner-boxplot" class="spinner" style="display: none;"></div>
+                    <canvas id="box-plot-chart"></canvas>
+                    <div class="boxplot-chart-utilities chart-utilities">
+                        <img id="download-bxplot-chart" class="download-image"
+                            src="images/download-ico.png" alt="Download">
+                    </div>
+                </div>
+            </div>
+            <!-- Nova tabela de resultados ao lado do gráfico -->
+            <div id="main-container">
+                <!-- Primeiro contêiner -->
+                <div id="results-container">
+                    
+                    
+                    <button id="button-export-results" onclick="exportResultsToXLSX()">Export Result</button>
+                    <h3 id="table-title">Best Fitness Per Generation & Experiments</h3>
+                    <div id="used-parameters">
+                        <!-- Parâmetros utilizados aparecerão aqui -->
+                    </div>
+                    <!-- <div id="table-navigation" style="text-align: center; margin-bottom: 10px;">
+                                <button id="prev-run" disabled style="padding: 5px 10px;">◀</button>
+                                <button id="next-run" disabled style="padding: 5px 10px;">▶</button>
+                            </div> -->
+                    <table id="best-values-table">
+                        <!-- Tabela dinâmica será preenchida aqui -->
+                    </table>
+                </div>
+
+                <div id="buttons-next-prev">
+                    <button id="prev-run" disabled style="padding: 5px 10px;">◀</button>
+                    <button id="next-run" disabled style="padding: 5px 10px;">▶</button>
+                </div>
+
+                <!-- Segundo contêiner -->
+                <div id="execution-results-container">
+                    <h3 id="status-tittle">Execution</h3>
+                    <div id="execution-status">
+                        <!-- status das execuções aparecerá aqui -->
+                    </div>
+                    <!-- <div id="table-navigation" style="text-align: center; margin-bottom: 10px;"></div> -->
+
+                </div>
+            </div>
+            </div>
+            <div class="secondary-wrapper">
+                <div id="secondary">
+                    <div class="carousel-container">
+                        <!-- Botão para navegar para o gráfico anterior -->
+                        <div id="spinner-carousel" class="spinner" style="display: none;"></div>
+
+                        <button class="carousel-nav" id="prev-experiment" onclick="navigateExperiment(-1)">◀</button>
+                        
+                        <!-- Contêiner do gráfico -->
+                        <div class="chart-container">
+                            <!-- Gráfico de linha -->
+                            <canvas id="lineChartExperiment"></canvas>
+                            
+                            <!-- Histograma -->
+                            <canvas id="histogramChartExperiment"></canvas>
+                            
+                            <!-- Legenda do experimento -->
+                            <p id="experimentLabel">Experiment 1</p>
+                        </div>
+                        
+                        <!-- Botão para navegar para o próximo gráfico -->
+                        <button class="carousel-nav" id="next-experiment" onclick="navigateExperiment(1)">▶</button>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+        </div>
+        
+        
+
+        
+    </main>
+<footer class="footer">
+  <div class="container">
+    
+    <!-- ✅ LOGOS INSTITUCIONAIS NO TOPO -->
+    <div style="display: flex; justify-content: center; gap: 40px; align-items: center; margin-bottom: -20px;">
+      <a href="https://www.puc-rio.br/english/" target="_blank" class="img-puc-logo">
+        <img src="images/pucrio-logo.png" alt="Logo PUC-Rio" style="height: 120px;" >
+      </a>
+      <a href="http://www.ele.puc-rio.br/en/" target="_blank" class="img-dee-logo">
+        <img src="images/dee-logo.png" alt="Logo DEE" style="height: 100px;">
+      </a>
+      <a href="http://www.lira.ele.puc-rio.br/home.html" target="_blank" class="img-lira-logo">
+        <img src="images/lira-logo2.PNG" alt="Logo LIRA" style="height: 80px;">
+      </a>
+    </div>
+
+    <!-- ✅ LINHA DIVISÓRIA -->
+    <hr class="footer-line">
+
+    <!-- ✅ BLOCO DE TEXTO CENTRAL -->
+    <div class="footer-content" style="text-align: center;">
+      <p style="font-size: 0.9em;">
+        <strong>GAdemo Platform - Pontifical Catholic University of Rio de Janeiro (PUC-Rio)</strong><br><br>
+        Developed by: Paloma L. Sette <br>
+        Supervised by: Karla Figueiredo & Marley Vellasco
+      </p>
+
+      <ul class="footer-links" style="display: flex; justify-content: center; gap: 15px; list-style: none; padding: 0;">
+        <li><a href="#" data-content="Terms of Use">Terms of Use</a></li>
+        <li><a href="#" data-content="Privacy Policy">Privacy Policy</a></li>
+        <li><a href="#" data-content="MIT License">MIT License</a></li>
+        <li><a href="https://github.com/palomaflsette/gademo-front" target="_blank">Frontend Repository</a></li>
+        <li><a href="https://github.com/palomaflsette/gademo-Api" target="_blank">Backend Repository</a></li>
+      </ul>
+    </div>
+
+    <!-- 🔒 PRIVACIDADE -->
+    <div class="privacy-info" style="font-size: 0.75em; text-align: center; margin-top: 20px; color: #bbb;">
+      <p>
+        This platform was initially developed as part of a graduation project in Control and Automation Engineering and is now available for further academic use. Contributions to future research and educational purposes are welcome.
+      </p>
+      <p>
+        This website does not use user data for any purpose. For more information, see our 
+        <a href="#" style="color: #fff; text-decoration: underline;">Privacy Policy</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+
+
+    <!-- Modal Structure -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Informações</h2>
+            <p id="modal-text">Conteúdo do modal vai aqui.</p>
+        </div>
+    </div>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <!-- Adicionar o BoxPlot e ViolinPlot plugin -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0/chartjs-plugin-datalabels.js"></script>
+    <script src="https://unpkg.com/@sgratzl/chartjs-chart-boxplot@3.6.0/build/index.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-chart-box-and-violin-plot/4.0.0/Chart.BoxPlot.min.js" integrity="sha512-z2lEnxnLHbu/Vp4PxvIyCCy/QX1mmq2ocpgqTf50xeSDn35VTra3gUi7Qs53qSLj99aJ9SMtqP08UFt+lJmHxA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <!-- <script src="./node_modules/chart.js/dist/chart.js"></script>
+        <script src="./node_modules/chartjs-chart-box-and-violin-plot/dist/chartjs-chart-box-and-violin-plot.js"></script> -->
+    <script src="index.js"></script>
+    <script src="config.js"></script>
+    <script src="modal/modal.js"></script>
+    <script src="spinner/spinner.js"></script>
+    <script src="keyboard/keyboard.js"></script>
+
+    <script src="tour.js"></script>
+    <script>
+    window.addEventListener('DOMContentLoaded', () => {
+        startGademoTour(); // Inicia automaticamente (se ainda não foi feito)
+    });
+    </script>
+
+</body>
+
+</html>

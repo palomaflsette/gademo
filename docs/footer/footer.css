@@ -1,0 +1,92 @@
+.footer {
+  background-color: #30577c;
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.img-puc-logo {
+  text-decoration: none; 
+  background: transparent; 
+}
+
+.img-puc-logo:hover {
+  background: transparent;
+  text-decoration: none;
+  opacity: 1;
+}
+
+.img-dee-logo {
+  text-decoration: none; 
+  background: transparent; 
+}
+
+.img-dee-logo:hover {
+  background: transparent;
+  text-decoration: none;
+  opacity: 1;
+}
+
+.img-lira-logo {
+  text-decoration: none; 
+  background: transparent; 
+}
+
+.img-lira-logo:hover {
+  background: transparent;
+  text-decoration: none;
+  opacity: 1;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.footer-line {
+  width: 80%;
+  margin: 30px auto;
+  height: 1px;
+  background-color: #999;
+  border: none;
+  opacity: 0.4;
+}
+
+
+.footer-content {
+  margin-bottom: 15px;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  display: inline;
+  margin-right: 15px;
+}
+
+.footer-links a {
+  color: #ddd;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+  color:#386da6;
+}
+
+.privacy-info {
+  font-size: 14px;
+}
+
+.privacy-info a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.privacy-info a:hover {
+  text-decoration: none;
+}
