@@ -2,7 +2,7 @@
 
 Projeto de experimentos de Algoritmo Genético desenvolvido com HTML, CSS e JavaScript. A aplicação permite aos usuários configurar vários parâmetros de um algoritmo genético e visualizar os resultados em um gráfico.
 
-- Atualizações instantâneas podem ser vistas [aqui](https://gademo-zxig.onrender.com).
+- Atualizações instantâneas podem ser vistas [aqui](https://palomasette.com/gademo).
 - Atualizações consolidadas são disponibilizadas no servidor da universidade [através deste link](https://www.maxwell.vrac.puc-rio.br/projetosEspeciais/GADEMO/index.html).
 - Mais informações disponíveis na [documentação](https://gademo.readthedocs.io/en/latest/).
 
