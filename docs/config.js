@@ -9,7 +9,7 @@ if (window.location.hostname.includes('onrender.com')) {
     window.location.hostname.includes('github.io') ||
     window.location.hostname.includes('palomasette.com')
 ) {
-    window.API_ENDPOINT = 'https://gademo-api-80847e4a6e18.herokuapp.com';
+    window.API_ENDPOINT = 'https://gademo-api.onrender.com';
 } else {
     window.API_ENDPOINT = 'https://servicosmaxwell.vrac.puc-rio.br';
 }
