@@ -205,11 +205,9 @@ function updateSteadyStateAvailability() {
             offRadio.disabled = false; // Mantém OFF habilitado
         }
         
-        // Esconde GAP e Strategy quando forçado para OFF
+        // Esconde o GAP quando forçado para OFF
         const gapGroup = document.getElementById('gapInputGroup');
-        const strategySelection = document.getElementById('strategySelection');
         if (gapGroup) gapGroup.style.display = 'none';
-        if (strategySelection) strategySelection.style.display = 'none';
         
     } else {
         // Reabilita steady-state quando elitismo está inativo
@@ -322,9 +320,9 @@ function updateUsedParametersDescription(params, numOfExp, objective, executionT
             <tr><td>Crossover Type:</td><td>${params.crossover_type ? (params.crossover_type.one_point ? 'One Point' : params.crossover_type.two_point ? 'Two Point' : 'Uniform') : 'N/A'}</td></tr>
             <tr><td>Linear Normalization:</td><td>${params.normalize_linear ? '['+params.normalize_min+','+params.normalize_max+']' : 'No'}</td></tr>
             <tr><td>Elitism:</td><td>${params.elitism ? 'Yes' : 'No'}</td></tr>
-            <tr><td>Steady State With Duplicates:</td><td>${params.steady_state ? 'Yes' : 'No'}</td></tr>
+            <tr><td>Steady State With Duplicates:</td><td>${params.steady_state_with_duplicates ? 'Yes' : 'No'}</td></tr>
             <tr><td>Steady State Without Duplicates:</td><td>${params.steady_state_without_duplicates ? 'Yes' : 'No'}</td></tr>
-            <tr><td>Gap:</td><td>${params.gap ? params.gap+'%' : 'No'}</td></tr>
+            <tr><td>Gap:</td><td>${(params.steady_state_with_duplicates || params.steady_state_without_duplicates) && params.gap ? Math.round(params.gap * 100) + '%' : 'N/A'}</td></tr>
             <tr><td>Execution Time:</td><td>${executionTime ? executionTime.toFixed(2) + " seconds" : 'N/A'}</td></tr>
         </table>
     `;
@@ -363,7 +361,8 @@ document.getElementById('experimentForm').addEventListener('submit', async funct
     const steadyStateMode = document.querySelector('input[name="steady_state"]:checked').value;
     const gap = document.getElementById('gap').value;
 
-    const steadyStateRemoval = document.getElementById('steady_state_removal')?.value || 'random';
+    // Steady-state padrão (apostila ICA): os filhos substituem os PIORES indivíduos da população.
+    const steadyStateRemoval = 'worst';
 
     const requestBody = {
         num_generations: parseInt(numGenerations),
@@ -567,9 +566,9 @@ function exportResultsToXLSX() {
                           p.crossover_type.two_point ? 'Two Point' : 'Uniform'],
         ['Linear Normalization:', p.normalize_linear ? `[${p.normalize_min}, ${p.normalize_max}]` : 'No'],
         ['Elitism:', p.elitism ? 'Yes' : 'No'],
-        ['Steady State With Duplicates:', p.steady_state ? 'Yes' : 'No'],
+        ['Steady State With Duplicates:', p.steady_state_with_duplicates ? 'Yes' : 'No'],
         ['Steady State Without Duplicates:', p.steady_state_without_duplicates ? 'Yes' : 'No'],
-        ['Gap:', p.gap ? `${p.gap}%` : 'No'],
+        ['Gap:', (p.steady_state_with_duplicates || p.steady_state_without_duplicates) && p.gap ? `${Math.round(p.gap * 100)}%` : 'N/A'],
         ['Execution Time:', `${runData.executionTime.toFixed(2)} seconds`],
     ];
 
@@ -883,15 +882,12 @@ window.onload = function(){
     document.querySelectorAll('input[name="steady_state"]').forEach(radio => {
         radio.addEventListener('change', function() {
             const gapGroup = document.getElementById('gapInputGroup');
-            const strategySelection = document.getElementById('strategySelection');
             
             if (this.value !== 'off') {
                 if (gapGroup) gapGroup.style.display = 'block';
-                if (strategySelection) strategySelection.style.display = 'block';
                 updateElitismAvailability();
             } else {
                 if (gapGroup) gapGroup.style.display = 'none';
-                if (strategySelection) strategySelection.style.display = 'none';
                 updateElitismAvailability();
             }
         });

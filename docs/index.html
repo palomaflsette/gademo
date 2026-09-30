@@ -263,17 +263,9 @@
                                                 <input type="number" id="gap" name="gap" min="0" max="100" value="75" step="1">
                                             </div>
                                         </div>
+                                        <p class="gap-hint">Each generation, Gap% of the population is replaced by new offspring, which take the place of the worst individuals. The remaining (100 - Gap)% is kept.</p>
                                     </div>
                                     
-                                    <!-- Strategy Selection -->
-                                    <div class="strategy-selection" id="strategySelection" style="display: none;">
-                                        <label for="steady_state_removal">Removal Strategy</label>
-                                        <select id="steady_state_removal" name="steady_state_removal">
-                                            <option value="random">Random (Classic)</option>
-                                            <option value="worst">Replace Worsts (Elitist)</option>
-                                            <option value="tournament">Tournament (Hybrid)</option>
-                                        </select>
-                                    </div>
                                 </div>
                             </div>
                         </div>
