@@ -1273,3 +1273,12 @@ a:hover {
     }
 
 }
+
+
+/* Explica a regra de substituição do steady-state (filhos substituem os piores) */
+.gap-hint {
+    font-size: 12px;
+    line-height: 1.4;
+    opacity: 0.75;
+    margin: 8px 0 0;
+}
